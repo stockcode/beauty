@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"    
+    xmlns:baiduadsdk="http://schemas.android.com/apk/res/cn.nit.beauty"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <me.maxwin.view.XListView
+        android:id="@+id/list"
+        android:scrollbars="vertical"
+         android:fastScrollEnabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.baidu.mobads.AdView android:id="@+id/adView"        
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true"  
+		baiduadsdk:adSize="0"
+		baiduadsdk:adId = "debug_m0000001"/>
+	<!-- 注： baiduadsdk:adId可以指定为"",表示默认广告位-->
+</merge>
