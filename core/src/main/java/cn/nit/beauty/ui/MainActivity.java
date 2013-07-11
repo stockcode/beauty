@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.baidu.mobstat.StatService;
+import com.capricorn.ArcMenu;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -479,50 +480,30 @@ public class MainActivity extends Activity {
 
 	}
 
+    int[] ITEM_DRAWABLES = { R.drawable.composer_add, R.drawable.composer_camera, R.drawable.composer_music,
+            R.drawable.composer_place, R.drawable.composer_sleep, R.drawable.composer_thought, R.drawable.composer_with };
+
 	public void initPath() {
 		MyAnimations.initOffset(MainActivity.this);
-		btn_skin = (ImageButton) findViewById(R.id.composer_button_sleep);
-		sp_skin = getSharedPreferences("skin", MODE_PRIVATE);
-		btn_skin.setBackgroundResource(sp_skin.getBoolean("id", true)?R.drawable.composer_sleep:R.drawable.composer_sun);
-		composerButtonsWrapper = (RelativeLayout) findViewById(R.id.composer_buttons_wrapper);
-		composerButtonsShowHideButton = (RelativeLayout) findViewById(R.id.composer_buttons_show_hide_button);
-		composerButtonsShowHideButtonIcon = (ImageView) findViewById(R.id.composer_buttons_show_hide_button_icon);
-		//
-		composerButtonsShowHideButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				if (!areButtonsShowing) {
-					composerButtonsShowHideButtonIcon
-					.startAnimation(MyAnimations.getRotateAnimation(0, -270,300));
-					MyAnimations.startAnimationsIn(composerButtonsWrapper, 300);
-				} else {
-					composerButtonsShowHideButtonIcon
-					.startAnimation(MyAnimations.getRotateAnimation(-270,0, 300));
-					MyAnimations.startAnimationsOut(composerButtonsWrapper, 300);
-				}
-				areButtonsShowing = !areButtonsShowing;
-			}
-		});
-		for (int i = 0; i < composerButtonsWrapper.getChildCount(); i++) {
-			final int position=i;
-			composerButtonsWrapper.getChildAt(i).setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View arg0) {
-					if(position==5){
-						sp_skin.edit().putBoolean("id", !sp_skin.getBoolean("id", true)).commit();
-						btn_skin.setBackgroundResource(sp_skin.getBoolean("id", true)?R.drawable.composer_sleep:R.drawable.composer_sun);
-						Toast.makeText(MainActivity.this,!sp_skin.getBoolean("id", true)? "已开启夜间模式":"夜间模式已关闭", 3000).show();
-					}else{
-						Intent intent = new Intent(MainActivity.this, classes[position]);
-						startActivity(intent);
-						overridePendingTransition(R.anim.anim_fromright_toup6, R.anim.anim_down_toleft6);
-					}
-				}
-			});
-		}
-		composerButtonsShowHideButton
-				.startAnimation(MyAnimations.getRotateAnimation(0,360,200));
+		sp_skin = getSharedPreferences("skin", MODE_PRIVATE);
+
+        ArcMenu arcMenu = (ArcMenu) findViewById(R.id.arc_menu);
+
+        final int itemCount = ITEM_DRAWABLES.length;
+        for (int i = 0; i < itemCount; i++) {
+            ImageView item = new ImageView(this);
+            item.setImageResource(ITEM_DRAWABLES[i]);
+
+            final int position = i;
+            arcMenu.addItem(item, new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(MainActivity.this, "position:" + position, Toast.LENGTH_SHORT).show();
+                }
+            });// Add a menu item
+        }
 	}
 
 
