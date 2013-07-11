@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
 
+import cn.nit.beauty.ui.CustomActivity;
+import cn.nit.beauty.ui.MainActivity;
+
 /**
  * Push消息处理receiver
  */

@@ -1,43 +1,27 @@
-package cn.nit.beauty;
+package cn.nit.beauty.ui;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
+import cn.nit.beauty.database.LaucherDataBase;
+import cn.nit.beauty.model.Category;
 import me.maxwin.view.XListView;
 import me.maxwin.view.XListView.IXListViewListener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.android.bitmapfun.util.ImageFetcher;
@@ -50,13 +34,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.aliyun.android.oss.OSSClient;
 import com.aliyun.android.oss.model.OSSObjectSummary;
 import com.aliyun.android.util.Pagination;
-import com.baidu.android.pushservice.PushConstants;
-import com.baidu.android.pushservice.PushManager;
-import com.baidu.android.pushservice.PushSettings;
 import com.baidu.mobstat.StatService;
-import com.lurencun.service.autoupdate.AppUpdate;
-import com.lurencun.service.autoupdate.AppUpdateService;
-import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
 
 public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavigationListener, 
 		IXListViewListener {
@@ -67,10 +45,11 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 	private int currentPage = 0;
 	private Pagination<OSSObjectSummary> pagination = null;
 	private OSSClient ossClient;
-	
+    LaucherDataBase database;
+
 	private String[] mLocations;
 	
-	private String category = "china";
+	private Category launcher;
 	
 	ContentTask task = new ContentTask(this, 2);
 
@@ -263,12 +242,13 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 		setContentView(R.layout.act_pull_to_refresh_sample);
 
 		Intent intent = getIntent();
-		category = intent.getStringExtra("category");
-		
-		
-		
-		
-		
+        launcher = (Category) intent.getSerializableExtra("launcher");
+
+
+
+
+        database = new LaucherDataBase(getApplicationContext());
+
 		ossClient = new OSSClient();
 		ossClient.setAccessId(Data.OSS_ACCESSID);
 		ossClient.setAccessKey(Data.OSS_ACCESSKEY);
@@ -311,13 +291,13 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
 	@Override
 	public void onRefresh() {
-		AddItemToContainer(++currentPage, 1, category);
+		AddItemToContainer(++currentPage, 1, launcher.getURL());
 
 	}
 
 	@Override
 	public void onLoadMore() {
-		AddItemToContainer(++currentPage, 2, category);
+		AddItemToContainer(++currentPage, 2, launcher.getURL());
 
 	}
 
@@ -333,7 +313,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		//category = Data.categoryMap.get(mLocations[itemPosition]);
 		pagination = null;
-		AddItemToContainer(currentPage, 3, category);
+		AddItemToContainer(currentPage, 3, launcher.getURL());
 		return true;
 	}
 	

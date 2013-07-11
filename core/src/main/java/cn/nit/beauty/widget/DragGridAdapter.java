@@ -77,7 +77,12 @@ public class DragGridAdapter extends BaseAdapter {
 			txt.setText(map.getTITLE().toString());
 			int url = map.getCATEGORY_ICON();
 			if(url!=-1)
-				img.setBackgroundResource(url);
+
+                try {
+                    img.setBackgroundResource(url);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 		/*	Drawable cachedImage = asyncImageLoader_Weibo.loadDrawable(context,
 					url, new ImageCallback_LW() {
 						public void imageLoaded(Drawable imageDrawable,

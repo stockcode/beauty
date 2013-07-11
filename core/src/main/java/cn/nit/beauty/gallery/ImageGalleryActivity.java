@@ -1,21 +1,12 @@
 package cn.nit.beauty.gallery;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import me.maxwin.view.XListView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.aliyun.android.oss.OSSClient;
 import com.aliyun.android.oss.model.OSSObject;
@@ -23,15 +14,12 @@ import com.aliyun.android.oss.model.OSSObjectSummary;
 import com.aliyun.android.util.Pagination;
 import com.baidu.mobstat.StatService;
 
-import cn.nit.beauty.BuildConfig;
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
-import cn.nit.beauty.BeautyActivity.StaggeredAdapter;
 import cn.nit.beauty.android.bitmapfun.util.DiskLruCache;
 import cn.nit.beauty.android.bitmapfun.util.ImageFetcher;
-import cn.nit.beauty.android.bitmapfun.util.Utils;
 import cn.nit.beauty.model.FolderInfo;
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -41,8 +29,6 @@ import android.os.Bundle;
 import android.os.AsyncTask.Status;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 
 public class ImageGalleryActivity extends SherlockActivity {
 	

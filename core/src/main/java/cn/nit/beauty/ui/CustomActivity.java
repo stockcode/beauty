@@ -1,4 +1,4 @@
-package cn.nit.beauty;
+package cn.nit.beauty.ui;
 
 import com.baidu.android.pushservice.PushConstants;
 

@@ -1,6 +1,7 @@
 package cn.nit.beauty.utils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.nit.beauty.R;
@@ -27,7 +28,7 @@ public class Data {
 			R.drawable.add_weibo };
 
 	public static String[] Item0 = { "亚洲", "欧美", "中国","我的收藏","VIP专区","更多"};
-	public static Map<String, String> categoryMap = new HashMap<String, String>(){{put("中国","china"); put("亚洲","asia"); put("欧美","occident"); }};
+	public static Map<String, List> categoryMap = new HashMap<String, List>();
 	public static int[] Item0_icon = { R.drawable.c_love_channel,R.drawable.c_net_new, R.drawable.c_user
 		,R.drawable.c_entertainment,R.drawable.c_financial,R.drawable.c_technoledge};
 

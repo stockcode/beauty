@@ -37,7 +37,7 @@ public class LaucherDataBase {
 	public LaucherDataBase(Context context) {
 		sContext = context;
 
-		helper = new DaoMaster.DevOpenHelper(context, DB_NAME, null);		
+		helper = new DaoMaster.DevOpenHelper(context, DB_NAME, null);
         db = helper.getWritableDatabase();                
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();

@@ -1,20 +1,14 @@
-package cn.nit.beauty;
+package cn.nit.beauty.ui;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.baidu.android.pushservice.PushConstants;
-import com.baidu.android.pushservice.PushManager;
 import com.baidu.mobstat.StatService;
-import com.squareup.otto.Subscribe;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -25,7 +19,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -45,11 +38,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import cn.nit.beauty.bus.BusProvider;
+import cn.nit.beauty.R;
 import cn.nit.beauty.bus.LauncherChangeEvent;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.model.Category;
-import cn.nit.beauty.ui.AddItemActivity;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.utils.FileOperation;
@@ -57,6 +49,7 @@ import cn.nit.beauty.widget.DragGridAdapter;
 import cn.nit.beauty.widget.DragGridView;
 import cn.nit.beauty.widget.MyAnimations;
 import cn.nit.beauty.widget.ScrollLayout;
+import de.greenrobot.event.EventBus;
 
 public class MainActivity extends Activity {
 
@@ -93,17 +86,18 @@ public class MainActivity extends Activity {
 	int addPosition=0,addPage=0;
 	
 	ImageButton btn_skin;SharedPreferences sp_skin;
-	BroadcastReceiver setpositionreceiver;IntentFilter setPositionFilter;boolean finishCount=false;
+	IntentFilter setPositionFilter;
+    boolean finishCount=false;
 	
 	Class<?>[] classes ={AboutActivity.class,UserCenterActivity.class,SetActivity.class,HelpActivity.class,FeedbackActivity.class};
 	ProgressDialog progressDialog;
 	
 	//0227更新壁纸切换：
-	BroadcastReceiver setbgreceiver;IntentFilter setbgFilter;
+	IntentFilter setbgFilter;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.layout_milaucher);					
+		setContentView(R.layout.layout_milaucher);
 		
 		database = new LaucherDataBase(getApplicationContext());
 		
@@ -287,7 +281,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					final int arg2, long arg3) {
-				String text = lists.get(ii).get(arg2).getTITLE();				
+				Category launcher = lists.get(ii).get(arg2);
+                String text = launcher.getTITLE();
 				Intent intent  = new Intent();
 				if(text != null && text.equals("none")){
 					return;
@@ -295,8 +290,7 @@ public class MainActivity extends Activity {
 					addPage = ii;addPosition = arg2;
 					intent.setClass(MainActivity.this, AddItemActivity.class);
 				} else {
-					String category = Data.categoryMap.get(text);
-					intent.putExtra("category", category);
+					intent.putExtra("launcher", launcher);
 					intent.setClass(MainActivity.this, BeautyActivity.class);
 
 				}
@@ -371,17 +365,18 @@ public class MainActivity extends Activity {
 		linear.addView(gridView, param);
 		return linear;
 	}
-	public void initBgBroadCast(){
-		setbgreceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				setImageBgAndRun();
-			}
-		};
-		setbgFilter = new IntentFilter(
-				"intentToBgChange");
-		registerReceiver(setbgreceiver, setbgFilter);
-	}
+//	public void initBgBroadCast(){
+//		setbgreceiver = new BroadcastReceiver() {
+//			@Override
+//			public void onReceive(Context context, Intent intent) {
+//				setImageBgAndRun();
+//			}
+//		};
+//		setbgFilter = new IntentFilter(
+//				"intentToBgChange");
+//		registerReceiver(setbgreceiver, setbgFilter);
+//	}
+
 	public void runAnimation() {
 		down = AnimationUtils.loadAnimation(MainActivity.this,
 				R.anim.griditem_del_down);
@@ -532,8 +527,7 @@ public class MainActivity extends Activity {
 
 
 
-    @Subscribe
-    public void onLauncherChanged(LauncherChangeEvent event) {
+    public void onEvent(LauncherChangeEvent event) {
 
         Category launcher = event.getLauncher();
 
@@ -609,7 +603,8 @@ public class MainActivity extends Activity {
 								f.delete();
 							}
 							sm.unregisterListener(lsn);
-							unregisterReceiver(setpositionreceiver);unregisterReceiver(setbgreceiver);
+
+
 							 if (!android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
 								clear(MainActivity.this.getCacheDir());
 							}
@@ -642,11 +637,13 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+
+        // Always unregister when an object no longer should be on the bus.
+        EventBus.getDefault().unregister(this);
+
 		PAGE_COUNT=Configure.countPages;PAGE_CURRENT=Configure.curentPage;		
 		StatService.onPause(this);
 
-        // Always unregister when an object no longer should be on the bus.
-        BusProvider.getInstance().unregister(this);
 	}
 
 	@Override
@@ -668,9 +665,10 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		StatService.onResume(this);
 
         // Register ourselves so that we can provide the initial value.
-        BusProvider.getInstance().register(this);
-	}		
+        EventBus.getDefault().registerSticky(this);
+
+		StatService.onResume(this);
+	}
 }

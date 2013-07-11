@@ -9,7 +9,7 @@ dependencies {
     compile  'de.greenrobot:greendao:1.3.1'
     compile  'com.github.rtyley:roboguice-sherlock:1.5'
     compile  'com.github.chrisbanes.photoview:library:1.2.1'
-    compile  'com.squareup:otto:1.3.4'
+    compile  'de.greenrobot:eventbus:2.0.2'
     compile  'com.baidu.android:mobstat:3.1'
     compile  'com.baidu.android:mobads:3.2'
     compile  'com.baidu.android:pushservice:2.2.1'
@@ -33,8 +33,8 @@ android {
     compileSdkVersion 17
     buildToolsVersion "17.0.0"
 
-    defaultConfig {
-        minSdkVersion 7
-        targetSdkVersion 16
-    }
+//    defaultConfig {
+//        minSdkVersion 7
+//        targetSdkVersion 16
+//    }
 }

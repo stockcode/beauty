@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,15 +15,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.squareup.otto.Produce;
-
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.AddItemAdapter;
 import cn.nit.beauty.adapter.ItemContentAdapter;
-import cn.nit.beauty.bus.BusProvider;
 import cn.nit.beauty.bus.LauncherChangeEvent;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.model.Category;
+import de.greenrobot.event.EventBus;
 
 
 public class AddItemActivity extends Activity implements OnClickListener, OnItemClickListener{
@@ -40,13 +37,11 @@ public class AddItemActivity extends Activity implements OnClickListener, OnItem
     @Override
     protected void onResume() {
         super.onResume();
-        BusProvider.getInstance().register(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        BusProvider.getInstance().unregister(this);
     }
 
     @Override
@@ -146,7 +141,7 @@ public class AddItemActivity extends Activity implements OnClickListener, OnItem
 				if(isChoiceChanged.get(itemData.get(i).getTITLE())){
 					database.updateChoice(itemData.get(i));
 
-                    BusProvider.getInstance().post(produceLauncherChange(itemData.get(i)));
+                    EventBus.getDefault().postSticky(new LauncherChangeEvent(itemData.get(i)));
 				}
 			}
 		}
@@ -154,10 +149,7 @@ public class AddItemActivity extends Activity implements OnClickListener, OnItem
 
 	}
 
-    @Produce
-    public LauncherChangeEvent produceLauncherChange(Category launcher) {
-        return new LauncherChangeEvent(launcher);
-    }
+
 	public void startInAnimation(){
 		Animation a = AnimationUtils.loadAnimation(AddItemActivity.this, R.anim.default_toleft);
 		final Animation b = AnimationUtils.loadAnimation(AddItemActivity.this, R.anim.default_fromright);

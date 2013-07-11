@@ -1,4 +1,4 @@
-package cn.nit.beauty;
+package cn.nit.beauty.ui;
 
 public class HelpActivity {
 

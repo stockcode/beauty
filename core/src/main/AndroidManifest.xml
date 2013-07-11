@@ -53,7 +53,7 @@
 		<meta-data android:name="BaiduMobAd_WIFI_LOCATION" android:value="true" />
 
         <activity
-            android:name=".LoadingActivity"
+            android:name=".ui.LoadingActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
@@ -64,7 +64,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.NoTitleBar" >
@@ -79,7 +79,7 @@
                     android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".BeautyActivity"
+            android:name=".ui.BeautyActivity"
             android:launchMode="singleTask"
             android:parentActivityName=".MainActivity" >
             <meta-data
@@ -87,7 +87,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".ImageListActivity"
+            android:name=".ui.ImageListActivity"
             android:parentActivityName=".BeautyActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -101,7 +101,7 @@
                 android:value=".ImageListActivity" />
         </activity>
         <activity
-            android:name="cn.nit.beauty.CustomActivity"
+            android:name=".ui.CustomActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="Push_notification_test" >
         </activity>

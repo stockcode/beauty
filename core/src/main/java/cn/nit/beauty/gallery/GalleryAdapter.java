@@ -4,34 +4,18 @@
  */
 package cn.nit.beauty.gallery;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
 import uk.co.senab.photoview.PhotoView;
-import me.maxwin.view.XListView;
-import cn.nit.beauty.BeautyActivity;
-import cn.nit.beauty.ImageListActivity;
-import cn.nit.beauty.R;
-import cn.nit.beauty.android.bitmapfun.util.DiskLruCache;
 import cn.nit.beauty.android.bitmapfun.util.ImageFetcher;
 import cn.nit.beauty.model.FolderInfo;
-import cn.nit.beauty.widget.ScaleImageView;
+
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.BaseAdapter;
-import android.widget.Gallery;
-import android.widget.ShareActionProvider;
-import android.widget.TextView;
 
 public class GalleryAdapter extends PagerAdapter {
 	

@@ -1,17 +1,13 @@
-package cn.nit.beauty;
+package cn.nit.beauty.ui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
+import cn.nit.beauty.Helper;
+import cn.nit.beauty.R;
 import me.maxwin.view.XListView;
 import me.maxwin.view.XListView.IXListViewListener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,23 +15,15 @@ import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-import cn.nit.beauty.Helper;
-import cn.nit.beauty.R;
-import cn.nit.beauty.BeautyActivity.StaggeredAdapter.ViewHolder;
+
 import cn.nit.beauty.android.bitmapfun.util.ImageFetcher;
 import cn.nit.beauty.gallery.ImageGalleryActivity;
 import cn.nit.beauty.model.FolderInfo;

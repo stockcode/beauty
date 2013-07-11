@@ -1,10 +1,11 @@
-package cn.nit.beauty;
+package cn.nit.beauty.ui;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +20,8 @@ import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
 import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
 
+import cn.nit.beauty.R;
+import cn.nit.beauty.Utils;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.model.Category;
 import cn.nit.beauty.utils.Configure;
@@ -26,7 +29,6 @@ import cn.nit.beauty.utils.Data;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.KeyEvent;
 
 public class LoadingActivity extends Activity {
@@ -119,21 +121,36 @@ public class LoadingActivity extends Activity {
 				List<Category> categories = new ArrayList<Category>();
 				
 				String json = new String(ossObject.getData(), "UTF-8");
-				JSONArray jsonArray = new JSONArray(json);
-				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject jsonObject = jsonArray.getJSONObject(i);					
-					Category category = new Category();
-                    category.setURL(jsonObject.getString("URL"));
-					category.setCATEGORY(jsonObject.getString("CATEGORY"));
-					category.setCATEGORY_ICON(jsonObject.getInt("CATEGORY_ICON"));
-					category.setTITLE(jsonObject.getString("TITLE"));
-					category.setICON(jsonObject.getInt("ICON"));
-                    category.setCHOICE(false);
-					categories.add(category);
-				}
-				
 
+                JSONObject jsonObject = new JSONObject(json);
+				JSONArray jsonCategories = jsonObject.getJSONArray("categories");
+				for (int i = 0; i < jsonCategories.length(); i++) {
+					JSONObject obj = jsonCategories.getJSONObject(i);
+                        Category category = new Category();
+                        category.setURL(obj.getString("URL"));
+                        category.setCATEGORY(obj.getString("CATEGORY"));
+                        category.setCATEGORY_ICON(obj.getInt("CATEGORY_ICON"));
+                        category.setTITLE(obj.getString("TITLE"));
+                        category.setICON(obj.getInt("ICON"));
+                        category.setCHOICE(false);
+                        categories.add(category);
+				}
 				database.insertItems(categories);
+
+                JSONObject mapObj = jsonObject.getJSONObject("roots");
+                Iterator iter = mapObj.keys();
+                while (iter.hasNext()) {
+                    String category = iter.next().toString();
+                    JSONArray jsonUrls = mapObj.getJSONArray(category);
+
+                    List<String> urls = new ArrayList<String>();
+                    for (int i = 0; i < jsonUrls.length(); i++) {
+                        urls.add(jsonUrls.getString(i));
+                    }
+
+                    Data.categoryMap.put(category, urls);
+
+                }
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (JSONException e) {
