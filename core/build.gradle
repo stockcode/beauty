@@ -13,10 +13,10 @@ dependencies {
     compile  'com.baidu.android:mobstat:3.1'
     compile  'com.baidu.android:mobads:3.2'
     compile  'com.baidu.android:pushservice:2.2.1'
-    compile('cn.nit:autoupdate:1.0.0')
+    //compile('cn.nit:autoupdate:1.0.0')
 
 	compile project(':actionbarsherlock')
-    //compile project(':autoupdate')
+    compile project(':autoupdate')
 	
 }
 
