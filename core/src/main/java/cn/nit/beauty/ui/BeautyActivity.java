@@ -43,90 +43,17 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 	private XListView mAdapterView = null;
 	private StaggeredAdapter mAdapter = null;
 	private int currentPage = 0;
-	private Pagination<OSSObjectSummary> pagination = null;
-	private OSSClient ossClient;
+    private int pageCount = 10;
+
     LaucherDataBase database;
+
+    private OSSClient ossClient;
 
 	private String[] mLocations;
 	
 	private Category launcher;
-	
-	ContentTask task = new ContentTask(this, 2);
 
-	
-	private class ContentTask extends
-			AsyncTask<String, Integer, List<FolderInfo>> {
-
-		private Context mContext;
-		private int mType = 1;
-
-		public ContentTask(Context context, int type) {
-			super();
-			mContext = context;
-			mType = type;
-
-		}
-
-		@Override
-		protected List<FolderInfo> doInBackground(String... params) {
-			String category = params[0] + "/";
-			
-			List<FolderInfo> folderInfos = new ArrayList<FolderInfo>();
-
-			try {
-				if (!Helper.checkConnection(mContext))
-					return null;
-
-				if (pagination == null) {
-					pagination = ossClient
-							.viewFolder("nit-photo", category, 10);
-				} else {
-					pagination = pagination.next();
-				}
-
-				for (OSSObjectSummary objectSummary : pagination.getContents()) {
-					if (objectSummary.getKey().equals(category))
-						continue;
-					
-					FolderInfo newsInfo1 = new FolderInfo();
-					newsInfo1.setAlbid(objectSummary.getKey());
-					newsInfo1.setIsrc(objectSummary.getKey() + "cover.jpg");
-					newsInfo1.setMsg(objectSummary.getKey());
-					folderInfos.add(newsInfo1);
-				}
-
-				return folderInfos;
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(List<FolderInfo> result) {
-			if (mType == 1) {
-
-				mAdapter.addItemTop(result);
-				mAdapter.notifyDataSetChanged();
-				mAdapterView.stopRefresh();
-
-			} else if (mType == 2) {
-				mAdapterView.stopLoadMore();
-				mAdapter.addItemLast(result);
-				mAdapter.notifyDataSetChanged();
-			} else if (mType == 3) {
-				mAdapter.clear();
-				mAdapter.addItemLast(result);
-				mAdapter.notifyDataSetChanged();
-			}
-
-		}
-
-		@Override
-		protected void onPreExecute() {
-		}
-	}
+    private List<String> folders;
 
 	/**
 	 * 添加内容
@@ -136,17 +63,42 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 	 *            1为下拉刷新 2为加载更多
 	 */
 	private void AddItemToContainer(int pageindex, int type, String category) {
-		if (task.getStatus() != Status.RUNNING) {
-			if (pagination == null || pagination.hasNext()) {
-				ContentTask task = new ContentTask(this, type);
-				task.execute(category);
+			if (pageindex * pageCount < folders.size()) {
+
+                List<FolderInfo> folderInfos = new ArrayList<FolderInfo>();
+
+                for(int i = pageindex; i < (pageindex+1) * pageCount; i++)
+                {
+                    if (i == folders.size()) break;
+
+                    FolderInfo newsInfo1 = new FolderInfo();
+                    newsInfo1.setAlbid(folders.get(i));
+                    newsInfo1.setIsrc(folders.get(i) + "cover.jpg");
+                    newsInfo1.setMsg(folders.get(i));
+                    folderInfos.add(newsInfo1);
+                }
+
+                if (type == 1) {
+
+                    mAdapter.addItemTop(folderInfos);
+                    mAdapter.notifyDataSetChanged();
+                    mAdapterView.stopRefresh();
+
+                } else if (type == 2) {
+                    mAdapterView.stopLoadMore();
+                    mAdapter.addItemLast(folderInfos);
+                    mAdapter.notifyDataSetChanged();
+                } else if (type == 3) {
+                    mAdapter.clear();
+                    mAdapter.addItemLast(folderInfos);
+                    mAdapter.notifyDataSetChanged();
+                }
+
 			} else {
 				mAdapterView.stopRefresh();
 				mAdapterView.stopLoadMore();
 			}
-
-		}
-	}
+    }
 
 	public class StaggeredAdapter extends BaseAdapter {
 		private Context mContext;
@@ -244,7 +196,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 		Intent intent = getIntent();
         launcher = (Category) intent.getSerializableExtra("launcher");
 
-
+        folders = Data.categoryMap.get(launcher.getURL());
 
 
         database = new LaucherDataBase(getApplicationContext());
@@ -312,7 +264,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		//category = Data.categoryMap.get(mLocations[itemPosition]);
-		pagination = null;
 		AddItemToContainer(currentPage, 3, launcher.getURL());
 		return true;
 	}
