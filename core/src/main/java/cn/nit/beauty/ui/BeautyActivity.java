@@ -65,7 +65,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
             FolderInfo newsInfo1 = new FolderInfo();
             newsInfo1.setAlbid(selectedFolders.get(i));
-            newsInfo1.setIsrc(selectedFolders.get(i) + "cover.jpg");
+            newsInfo1.setIsrc(selectedFolders.get(i) + "thumb/cover.jpg");
             newsInfo1.setMsg(selectedFolders.get(i));
             folderInfos.add(newsInfo1);
         }
@@ -230,7 +230,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             holder = (ViewHolder) convertView.getTag();
             holder.imageView.setImageWidth(duitangInfo.getWidth());
             holder.imageView.setImageHeight(duitangInfo.getHeight());
-            holder.contentView.setText(duitangInfo.getMsg());
+            //holder.contentView.setText(duitangInfo.getMsg());
             holder.objectKey = duitangInfo.getAlbid();
             mImageFetcher.loadImage(duitangInfo.getIsrc(), holder.imageView);
             return convertView;

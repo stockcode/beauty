@@ -32,7 +32,6 @@ public class LaucherDataBase {
     private DaoMaster daoMaster;
     private DaoSession daoSession;
     private CategoryDao categoryDao;
-    private Cursor cursor;
 
 	public LaucherDataBase(Context context) {
 		sContext = context;
@@ -42,7 +41,6 @@ public class LaucherDataBase {
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
         categoryDao = daoSession.getCategoryDao();
-        cursor = db.query(categoryDao.getTablename(), categoryDao.getAllColumns(), null, null, null, null, null);
 	}
 	
 	public void upgrade() {
@@ -61,7 +59,6 @@ public class LaucherDataBase {
 	public void updateChoice(Category category) {
 			categoryDao.update(category);
 
-        cursor.requery();
 	}
 
 	public void insertItems(List<Category> categories) {
@@ -71,7 +68,6 @@ public class LaucherDataBase {
 			categoryDao.insert(category);
 		}
 
-        cursor.requery();
 	}
 
 	public List<Category> getItems(String from) {
@@ -106,7 +102,6 @@ public class LaucherDataBase {
 	public void deleteItems() {
 		categoryDao.deleteAll();
 
-        cursor.requery();
 	}
 	
 	public boolean hasLauncher() {		
@@ -117,7 +112,6 @@ public class LaucherDataBase {
 		DeleteQuery<Category> query = categoryDao.queryBuilder().where(Properties.CHOICE.eq(true)).buildDelete();
 		query.executeDeleteWithoutDetachingEntities();
 
-        cursor.requery();
 	}
 
 	public List<Category> getLauncher() {
@@ -131,7 +125,6 @@ public class LaucherDataBase {
 			categoryDao.insert(launcher);
 		}
 
-        cursor.requery();
 	}
 
 }

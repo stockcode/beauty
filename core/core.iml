@@ -3,8 +3,8 @@
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
-        <option name="SELECTED_BUILD_VARIANT" value="debug" />
-        <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
+        <option name="SELECTED_BUILD_VARIANT" value="mm-debug" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleMmDebug" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
@@ -20,19 +20,33 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/build/classes/debug" />
+    <output url="file://$MODULE_DIR$/build/classes/mm/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/build/source/r/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/debug" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/r/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/r/mm/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/mm/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/mm/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/mm/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/mm/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/r/mm/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/aidl/mm/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/rs/mm/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/source/buildConfig/mm/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/res/rs/mm/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mm/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mm/assets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mm/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mm/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mm/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mm/res" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mm/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestMm/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestMm/assets" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestMm/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestMm/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestMm/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestMm/res" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/instrumentTestMm/resources" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/aidl" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/java" isTestSource="false" />

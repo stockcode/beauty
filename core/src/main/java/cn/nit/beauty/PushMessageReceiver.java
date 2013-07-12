@@ -72,11 +72,11 @@ public class PushMessageReceiver extends BroadcastReceiver {
 			Log.d(TAG, "onMessage: method : " + method);
 			Log.d(TAG, "onMessage: result : " + errorCode);
 			Log.d(TAG, "onMessage: content : " + content);
-			Toast.makeText(
-					context,
-					"method : " + method + "\n result: " + errorCode
-							+ "\n content = " + content, Toast.LENGTH_SHORT)
-					.show();
+//			Toast.makeText(
+//					context,
+//					"method : " + method + "\n result: " + errorCode
+//							+ "\n content = " + content, Toast.LENGTH_SHORT)
+//					.show();
 
 			Intent responseIntent = null;
 			responseIntent = new Intent(Utils.ACTION_RESPONSE);

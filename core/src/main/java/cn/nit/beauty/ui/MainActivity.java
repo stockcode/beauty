@@ -219,20 +219,6 @@ public class MainActivity extends Activity {
 		lst_views.snapToScreen(0);
 	}
 
-	public void resetNull(int position){
-		if (getFristNonePosition(lists.get(position)) < 0 ) {
-
-			if (position == Configure.countPages - 1 || 
-					getFristNonePosition(lists.get(lists.size() - 1)) < 0) {
-				lists.add(new ArrayList<Category>());
-				//lists.get(lists.size() - 1).add(map_null);
-				for (int i = 1; i < PAGE_SIZE; i++)
-					lists.get(lists.size() - 1).add(map_none);
-				lst_views.addView(addGridView(Configure.countPages));
-				Configure.countPages++;
-			}
-		}
-	}
 	public int getFristNonePosition(List<Category> array) {
 		for (int i = 0; i < array.size(); i++) {
             Category category = array.get(i);
@@ -260,10 +246,20 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					final int arg2, long arg3) {
+
 				Category launcher = lists.get(ii).get(arg2);
+
+                if (launcher.getTITLE().equals("none")) return;
+
+                if (launcher.getURL().equals("favorite") || launcher.getURL().equals("vip") || launcher.getURL().equals("more")) {
+                    Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String text = launcher.getTITLE();
 				Intent intent  = new Intent();
 				if(text != null && !text.equals("none")){
+
 					intent.putExtra("launcher", launcher);
 					intent.setClass(MainActivity.this, BeautyActivity.class);
                     startActivity(intent);
@@ -458,7 +454,7 @@ public class MainActivity extends Activity {
 	}
 
     int[] ITEM_DRAWABLES = { R.drawable.composer_add, R.drawable.composer_camera, R.drawable.composer_music,
-            R.drawable.composer_place, R.drawable.composer_sleep, R.drawable.composer_thought, R.drawable.composer_with };
+            R.drawable.composer_place, R.drawable.composer_with };
 
 	public void initPath() {
 		MyAnimations.initOffset(MainActivity.this);
@@ -477,6 +473,11 @@ public class MainActivity extends Activity {
 
                 @Override
                 public void onClick(View v) {
+                    if (position > 0) {
+                        Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     Intent intent = new Intent(MainActivity.this, classes[position]);
                     startActivity(intent);
                     //overridePendingTransition(R.anim.anim_fromright_toup6, R.anim.anim_down_toleft6);
@@ -533,7 +534,7 @@ public class MainActivity extends Activity {
 						finish();return true;
 					}
 					progressDialog = ProgressDialog.show(MainActivity.this, "请稍等片刻...",
-							"小夜正在努力的为您保存状态", true, true);
+							"正在努力的为您保存状态", true, true);
 					new Thread(){
 						public void run(){
 

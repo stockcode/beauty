@@ -21,7 +21,7 @@
             android:layout_toLeftOf="@+id/btn_ok"
             android:layout_toRightOf="@+id/btn_back"
             android:background="#0EA6EE"
-            android:text="AddChoice"	android:gravity="center"
+            android:text="类别列表"	android:gravity="center"
             android:textColor="#ffffff" />
 
         <Button

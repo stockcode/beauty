@@ -8,7 +8,7 @@ dependencies {
     compile 'com.google.android:support-v4:r6'
     compile  'de.greenrobot:greendao:1.3.1'
     compile  'com.github.rtyley:roboguice-sherlock:1.5'
-    compile  'com.github.chrisbanes.photoview:library:1.2.1'
+    //compile  'com.github.chrisbanes.photoview:library:1.2.1'
     compile  'de.greenrobot:eventbus:2.0.2'
     compile  'com.baidu.android:mobstat:3.1'
     compile  'com.baidu.android:mobads:3.2'
@@ -33,6 +33,53 @@ android {
     compileSdkVersion 17
     buildToolsVersion "17.0.0"
 
+    project.archivesBaseName = "beauty";
+
+    signingConfigs {
+        release{
+            storeFile file("nit.keystore")
+            storePassword "790624"
+            keyAlias "mykey"
+            keyPassword "790624"
+        }
+    }
+
+    buildTypes {
+        debug {
+            packageNameSuffix = ".debug"
+            versionNameSuffix = "-DEBUG"
+            //signingConfig signingConfigs.debug
+        }
+
+        release {
+            signingConfig signingConfigs.release
+        }
+//        buildVariants.each { variant ->
+//
+//            apk = variant.packageApplication.outputFile;
+//
+//            if (variant.buildType.name == "release") {
+//                newName = apk.name.replace(".apk", "-v" + defaultConfig.versionName + "-RELEASE.apk");
+//            } else {
+//                newName = apk.name.replace(".apk", "-v" + defaultConfig.versionName + "-SNAPSHOT.apk");
+//            }
+//
+//            newName = newName.replace("-" + variant.buildType.name, "");
+//
+//            variant.packageApplication.outputFile = new File(apk.parentFile, newName);
+//            if (variant.zipAlign) {
+//                variant.zipAlign.outputFile = new File(apk.parentFile, newName.replace("-unaligned", ""));
+//            }
+//        }
+    }
+
+
+    productFlavors {
+        mm {
+            packageName "cn.nit.beauty"
+            versionCode 2
+        }
+    }
 //    defaultConfig {
 //        minSdkVersion 7
 //        targetSdkVersion 16

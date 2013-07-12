@@ -25,7 +25,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import cn.nit.beauty.android.bitmapfun.util.ImageFetcher;
-import cn.nit.beauty.gallery.ImageGalleryActivity;
 import cn.nit.beauty.model.FolderInfo;
 import cn.nit.beauty.widget.ScaleImageView;
 
@@ -77,9 +76,11 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
 					if (objectSummary.getKey().equals(objectKey))
 						continue;
 
+                    String key = objectSummary.getKey();
+                    key = key.substring(0, key.lastIndexOf("/")) + "/thumb" + key.substring(key.lastIndexOf("/"), key.length());
 					FolderInfo newsInfo1 = new FolderInfo();
 					newsInfo1.setAlbid(objectSummary.getKey());
-					newsInfo1.setIsrc(objectSummary.getKey());
+					newsInfo1.setIsrc(key);
 					newsInfo1.setMsg(objectSummary.getKey());
 					folderInfos.add(newsInfo1);
 				}
@@ -172,9 +173,9 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
             }
 
             holder = (ViewHolder) convertView.getTag();
-            holder.imageView.setImageWidth(duitangInfo.getWidth());
-            holder.imageView.setImageHeight(duitangInfo.getHeight());
-            holder.contentView.setText(duitangInfo.getMsg());
+            //holder.imageView.setImageWidth(duitangInfo.getWidth());
+            //holder.imageView.setImageHeight(duitangInfo.getHeight());
+            //holder.contentView.setText(duitangInfo.getMsg());
             holder.objectKey = duitangInfo.getAlbid();
             mImageFetcher.loadImage(duitangInfo.getIsrc(), holder.imageView);
             return convertView;
@@ -237,16 +238,6 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
         mImageFetcher.setLoadingImage(R.drawable.empty_photo);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return true;
-    }
 
     @Override
     protected void onResume() {

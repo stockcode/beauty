@@ -1,4 +1,4 @@
-package cn.nit.beauty.gallery;
+package cn.nit.beauty.ui;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,7 +9,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.aliyun.android.oss.OSSClient;
-import com.aliyun.android.oss.model.OSSObject;
 import com.aliyun.android.oss.model.OSSObjectSummary;
 import com.aliyun.android.util.Pagination;
 import com.baidu.mobstat.StatService;
@@ -18,7 +17,11 @@ import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.android.bitmapfun.util.DiskLruCache;
 import cn.nit.beauty.android.bitmapfun.util.ImageFetcher;
+import cn.nit.beauty.adapter.GalleryAdapter;
+import cn.nit.beauty.bus.ImageChangeEvent;
+import cn.nit.beauty.gallery.HackyViewPager;
 import cn.nit.beauty.model.FolderInfo;
+import de.greenrobot.event.EventBus;
 
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +47,8 @@ public class ImageGalleryActivity extends SherlockActivity {
 	private GalleryAdapter mAdapter;
 	private ViewPager mViewPager;
 	private ImageFetcher mImageFetcher;
-	
+    private ShareActionProvider actionProvider;
+
 	private OSSClient ossClient;
 	
 	private String objectKey;
@@ -91,11 +95,8 @@ public class ImageGalleryActivity extends SherlockActivity {
         // Set file with share history to the provider and set the share intent.
         MenuItem actionItem = menu.findItem(R.id.menu_item_share_action_provider_action_bar);        
         
-        ShareActionProvider actionProvider = (ShareActionProvider) actionItem.getActionProvider();
+        actionProvider = (ShareActionProvider) actionItem.getActionProvider();
         actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
-        // Note that you can set/change the intent any time,
-        // say when the user has selected an image.
-        actionProvider.setShareIntent(createShareIntent(objectKey));
 
         return true;
     }
@@ -128,6 +129,10 @@ public class ImageGalleryActivity extends SherlockActivity {
         
         return shareIntent;
     }
+
+    public void onEvent(ImageChangeEvent event) {
+        actionProvider.setShareIntent(createShareIntent(event.getObjectkey()));
+    }
     
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -140,14 +145,18 @@ public class ImageGalleryActivity extends SherlockActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		StatService.onPause(this);		
+		StatService.onPause(this);
+
+        EventBus.getDefault().unregister(this);
 	}
 
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		StatService.onResume(this);		
+		StatService.onResume(this);
+
+        EventBus.getDefault().register(this);
 	}	
 	
 	ContentTask task = new ContentTask(this);
@@ -171,17 +180,11 @@ public class ImageGalleryActivity extends SherlockActivity {
 				if (!Helper.checkConnection(mContext))
 					return null;
 
-				OSSObject ossObject = ossClient.getObjectSummary("nit-photo", objectKey);
 				FolderInfo newsInfo1 = new FolderInfo();
-				newsInfo1.setAlbid(ossObject.getObjectKey());
-				newsInfo1.setIsrc(ossObject.getObjectKey());
-				newsInfo1.setMsg(ossObject.getObjectKey());
-				folderInfos.add(newsInfo1);
-				
+
 				Pagination<OSSObjectSummary> pagination = ossClient.viewFolder("nit-photo", folder);				
 				for (OSSObjectSummary objectSummary : pagination.getContents()) {
-					if (objectSummary.getKey().equals(objectKey))
-						continue;
+
 					
 					if (objectSummary.getKey().equals(folder))
 						continue;
@@ -190,7 +193,11 @@ public class ImageGalleryActivity extends SherlockActivity {
 					newsInfo1.setAlbid(objectSummary.getKey());
 					newsInfo1.setIsrc(objectSummary.getKey());
 					newsInfo1.setMsg(objectSummary.getKey());
-					folderInfos.add(newsInfo1);
+
+                    if (objectSummary.getKey().equals(objectKey))
+                        folderInfos.add(0, newsInfo1);
+                    else
+					    folderInfos.add(newsInfo1);
 				}
 
 				return folderInfos;

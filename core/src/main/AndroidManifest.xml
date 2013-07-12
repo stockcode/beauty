@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.nit.beauty"
-    android:versionCode="1"
+    android:versionCode="2"
     android:versionName="1.0.1" >
 
     <uses-sdk android:minSdkVersion="7" />
@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/Theme.Sherlock.Light" >
 
@@ -67,38 +67,40 @@
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
                 android:name=".ui.AddItemActivity"
                 android:launchMode="singleTask"
-                android:parentActivityName=".MainActivity"
+                android:parentActivityName=".ui.MainActivity"
                 android:theme="@android:style/Theme.NoTitleBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".MainActivity" />
+                    android:value=".ui.MainActivity" />
         </activity>
         <activity
             android:name=".ui.BeautyActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".ui.MainActivity" />
         </activity>
         <activity
             android:name=".ui.ImageListActivity"
-            android:parentActivityName=".BeautyActivity" >
+            android:launchMode="singleTask"
+            android:parentActivityName=".ui.BeautyActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".BeautyActivity" />
+                android:value=".ui.BeautyActivity" />
         </activity>
         <activity
-            android:name="cn.nit.beauty.gallery.ImageGalleryActivity"
-            android:parentActivityName=".ImageListActivity" >
+            android:name=".ui.ImageGalleryActivity"
+            android:parentActivityName=".ui.ImageListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ImageListActivity" />
+                android:value=".ui.ImageListActivity" />
         </activity>
         <activity
             android:name=".ui.CustomActivity"

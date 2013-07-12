@@ -2,11 +2,13 @@
  * GalleryAdapter.java
  * @version 1.0
  */
-package cn.nit.beauty.gallery;
+package cn.nit.beauty.adapter;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import cn.nit.beauty.bus.ImageChangeEvent;
+import de.greenrobot.event.EventBus;
 import uk.co.senab.photoview.PhotoView;
 import cn.nit.beauty.android.bitmapfun.util.ImageFetcher;
 import cn.nit.beauty.model.FolderInfo;
@@ -33,12 +35,15 @@ public class GalleryAdapter extends PagerAdapter {
 	@Override
 	public View instantiateItem(ViewGroup container, int position) {
 		FolderInfo folderInfo = mInfos.get(position);
-		PhotoView photoView = new PhotoView(container.getContext());
+
+        PhotoView photoView = new PhotoView(container.getContext());
 		
 		mImageFetcher.loadImage(folderInfo.getIsrc(), photoView);		
 		
 		// Now just add PhotoView to ViewPager and return it
 		container.addView(photoView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+
+        EventBus.getDefault().post(new ImageChangeEvent(folderInfo.getAlbid()));
 
 		return photoView;
 	}

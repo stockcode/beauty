@@ -18,6 +18,7 @@ package cn.nit.beauty.android.bitmapfun.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -37,6 +38,7 @@ import java.net.URL;
 import cn.nit.beauty.BuildConfig;
 
 import com.aliyun.android.oss.OSSClient;
+import com.aliyun.android.oss.model.OSSObject;
 
 /**
  * A simple subclass of {@link ImageResizer} that fetches and resizes images
@@ -112,6 +114,7 @@ public class ImageFetcher extends ImageResizer {
 
 		if (f != null) {
 			// Return a sampled down version
+            //return BitmapFactory.decodeFile(f.toString());
 			return decodeSampledBitmapFromFile(f.toString(), mImageWidth,
 					mImageHeight);
 		}
