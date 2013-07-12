@@ -1,6 +1,7 @@
 package cn.nit.beauty.widget;
 
 import cn.nit.beauty.R;
+import cn.nit.beauty.adapter.DragGridAdapter;
 import cn.nit.beauty.utils.Configure;
 import android.app.Service;
 import android.content.Context;
@@ -187,7 +188,7 @@ public class DragGridView extends GridView {
 				}
 			}
 		}else {
-			//¿ªÊ¼MOVE
+			//ï¿½ï¿½Ê¼MOVE
 			
 			if((x>=(moveNum+1)*Configure.screenWidth-20*Configure.screenDensity || x<=moveNum*Configure.screenWidth)&&
 					!Configure.isChangingPage) stopCount++;

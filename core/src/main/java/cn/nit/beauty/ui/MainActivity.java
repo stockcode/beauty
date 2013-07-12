@@ -44,9 +44,8 @@ import cn.nit.beauty.bus.LauncherChangeEvent;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.model.Category;
 import cn.nit.beauty.utils.Configure;
-import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.utils.FileOperation;
-import cn.nit.beauty.widget.DragGridAdapter;
+import cn.nit.beauty.adapter.DragGridAdapter;
 import cn.nit.beauty.widget.DragGridView;
 import cn.nit.beauty.widget.MyAnimations;
 import cn.nit.beauty.widget.ScrollLayout;
@@ -62,7 +61,7 @@ public class MainActivity extends Activity {
 	private RelativeLayout composerButtonsShowHideButton;
 
 	Category map_none = new Category();
-	Category map_null = new Category();
+	//Category map_null = new Category();
 	List<Category> addDate = new ArrayList<Category>();// 每一页的数据
 	/** GridView. */
 	private ScrollLayout lst_views;
@@ -83,14 +82,12 @@ public class MainActivity extends Activity {
 	
 	SensorManager sm;SensorEventListener lsn;
 	boolean isClean = false;Vibrator vibrator;int rockCount = 0;
-	
-	int addPosition=0,addPage=0;
-	
+
 	ImageButton btn_skin;SharedPreferences sp_skin;
 	IntentFilter setPositionFilter;
     boolean finishCount=false;
 	
-	Class<?>[] classes ={AboutActivity.class,UserCenterActivity.class,SetActivity.class,HelpActivity.class,FeedbackActivity.class};
+	Class<?>[] classes ={AddItemActivity.class, AboutActivity.class,UserCenterActivity.class,SetActivity.class,HelpActivity.class,FeedbackActivity.class};
 	ProgressDialog progressDialog;
 	
 	//0227更新壁纸切换：
@@ -106,7 +103,7 @@ public class MainActivity extends Activity {
 		addDate = lstDate;
 
 		map_none.setTITLE("none");
-		map_null.setTITLE(null);
+
 		if(lstDate.size()==0)
 			Toast.makeText(MainActivity.this, "网络有点不给力哦", 2200).show();
 		init();
@@ -196,12 +193,8 @@ public class MainActivity extends Activity {
 					.size() ? lstDate.size() : PAGE_SIZE * (i + 1)); j++)
 				lists.get(i).add(lstDate.get(j));
 		}
-		boolean isLast = true;
+
 		for (int i = lists.get(Configure.countPages - 1).size(); i < PAGE_SIZE; i++) {
-			if (isLast) {
-				lists.get(Configure.countPages - 1).add(map_null);
-				isLast = false;
-			} else
 				lists.get(Configure.countPages - 1).add(map_none);
 		}
 	}
@@ -227,38 +220,23 @@ public class MainActivity extends Activity {
 	}
 
 	public void resetNull(int position){
-		if (getFristNonePosition(lists.get(position)) > 0&& getFristNullPosition(lists.get(position)) < 0) {
-			lists.get(position).set(getFristNonePosition(lists.get(position)),map_null);
-		}
-		if (getFristNonePosition(lists.get(position)) < 0&& getFristNullPosition(lists.get(position)) < 0) {
+		if (getFristNonePosition(lists.get(position)) < 0 ) {
+
 			if (position == Configure.countPages - 1 || 
-					(getFristNullPosition(lists.get(lists.size() - 1)) < 0 && getFristNonePosition(lists.get(lists.size() - 1)) < 0)) {
+					getFristNonePosition(lists.get(lists.size() - 1)) < 0) {
 				lists.add(new ArrayList<Category>());
-				lists.get(lists.size() - 1).add(map_null);
+				//lists.get(lists.size() - 1).add(map_null);
 				for (int i = 1; i < PAGE_SIZE; i++)
 					lists.get(lists.size() - 1).add(map_none);
 				lst_views.addView(addGridView(Configure.countPages));
 				Configure.countPages++;
-			} else if (getFristNonePosition(lists.get(lists.size() - 1)) > 0
-					&& getFristNullPosition(lists.get(lists.size() - 1)) < 0) {
-				lists.get(lists.size() - 1).set(getFristNonePosition(lists.get(lists.size() - 1)),map_null);
-				((DragGridAdapter) ((gridviews.get(lists.size() - 1)).getAdapter())).notifyDataSetChanged();
 			}
 		}
 	}
 	public int getFristNonePosition(List<Category> array) {
 		for (int i = 0; i < array.size(); i++) {
-			if (array.get(i) != null && array.get(i).getTITLE() != null
-					&& array.get(i).getTITLE().equals("none")) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	public int getFristNullPosition(List<Category> array) {
-		for (int i = 0; i < array.size(); i++) {
-			if (array.get(i) != null && array.get(i).getTITLE() == null) {
+            Category category = array.get(i);
+			if (category.getTITLE().equals("none")) {
 				return i;
 			}
 		}
@@ -285,19 +263,14 @@ public class MainActivity extends Activity {
 				Category launcher = lists.get(ii).get(arg2);
                 String text = launcher.getTITLE();
 				Intent intent  = new Intent();
-				if(text != null && text.equals("none")){
-					return;
-				}else if (text == null) {
-					addPage = ii;addPosition = arg2;
-					intent.setClass(MainActivity.this, AddItemActivity.class);
-				} else {
+				if(text != null && !text.equals("none")){
 					intent.putExtra("launcher", launcher);
 					intent.setClass(MainActivity.this, BeautyActivity.class);
-
+                    startActivity(intent);
+                    //overridePendingTransition(R.anim.anim_fromright_toup6, R.anim.anim_down_toleft6);
 				}
 
-				startActivity(intent);
-				overridePendingTransition(R.anim.anim_fromright_toup6, R.anim.anim_down_toleft6);
+
 			}
 		});
 		gridView.setSelector(R.drawable.selector_null);
@@ -333,12 +306,16 @@ public class MainActivity extends Activity {
 					break;
 				case 5:// 松手动作
 					delImage.startAnimation(down);
-					lists.get(Configure.curentPage).add(Configure.removeItem,
-							map_null);
-					lists.get(Configure.curentPage).remove(
-							Configure.removeItem + 1);
+					Category delLauncher = lists.get(Configure.curentPage).remove(
+							Configure.removeItem);
+                    lists.get(Configure.curentPage).add(map_none);
+
 					((DragGridAdapter) ((gridviews.get(Configure.curentPage))
 							.getAdapter())).notifyDataSetChanged();
+
+                    delLauncher.setCHOICE(false);
+                    database.updateChoice(delLauncher);
+
 					break;
 				}
 			}
@@ -500,7 +477,9 @@ public class MainActivity extends Activity {
 
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(MainActivity.this, "position:" + position, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, classes[position]);
+                    startActivity(intent);
+                    //overridePendingTransition(R.anim.anim_fromright_toup6, R.anim.anim_down_toleft6);
                 }
             });// Add a menu item
         }
@@ -509,7 +488,6 @@ public class MainActivity extends Activity {
 
 
     public void onEvent(LauncherChangeEvent event) {
-
         Category launcher = event.getLauncher();
 
 		final String str = launcher.getTITLE();
@@ -519,41 +497,30 @@ public class MainActivity extends Activity {
 					for(int j=0;j<lists.get(i).size();j++){
 						if(lists.get(i).get(j).getTITLE()!=null && lists.get(i).get(j).getTITLE().equals(str)){
 							isExit=true;
-							lists.get(i).add(j,map_null);
+							//lists.get(i).add(j,map_null);
 							lists.get(i).remove(j + 1);
 							((DragGridAdapter) ((gridviews.get(i)).getAdapter())).notifyDataSetChanged();
 						}
 					}
 				}
 				if(!isExit){
-					Category item = new Category();
-					item.setTITLE(str);
 
-					item.setCATEGORY_ICON(database.getItemsUrl(str));
-
-					if(lists.get(addPage).get(addPosition).getTITLE()==null){//当前add位置是否已占有
-						lists.get(addPage).set(addPosition, item);
-						resetNull(lists.size() - 1);
-						((DragGridAdapter) ((gridviews.get(addPage)).getAdapter())).notifyDataSetChanged();
-					}else{
 						if(getFristNonePosition(lists.get(lists.size() - 1)) > 0){
-							lists.get(lists.size() - 1).set(getFristNonePosition(lists.get(lists.size() - 1)), item);
-							resetNull(lists.size() - 1);
-							((DragGridAdapter) ((gridviews.get(gridviews.size()-1)).getAdapter())).notifyDataSetChanged();
-						}else if(getFristNullPosition(lists.get(lists.size() - 1)) > 0){
-							lists.get(lists.size() - 1).set(getFristNullPosition(lists.get(lists.size() - 1)), item);
-							resetNull(lists.size() - 1);
+							lists.get(lists.size() - 1).set(getFristNonePosition(lists.get(lists.size() - 1)), launcher);
+							//resetNull(lists.size() - 1);
 							((DragGridAdapter) ((gridviews.get(gridviews.size()-1)).getAdapter())).notifyDataSetChanged();
 						}else{//当前最后页面已经填满
 							lists.add(new ArrayList<Category>());
-							lists.get(lists.size() - 1).add(item);
+							lists.get(lists.size() - 1).add(launcher);
 							for (int i = 1; i < PAGE_SIZE; i++)
 								lists.get(lists.size() - 1).add(map_none);
 							lst_views.addView(addGridView(Configure.countPages));
 							Configure.countPages++;	
 						}
-					}
+
 				}
+
+        EventBus.getDefault().removeStickyEvent(event);
 	}
 
 	@Override
@@ -570,10 +537,10 @@ public class MainActivity extends Activity {
 					new Thread(){
 						public void run(){
 
-							database.deleteLauncher();
-							for (int i = 0; i < lists.size(); i++) {
-								database.insertLauncher(lists.get(i));
-							}
+//							database.deleteLauncher();
+//							for (int i = 0; i < lists.size(); i++) {
+//								database.insertLauncher(lists.get(i));
+//							}
 
 
 							SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);

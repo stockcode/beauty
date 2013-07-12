@@ -1,4 +1,4 @@
-package cn.nit.beauty.widget;
+package cn.nit.beauty.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class DragGridAdapter extends BaseAdapter {
 		if(map!=null && map.getTITLE()==null){
 			txt.setText("");
 			img.setImageBitmap(null);
-			relate.setBackgroundResource(R.drawable.red_add);
+			//relate.setBackgroundResource(R.drawable.red_add);
 		}
 		else if(map!=null &&map.getTITLE().equals("none")){
 			txt.setText("");
