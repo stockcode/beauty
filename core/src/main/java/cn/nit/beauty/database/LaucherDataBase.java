@@ -41,7 +41,8 @@ public class LaucherDataBase {
         db = helper.getWritableDatabase();                
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
-        categoryDao = daoSession.getCategoryDao();        
+        categoryDao = daoSession.getCategoryDao();
+        cursor = db.query(categoryDao.getTablename(), categoryDao.getAllColumns(), null, null, null, null, null);
 	}
 	
 	public void upgrade() {
@@ -59,6 +60,8 @@ public class LaucherDataBase {
 
 	public void updateChoice(Category category) {
 			categoryDao.update(category);
+
+        cursor.requery();
 	}
 
 	public void insertItems(List<Category> categories) {
@@ -67,6 +70,8 @@ public class LaucherDataBase {
             if (query.unique() == null)
 			categoryDao.insert(category);
 		}
+
+        cursor.requery();
 	}
 
 	public List<Category> getItems(String from) {
@@ -100,6 +105,8 @@ public class LaucherDataBase {
 	// 删除当天数据
 	public void deleteItems() {
 		categoryDao.deleteAll();
+
+        cursor.requery();
 	}
 	
 	public boolean hasLauncher() {		
@@ -109,6 +116,8 @@ public class LaucherDataBase {
 	public void deleteLauncher() {
 		DeleteQuery<Category> query = categoryDao.queryBuilder().where(Properties.CHOICE.eq(true)).buildDelete();
 		query.executeDeleteWithoutDetachingEntities();
+
+        cursor.requery();
 	}
 
 	public List<Category> getLauncher() {
@@ -121,6 +130,8 @@ public class LaucherDataBase {
             if (launcher.getTITLE() == null || launcher.getTITLE().equals("none")) continue;
 			categoryDao.insert(launcher);
 		}
+
+        cursor.requery();
 	}
 
 }
