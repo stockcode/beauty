@@ -1,4 +1,1 @@
-include 'actionbarsherlock'
-include 'autoupdate'
-include 'arcmenu'
 include 'core'

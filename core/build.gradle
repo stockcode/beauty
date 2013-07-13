@@ -4,6 +4,7 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.6'
 }
 
+
 dependencies {
     compile 'com.google.android:support-v4:r6'
     compile  'de.greenrobot:greendao:1.3.1'
@@ -13,10 +14,12 @@ dependencies {
     compile  'com.baidu.android:mobstat:3.1'
     compile  'com.baidu.android:mobads:3.2'
     compile  'com.baidu.android:pushservice:2.2.1'
-
-	compile project(':actionbarsherlock')
-    compile project(':autoupdate')
-    compile project(':arcmenu')
+    compile 'cn.nit:autoupdate:1.0.0'
+    compile 'com.actionbarsherlock:actionbarsherlock:4.3.2-SNAPSHOT'
+    compile 'com.capricorn:arcmenu:1.0.0'
+	//compile project(':actionbarsherlock')
+    //compile project(':autoupdate')
+    //compile project(':arcmenu')
 	
 }
 
