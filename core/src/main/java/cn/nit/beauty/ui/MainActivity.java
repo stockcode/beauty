@@ -7,7 +7,6 @@ import java.util.List;
 import com.baidu.mobstat.StatService;
 import com.capricorn.ArcMenu;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -42,7 +41,7 @@ import android.widget.Toast;
 import cn.nit.beauty.R;
 import cn.nit.beauty.bus.LauncherChangeEvent;
 import cn.nit.beauty.database.LaucherDataBase;
-import cn.nit.beauty.model.Category;
+import cn.nit.beauty.database.Category;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.FileOperation;
 import cn.nit.beauty.adapter.DragGridAdapter;
@@ -50,8 +49,12 @@ import cn.nit.beauty.widget.DragGridView;
 import cn.nit.beauty.widget.MyAnimations;
 import cn.nit.beauty.widget.ScrollLayout;
 import de.greenrobot.event.EventBus;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
 
-public class MainActivity extends Activity {
+@ContentView(R.layout.layout_milaucher)
+public class MainActivity extends RoboActivity {
 
 	LaucherDataBase database;
 
@@ -64,11 +67,15 @@ public class MainActivity extends Activity {
 	//Category map_null = new Category();
 	List<Category> addDate = new ArrayList<Category>();// 每一页的数据
 	/** GridView. */
-	private ScrollLayout lst_views;
-	TextView tv_page;// int oldPage=1;
-	private ImageView runImage, delImage;
+
+    @InjectView(R.id.views) ScrollLayout lst_views;
+	@InjectView(R.id.tv_page) TextView tv_page;
+    @InjectView(R.id.run_image) ImageView runImage;
+    @InjectView(R.id.dels) ImageView delImage;
+    @InjectView(R.id.arc_menu) ArcMenu arcMenu;
+
 	float  bitmap_width, bitmap_height;
-	
+
 	LinearLayout.LayoutParams param;
 
 	TranslateAnimation left, right;
@@ -79,26 +86,25 @@ public class MainActivity extends Activity {
 
 	ArrayList<List<Category>> lists = new ArrayList<List<Category>>();// 全部数据的集合集lists.size()==countpage;
 	List<Category> lstDate = new ArrayList<Category>();// 每一页的数据
-	
+
 	SensorManager sm;SensorEventListener lsn;
 	boolean isClean = false;Vibrator vibrator;int rockCount = 0;
 
 	ImageButton btn_skin;SharedPreferences sp_skin;
 	IntentFilter setPositionFilter;
     boolean finishCount=false;
-	
+
 	Class<?>[] classes ={AddItemActivity.class, AboutActivity.class,UserCenterActivity.class,SetActivity.class,HelpActivity.class,FeedbackActivity.class};
 	ProgressDialog progressDialog;
-	
+
 	//0227更新壁纸切换：
 	IntentFilter setbgFilter;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.layout_milaucher);
-		
+
 		database = new LaucherDataBase(getApplicationContext());
-		
+
 		lstDate = database.getLauncher();
 		addDate = lstDate;
 
@@ -122,10 +128,8 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		runImage = (ImageView) findViewById(R.id.run_image);
 		setImageBgAndRun();
-		
-		delImage = (ImageView) findViewById(R.id.dels);
+
 
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -169,9 +173,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void init() {
-		// relate = (RelativeLayout) findViewById(R.id.relate);
-		lst_views = (ScrollLayout) findViewById(R.id.views);
-		tv_page = (TextView) findViewById(R.id.tv_page);
+
 		tv_page.setText("1");
 		Configure.inits(MainActivity.this);
 		param = new LinearLayout.LayoutParams(
@@ -184,7 +186,7 @@ public class MainActivity extends Activity {
 	public void initData() {
 		Configure.countPages = (int) Math.ceil(lstDate.size()
 				/ (float) PAGE_SIZE);
-		
+
 		if(Configure.countPages==0) return;
 		lists = new ArrayList<List<Category>>();
 		for (int i = 0; i < Configure.countPages; i++) {
@@ -461,8 +463,6 @@ public class MainActivity extends Activity {
 
 		sp_skin = getSharedPreferences("skin", MODE_PRIVATE);
 
-        ArcMenu arcMenu = (ArcMenu) findViewById(R.id.arc_menu);
-
         final int itemCount = ITEM_DRAWABLES.length;
         for (int i = 0; i < itemCount; i++) {
             ImageView item = new ImageView(this);
@@ -491,24 +491,15 @@ public class MainActivity extends Activity {
     public void onEvent(LauncherChangeEvent event) {
         Category launcher = event.getLauncher();
 
-		final String str = launcher.getTITLE();
-        boolean isExit=false;
-				Configure.countPages = lists.size();
-				for (int i = 0; i < lists.size(); i++) {
-					for(int j=0;j<lists.get(i).size();j++){
-						if(lists.get(i).get(j).getTITLE()!=null && lists.get(i).get(j).getTITLE().equals(str)){
-							isExit=true;
-							//lists.get(i).add(j,map_null);
-							lists.get(i).remove(j + 1);
-							((DragGridAdapter) ((gridviews.get(i)).getAdapter())).notifyDataSetChanged();
-						}
-					}
-				}
-				if(!isExit){
 
+				Configure.countPages = lists.size();
+
+
+
+
+                if (launcher.getCHOICE()) { //添加launcher
 						if(getFristNonePosition(lists.get(lists.size() - 1)) > 0){
 							lists.get(lists.size() - 1).set(getFristNonePosition(lists.get(lists.size() - 1)), launcher);
-							//resetNull(lists.size() - 1);
 							((DragGridAdapter) ((gridviews.get(gridviews.size()-1)).getAdapter())).notifyDataSetChanged();
 						}else{//当前最后页面已经填满
 							lists.add(new ArrayList<Category>());
@@ -516,10 +507,16 @@ public class MainActivity extends Activity {
 							for (int i = 1; i < PAGE_SIZE; i++)
 								lists.get(lists.size() - 1).add(map_none);
 							lst_views.addView(addGridView(Configure.countPages));
-							Configure.countPages++;	
+							Configure.countPages++;
 						}
+                } else { //删除launcher
+                    for (int i = 0; i < lists.size(); i++) {
+                        if (lists.get(i).remove(launcher)) {
+                            ((DragGridAdapter) ((gridviews.get(i)).getAdapter())).notifyDataSetChanged();
+                        }
+                    }
+                }
 
-				}
 
         EventBus.getDefault().removeStickyEvent(event);
 	}
@@ -582,7 +579,7 @@ public class MainActivity extends Activity {
 			finish();
 		}
 	};
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -590,7 +587,7 @@ public class MainActivity extends Activity {
         // Always unregister when an object no longer should be on the bus.
         EventBus.getDefault().unregister(this);
 
-		PAGE_COUNT=Configure.countPages;PAGE_CURRENT=Configure.curentPage;		
+		PAGE_COUNT=Configure.countPages;PAGE_CURRENT=Configure.curentPage;
 		StatService.onPause(this);
 
 	}

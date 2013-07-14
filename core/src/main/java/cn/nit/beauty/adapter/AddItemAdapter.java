@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import cn.nit.beauty.R;
-import cn.nit.beauty.model.Category;
+import cn.nit.beauty.database.Category;
 
 
 public class AddItemAdapter extends BaseAdapter {

@@ -23,7 +23,7 @@ import java.util.List;
 import cn.nit.beauty.R;
 import cn.nit.beauty.android.bitmapfun.util.ImageFetcher;
 import cn.nit.beauty.database.LaucherDataBase;
-import cn.nit.beauty.model.Category;
+import cn.nit.beauty.database.Category;
 import cn.nit.beauty.model.FolderInfo;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.ScaleImageView;

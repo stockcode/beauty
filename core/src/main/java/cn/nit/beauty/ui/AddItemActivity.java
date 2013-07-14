@@ -20,7 +20,7 @@ import cn.nit.beauty.adapter.AddItemAdapter;
 import cn.nit.beauty.adapter.ItemContentAdapter;
 import cn.nit.beauty.bus.LauncherChangeEvent;
 import cn.nit.beauty.database.LaucherDataBase;
-import cn.nit.beauty.model.Category;
+import cn.nit.beauty.database.Category;
 import de.greenrobot.event.EventBus;
 
 

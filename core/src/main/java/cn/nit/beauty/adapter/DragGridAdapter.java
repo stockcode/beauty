@@ -1,10 +1,9 @@
 package cn.nit.beauty.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.nit.beauty.R;
-import cn.nit.beauty.model.Category;
+import cn.nit.beauty.database.Category;
 import cn.nit.beauty.utils.ImgAsync_List;
 import android.content.Context;
 import android.view.LayoutInflater;

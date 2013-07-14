@@ -1,6 +1,6 @@
 package cn.nit.beauty.bus;
 
-import cn.nit.beauty.model.Category;
+import cn.nit.beauty.database.Category;
 
 /**
  * Created by gengke on 13-7-10.

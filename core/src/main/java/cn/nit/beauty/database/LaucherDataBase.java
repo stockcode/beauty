@@ -1,24 +1,14 @@
 package cn.nit.beauty.database;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.util.LangUtils;
-
-import cn.nit.beauty.model.Category;
-import cn.nit.beauty.model.CategoryDao;
-import cn.nit.beauty.model.CategoryDao.Properties;
-import cn.nit.beauty.model.DaoMaster;
-import cn.nit.beauty.model.DaoMaster.DevOpenHelper;
-import cn.nit.beauty.model.DaoSession;
-import cn.nit.beauty.utils.Configure;
+import cn.nit.beauty.database.CategoryDao.Properties;
+import cn.nit.beauty.database.DaoMaster.DevOpenHelper;
 import de.greenrobot.dao.query.DeleteQuery;
 import de.greenrobot.dao.query.Query;
-import android.content.ContentValues;
+
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 public class LaucherDataBase {
 	private static final String DB_NAME = "beauty.db";

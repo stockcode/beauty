@@ -17,10 +17,7 @@ dependencies {
     compile 'cn.nit:autoupdate:1.0.0'
     compile 'com.actionbarsherlock:actionbarsherlock:4.3.2-SNAPSHOT'
     compile 'com.capricorn:arcmenu:1.0.0'
-	//compile project(':actionbarsherlock')
-    //compile project(':autoupdate')
-    //compile project(':arcmenu')
-	
+    compile 'com.aliyun.android:oss:1.0.0'
 }
 
 tasks.withType(Compile) { compileTask -> compileTask.dependsOn copyNativeLibs }
