@@ -275,10 +275,13 @@ public class DiskLruCache {
 		// Check if media is mounted or storage is built-in, if so, try and use
 		// external cache dir
 		// otherwise use internal cache dir
-		//String cachePath = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED || !Utils.isExternalStorageRemovable() ? Utils
-		//		.getExternalCacheDir(context).getPath() : context.getCacheDir().getPath();
+        String cachePath = context.getCacheDir().getPath();
 
-		String cachePath = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) ? Environment.getExternalStorageDirectory() + "/beauty/cache" : "/beauty/cache";
+        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED || !Utils.isExternalStorageRemovable()) {
+		    cachePath = Utils.getExternalCacheDir(context).getPath();
+        }
+
+		//String cachePath = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) ? Environment.getExternalStorageDirectory() + "/beauty/cache" : "/beauty/cache";
 		
 		return new File(cachePath + File.separator + uniqueName);
 	}

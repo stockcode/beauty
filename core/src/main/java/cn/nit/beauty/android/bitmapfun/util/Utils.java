@@ -81,13 +81,18 @@ public class Utils {
      */
     @SuppressLint("NewApi")
     public static File getExternalCacheDir(Context context) {
+        File cache = null;
         if (hasExternalCacheDir()) {
-            return context.getExternalCacheDir();
+            cache = context.getExternalCacheDir();
         }
 
+        if (cache == null) {
         // Before Froyo we need to construct the external cache dir ourselves
         final String cacheDir = "/Android/data/" + context.getPackageName() + "/cache/";
-        return new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
+        cache = new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
+        }
+
+        return cache;
     }
 
     /**

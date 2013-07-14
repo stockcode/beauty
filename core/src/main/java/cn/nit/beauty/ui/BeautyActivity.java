@@ -97,6 +97,8 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
         folders = Data.categoryMap.get(category);
 
+        if (folders == null) folders = new ArrayList<String>();
+
         database = new LaucherDataBase(getApplicationContext());
 
         ossClient = new OSSClient();
