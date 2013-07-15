@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StatFs;
@@ -17,6 +19,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.lurencun.service.autoupdate.AppUpdate;
+import com.lurencun.service.autoupdate.AppUpdateService;
+import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -24,10 +29,11 @@ import java.text.DecimalFormat;
 import cn.nit.beauty.R;
 import cn.nit.beauty.android.bitmapfun.util.DiskLruCache;
 import cn.nit.beauty.android.bitmapfun.util.Utils;
+import cn.nit.beauty.utils.Data;
 
 public class SettingActivity extends PreferenceActivity {
 	private static final String[] PREFERENCE_KEYS = {"txtPasswd"};
-	private Preference prefCache;
+	private Preference prefCache, prefVersion;
     private float cacheSize= 0;
     DecimalFormat df   =   new   DecimalFormat("##0.00");
 
@@ -36,6 +42,7 @@ public class SettingActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref);
         prefCache = findPreference("clear_cache");
+        prefVersion = findPreference("version");
 
         final File cacheDir = DiskLruCache.getDiskCacheDir(getApplicationContext(),
                 Utils.HTTP_CACHE_DIR);
@@ -43,11 +50,37 @@ public class SettingActivity extends PreferenceActivity {
         cacheSize = Utils.getFolderSize(cacheDir) / div;
         prefCache.setSummary("当前共有缓存" + df.format(cacheSize) + "MB");
         prefCache.setOnPreferenceClickListener(new PrefClickListener());
-        
+
+        prefVersion.setSummary("当前版本为" + getPackageVersion());
+        prefVersion.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                AppUpdate appUpdate = AppUpdateService.getAppUpdate(SettingActivity.this);
+
+                appUpdate.checkLatestVersion(Data.UPDATE_URL,
+                        new SimpleJSONParser());
+                return true;
+            }
+        });
+
         for (String key: PREFERENCE_KEYS) {
 	        setPreferenceSummary(key);
         }
     }
+
+    public String getPackageVersion() {
+        String version = "";
+        try {
+            PackageManager pm = getApplication().getPackageManager();
+            PackageInfo pi = null;
+            pi = pm.getPackageInfo(getApplication().getPackageName(), 0);
+            version = pi.versionName;
+        } catch (Exception e) {
+            version = ""; // failed, ignored
+        }
+        return version;
+    }
+
 	private class PrefClickListener implements OnPreferenceClickListener {
         public boolean onPreferenceClick(Preference preference) {
 

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.nit.beauty"
     android:versionCode="2"
-    android:versionName="1.0.1" >
+    android:versionName="1.0.1">
 
     <uses-sdk android:minSdkVersion="7" />
 
@@ -23,7 +23,8 @@
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Sherlock.Light" >
+        android:theme="@style/Theme.Sherlock.Light"
+        android:name="BeautyApplication">
 
         <!-- 注册AppActivity -->
 		<activity android:name="com.baidu.mobads.AppActivity" android:configChanges="keyboard|keyboardHidden|orientation" />

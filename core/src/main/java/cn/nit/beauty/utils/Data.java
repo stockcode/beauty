@@ -1,5 +1,8 @@
 package cn.nit.beauty.utils;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,5 +34,6 @@ public class Data {
 	public static Map<String, List> categoryMap = new HashMap<String, List>();
 	public static int[] Item0_icon = { R.drawable.c_love_channel,R.drawable.c_net_new, R.drawable.c_user
 		,R.drawable.c_entertainment,R.drawable.c_financial,R.drawable.c_technoledge};
+
 
 }

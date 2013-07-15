@@ -14,6 +14,7 @@ dependencies {
     compile  'com.baidu.android:mobstat:3.1'
     compile  'com.baidu.android:mobads:3.2'
     compile  'com.baidu.android:pushservice:2.2.1'
+    compile 'ch.acra:acra:4.5.0'
     compile 'cn.nit:autoupdate:1.0.0'
     compile 'com.actionbarsherlock:actionbarsherlock:4.3.2-SNAPSHOT'
     compile 'com.capricorn:arcmenu:1.0.0'

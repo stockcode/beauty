@@ -98,6 +98,7 @@
     <orderEntry type="library" name="ComActionbarsherlockActionbarsherlock432SNAPSHOT.aar" level="project" />
     <orderEntry type="library" name="ComCapricornArcmenu100.aar" level="project" />
     <orderEntry type="library" name="ComAliyunAndroidOss100.aar" level="project" />
+    <orderEntry type="library" name="acra-4.5.0" level="project" />
   </component>
 </module>
 
