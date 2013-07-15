@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <PreferenceCategory android:title="设置">
+<!--    <CheckBoxPreference
+      android:key="checkbox_key"
+      android:title="@string/checkbox_title"
+      android:summary="@string/checkbox_summary" />
+-->
+    <EditTextPreference
+      android:key="txtPasswd"
+      android:title="设置密码"
+      android:summary="密码："
+      android:dialogTitle="请输入密码" />
+<!--    <ListPreference
+      android:key="list_key"
+      android:title="@string/list_title"
+      android:summary="@string/list_summary"
+      android:dialogTitle="@string/list_dialogtitle"
+      android:entries="@array/list_entries"
+      android:entryValues="@array/list_entryvalues" />
+    <RingtonePreference
+      android:key="ringtone_key"
+      android:title="@string/ringtone_title"
+      android:showDefault="true"
+      android:summary="@string/ringtone_summary" />
+-->
+
+      <Preference android:key="clear_cache" android:title="清除缓存"></Preference>
+  </PreferenceCategory>
+</PreferenceScreen>

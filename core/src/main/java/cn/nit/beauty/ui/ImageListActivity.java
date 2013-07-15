@@ -77,9 +77,9 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
 						continue;
 
                     String key = objectSummary.getKey();
-                    key = key.substring(0, key.lastIndexOf("/")) + "/thumb" + key.substring(key.lastIndexOf("/"), key.length());
+                    //key = key.substring(0, key.lastIndexOf("/")) + "/thumb" + key.substring(key.lastIndexOf("/"), key.length());
 					FolderInfo newsInfo1 = new FolderInfo();
-					newsInfo1.setAlbid(objectSummary.getKey());
+					newsInfo1.setAlbid(key);
 					newsInfo1.setIsrc(key);
 					newsInfo1.setMsg(objectSummary.getKey());
 					folderInfos.add(newsInfo1);

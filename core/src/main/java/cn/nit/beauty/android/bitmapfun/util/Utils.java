@@ -31,9 +31,31 @@ import java.io.File;
  */
 public class Utils {
     public static final int IO_BUFFER_SIZE = 8 * 1024;
+    public static final int HTTP_CACHE_SIZE = 10 * 1024 * 1024; // 10MB
+    public static final String HTTP_CACHE_DIR = "http";
 
     private Utils() {};
 
+    public static void DeleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                DeleteRecursive(child);
+
+        fileOrDirectory.delete();
+    }
+
+    public static long getFolderSize(File dir) {
+        long size = 0;
+        for (File file : dir.listFiles()) {
+            if (file.isFile()) {
+                System.out.println(file.getName() + " " + file.length());
+                size += file.length();
+            }
+            else
+                size += getFolderSize(file);
+        }
+        return size;
+    }
     /**
      * Workaround for bug pre-Froyo, see here for more info:
      * http://android-developers.blogspot.com/2011/09/androids-http-clients.html
@@ -89,6 +111,7 @@ public class Utils {
         if (cache == null) {
         // Before Froyo we need to construct the external cache dir ourselves
         final String cacheDir = "/Android/data/" + context.getPackageName() + "/cache/";
+        //final String cacheDir = "/beauty/cache/";
         cache = new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
         }
 

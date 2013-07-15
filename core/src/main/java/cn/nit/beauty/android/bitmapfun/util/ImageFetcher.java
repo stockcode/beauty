@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -146,7 +147,7 @@ public class ImageFetcher extends ImageResizer {
 
 		final File cacheFile = new File(cache.createFilePath(urlString));
 
-		if (cache.containsKey(urlString)) {
+		if (cacheFile.length() != 0 && cache.containsKey(urlString)) {
 			if (BuildConfig.DEBUG) {
 				Log.d(TAG, "downloadBitmap - found in http cache - "
 						+ urlString);
@@ -161,6 +162,7 @@ public class ImageFetcher extends ImageResizer {
 		Utils.disableConnectionReuseIfNecessary();
 
 		try {
+
 			if (ossClient.downloadObject("nit-photo", urlString, cacheFile))
 				return cacheFile;
 		} catch (Exception e) {

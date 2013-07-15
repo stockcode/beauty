@@ -103,6 +103,14 @@
                 android:value=".ui.ImageListActivity" />
         </activity>
         <activity
+                android:name=".ui.SettingActivity"
+                android:launchMode="singleTask"
+                android:parentActivityName=".ui.MainActivity" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.MainActivity" />
+        </activity>
+        <activity
             android:name=".ui.CustomActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="Push_notification_test" >

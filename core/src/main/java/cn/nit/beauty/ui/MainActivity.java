@@ -93,7 +93,7 @@ public class MainActivity extends RoboActivity {
     SharedPreferences sp_skin;
     IntentFilter setPositionFilter;
     boolean finishCount = false;
-    Class<?>[] classes = {AddItemActivity.class, AboutActivity.class, UserCenterActivity.class, SetActivity.class, HelpActivity.class, FeedbackActivity.class};
+    Class<?>[] classes = {AddItemActivity.class, AboutActivity.class, UserCenterActivity.class, SettingActivity.class, HelpActivity.class, FeedbackActivity.class};
     ProgressDialog progressDialog;
     //0227更新壁纸切换：
     IntentFilter setbgFilter;
@@ -485,14 +485,13 @@ public class MainActivity extends RoboActivity {
 
                 @Override
                 public void onClick(View v) {
-                    if (position > 0) {
-                        Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    //if (position > 0) {
+                    //    Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
+                    //    return;
+                    //}
+                        Intent intent = new Intent(MainActivity.this, classes[position]);
+                        startActivity(intent);
 
-                    Intent intent = new Intent(MainActivity.this, classes[position]);
-                    startActivity(intent);
-                    //overridePendingTransition(R.anim.anim_fromright_toup6, R.anim.anim_down_toleft6);
                 }
             });// Add a menu item
         }
@@ -501,9 +500,11 @@ public class MainActivity extends RoboActivity {
     public void onEvent(LauncherChangeEvent event) {
 
 
+        Configure.countPages = lists.size();
 
-            Category launcher = event.getLauncher();
-            Configure.countPages = lists.size();
+        List<Category> launchers = event.getLaunchers();
+        for(Category launcher : launchers) {
+
 
 
             if (launcher.getCHOICE()) { //添加launcher
@@ -521,13 +522,14 @@ public class MainActivity extends RoboActivity {
             } else { //删除launcher
                 for (int i = 0; i < lists.size(); i++) {
                     if (lists.get(i).remove(launcher)) {
+                        lists.get(Configure.curentPage).add(map_none);
                         ((DragGridAdapter) ((gridviews.get(i)).getAdapter())).notifyDataSetChanged();
                     }
                 }
             }
+        }
 
-
-            EventBus.getDefault().removeStickyEvent(event);
+        EventBus.getDefault().removeStickyEvent(event);
     }
 
     @Override

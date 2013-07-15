@@ -135,18 +135,20 @@ public class AddItemActivity extends Activity implements OnClickListener, OnItem
 		return super.dispatchKeyEvent(event);
 	}
 	public void resetChoice(){
+        LauncherChangeEvent launcherChangeEvent = new LauncherChangeEvent();
 
 		for(int i=0;i<itemData.size();i++){
-			if(isChoiceChanged.containsKey(itemData.get(i).getTITLE())){
-				if(isChoiceChanged.get(itemData.get(i).getTITLE())){
-					database.updateChoice(itemData.get(i));
+            Category launcher = itemData.get(i);
+			if(isChoiceChanged.containsKey(launcher.getTITLE())){
+				if(isChoiceChanged.get(launcher.getTITLE())){
+					database.updateChoice(launcher);
 
-                    EventBus.getDefault().postSticky(new LauncherChangeEvent(itemData.get(i)));
+                    launcherChangeEvent.add(launcher);
 				}
 			}
 		}
 		isChoiceChanged.clear();
-
+        EventBus.getDefault().postSticky(launcherChangeEvent);
 	}
 
 

@@ -223,7 +223,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
                         Intent intent = new Intent(BeautyActivity.this,
                                 ImageListActivity.class);
-                        intent.putExtra("objectKey", holder.objectKey);
+                        intent.putExtra("objectKey", holder.objectKey + "thumb/");
                         startActivity(intent);
                     }
                 });
