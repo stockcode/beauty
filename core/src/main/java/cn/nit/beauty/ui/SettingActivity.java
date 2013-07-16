@@ -22,13 +22,14 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
 import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
 import java.text.DecimalFormat;
 
 import cn.nit.beauty.R;
-import cn.nit.beauty.android.bitmapfun.util.DiskLruCache;
-import cn.nit.beauty.android.bitmapfun.util.Utils;
+import cn.nit.beauty.Utils;
 import cn.nit.beauty.utils.Data;
 
 public class SettingActivity extends PreferenceActivity {
@@ -44,8 +45,8 @@ public class SettingActivity extends PreferenceActivity {
         prefCache = findPreference("clear_cache");
         prefVersion = findPreference("version");
 
-        final File cacheDir = DiskLruCache.getDiskCacheDir(getApplicationContext(),
-                Utils.HTTP_CACHE_DIR);
+
+        final File cacheDir = StorageUtils.getCacheDirectory(this);
         float div = 1024*1024;
         cacheSize = Utils.getFolderSize(cacheDir) / div;
         prefCache.setSummary("当前共有缓存" + df.format(cacheSize) + "MB");
@@ -89,11 +90,7 @@ public class SettingActivity extends PreferenceActivity {
                     .setMessage("确定要清除所有缓存?")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            final File cacheDir = DiskLruCache.getDiskCacheDir(getApplicationContext(),
-                                    Utils.HTTP_CACHE_DIR);
-
-                            Utils.DeleteRecursive(cacheDir);
-                            cacheDir.mkdirs();
+                            ImageLoader.getInstance().clearDiscCache();
                             prefCache.setSummary("当前共有缓存0.00MB");
                             Toast.makeText(SettingActivity.this, "已清理缓存,共释放" + df.format(cacheSize) + "空间!", Toast.LENGTH_SHORT).show();
                         }

@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 
+import java.io.File;
+
 public class Utils {
 	// 在百度开发者中心查询应用的API Key
 	//public static final String API_KEY = "uZbmgZKhfumvGYGowcjSPFc1";//"GkWwrvZrCaMQfCZ190ujndZm";
@@ -42,4 +44,24 @@ public class Utils {
         return apiKey;
     }
 
+    public static void DeleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                DeleteRecursive(child);
+
+        fileOrDirectory.delete();
+    }
+
+    public static long getFolderSize(File dir) {
+        long size = 0;
+        for (File file : dir.listFiles()) {
+            if (file.isFile()) {
+                System.out.println(file.getName() + " " + file.length());
+                size += file.length();
+            }
+            else
+                size += getFolderSize(file);
+        }
+        return size;
+    }
 }

@@ -163,6 +163,7 @@
             android:name="api_key"
             android:value="6NxlGErC78G5tGB2aWPblquO" />
         <!-- push service end -->
+
     </application>
 
 </manifest>

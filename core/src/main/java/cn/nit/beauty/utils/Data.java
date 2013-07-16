@@ -12,7 +12,8 @@ import cn.nit.beauty.R;
 
 public class Data {
 	public static int ItemCount = 8;
-	
+
+    public final static String OSS_URL = "http://oss.aliyuncs.com/nit-photo/";
 	public final static String UPDATE_URL = "http://nit-app.oss.aliyuncs.com/beauty/update.json";
 	
 	public final static String INDEX_KEY = "index.ini";

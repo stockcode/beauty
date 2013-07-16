@@ -15,13 +15,13 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.aliyun.android.oss.OSSClient;
 import com.baidu.mobstat.StatService;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import cn.nit.beauty.R;
-import cn.nit.beauty.android.bitmapfun.util.ImageFetcher;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.model.FolderInfo;
@@ -34,7 +34,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
         IXListViewListener {
 
     LaucherDataBase database;
-    private ImageFetcher mImageFetcher;
     private XListView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private int currentPage = 0;
@@ -94,6 +93,8 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             selectedFilter = launcher.getTITLE();
         }
 
+        setTitle(launcher.getTITLE());
+
 
         folders = Data.categoryMap.get(category);
 
@@ -111,9 +112,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
         mAdapter = new StaggeredAdapter(this, mAdapterView);
 
-        mImageFetcher = new ImageFetcher(this, 240);
-        mImageFetcher.setOssClient(ossClient);
-        mImageFetcher.setLoadingImage(R.drawable.empty_photo);
 
         updateFilters();
 
@@ -151,7 +149,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     @Override
     protected void onResume() {
         super.onResume();
-        mImageFetcher.setExitTasksEarly(false);
         mAdapterView.setAdapter(mAdapter);
         StatService.onResume(this);
     }
@@ -178,6 +175,11 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     protected void onPause() {
         super.onPause();
         StatService.onPause(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -230,11 +232,11 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             }
 
             holder = (ViewHolder) convertView.getTag();
-            holder.imageView.setImageWidth(duitangInfo.getWidth());
-            holder.imageView.setImageHeight(duitangInfo.getHeight());
+            //holder.imageView.setImageWidth(duitangInfo.getWidth());
+            //holder.imageView.setImageHeight(duitangInfo.getHeight());
             //holder.contentView.setText(duitangInfo.getMsg());
             holder.objectKey = duitangInfo.getAlbid();
-            mImageFetcher.loadImage(duitangInfo.getIsrc(), holder.imageView);
+            ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getIsrc(), holder.imageView);
             return convertView;
         }
 

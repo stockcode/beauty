@@ -15,8 +15,6 @@ import com.baidu.mobstat.StatService;
 
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
-import cn.nit.beauty.android.bitmapfun.util.DiskLruCache;
-import cn.nit.beauty.android.bitmapfun.util.ImageFetcher;
 import cn.nit.beauty.adapter.GalleryAdapter;
 import cn.nit.beauty.bus.ImageChangeEvent;
 import cn.nit.beauty.gallery.HackyViewPager;
@@ -46,13 +44,13 @@ public class ImageGalleryActivity extends SherlockActivity {
 	
 	private GalleryAdapter mAdapter;
 	private ViewPager mViewPager;
-	private ImageFetcher mImageFetcher;
     private ShareActionProvider actionProvider;
 
 	private OSSClient ossClient;
 	
 	private String objectKey;
-	 
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,11 +70,7 @@ public class ImageGalleryActivity extends SherlockActivity {
 		mViewPager = new HackyViewPager(this);
 		setContentView(mViewPager);
 
-		mImageFetcher = new ImageFetcher(this, 240);
-        mImageFetcher.setOssClient(ossClient);
-        mImageFetcher.setLoadingImage(R.drawable.empty_photo);
-        
-		mAdapter = new GalleryAdapter(this, mImageFetcher);
+		mAdapter = new GalleryAdapter(this);
 		mViewPager.setAdapter(mAdapter);
 		
 		if (task.getStatus() != Status.RUNNING) {
@@ -112,18 +106,18 @@ public class ImageGalleryActivity extends SherlockActivity {
         
         
 
-        final File cacheDir = DiskLruCache.getDiskCacheDir(getApplicationContext(),
-				HTTP_CACHE_DIR);
-
-		final DiskLruCache cache = DiskLruCache.openCache(getApplicationContext(), cacheDir,
-				HTTP_CACHE_SIZE);
-
-		final File cacheFile = new File(cache.createFilePath(key));
-
-		if (cache.containsKey(key)) {
-			Uri uri = Uri.fromFile(cacheFile);
-			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-		}        
+//        final File cacheDir = DiskLruCache.getDiskCacheDir(getApplicationContext(),
+//				HTTP_CACHE_DIR);
+//
+//		final DiskLruCache cache = DiskLruCache.openCache(getApplicationContext(), cacheDir,
+//				HTTP_CACHE_SIZE);
+//
+//		final File cacheFile = new File(cache.createFilePath(key));
+//
+//		if (cache.containsKey(key)) {
+//			Uri uri = Uri.fromFile(cacheFile);
+//			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+//		}
 		
         
         
@@ -150,8 +144,12 @@ public class ImageGalleryActivity extends SherlockActivity {
         EventBus.getDefault().unregister(this);
 	}
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 
-	@Override
+    @Override
 	protected void onResume() {
 		super.onResume();
 		StatService.onResume(this);

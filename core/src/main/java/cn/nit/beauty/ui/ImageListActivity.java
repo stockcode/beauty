@@ -8,6 +8,7 @@ import java.util.List;
 
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
+import cn.nit.beauty.utils.Data;
 import me.maxwin.view.XListView;
 import me.maxwin.view.XListView.IXListViewListener;
 
@@ -26,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import cn.nit.beauty.android.bitmapfun.util.ImageFetcher;
 import cn.nit.beauty.model.FolderInfo;
 import cn.nit.beauty.widget.ScaleImageView;
 
@@ -34,9 +34,9 @@ import com.aliyun.android.oss.OSSClient;
 import com.aliyun.android.oss.model.OSSObjectSummary;
 import com.aliyun.android.util.Pagination;
 import com.baidu.mobstat.StatService;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ImageListActivity extends FragmentActivity implements IXListViewListener {
-    private ImageFetcher mImageFetcher;
     private XListView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private int currentPage = 0;
@@ -176,7 +176,7 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
             //holder.imageView.setImageHeight(duitangInfo.getHeight());
             //holder.contentView.setText(duitangInfo.getMsg());
             holder.objectKey = duitangInfo.getAlbid();
-            mImageFetcher.loadImage(duitangInfo.getIsrc(), holder.imageView);
+            ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getIsrc(), holder.imageView);
             return convertView;
         }
 
@@ -232,16 +232,12 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
 
         mAdapter = new StaggeredAdapter(this, mAdapterView);
 
-        mImageFetcher = new ImageFetcher(this, 240);
-        mImageFetcher.setOssClient(ossClient);
-        mImageFetcher.setLoadingImage(R.drawable.empty_photo);
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        mImageFetcher.setExitTasksEarly(false);
         mAdapterView.setAdapter(mAdapter);
         AddItemToContainer(currentPage, 2);
         StatService.onResume(this);
