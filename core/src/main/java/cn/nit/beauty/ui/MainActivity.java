@@ -33,6 +33,9 @@ import android.widget.Toast;
 
 import com.baidu.mobstat.StatService;
 import com.capricorn.ArcMenu;
+import com.lurencun.service.autoupdate.AppUpdate;
+import com.lurencun.service.autoupdate.AppUpdateService;
+import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,6 +47,7 @@ import cn.nit.beauty.bus.LauncherChangeEvent;
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.utils.Configure;
+import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.utils.FileOperation;
 import cn.nit.beauty.widget.DragGridView;
 import cn.nit.beauty.widget.MyAnimations;
@@ -59,6 +63,8 @@ public class MainActivity extends RoboActivity {
     public static final int PAGE_SIZE = 8;
     public int PAGE_COUNT = 2, PAGE_CURRENT = 0;
     LaucherDataBase database;
+    private AppUpdate appUpdate;
+
     Category map_none = new Category();
     //Category map_null = new Category();
     List<Category> addDate = new ArrayList<Category>();// 每一页的数据
@@ -113,6 +119,10 @@ public class MainActivity extends RoboActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        appUpdate = AppUpdateService.getAppUpdate(this);
+        appUpdate.checkLatestVersion(Data.UPDATE_URL,
+                new SimpleJSONParser());
 
         database = new LaucherDataBase(getApplicationContext());
 
@@ -490,8 +500,11 @@ public class MainActivity extends RoboActivity {
                     //    return;
                     //}
                         Intent intent = new Intent(MainActivity.this, classes[position]);
+                    try {
                         startActivity(intent);
-
+                    }catch (RuntimeException e) {
+                        Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });// Add a menu item
         }
@@ -596,6 +609,7 @@ public class MainActivity extends RoboActivity {
         PAGE_COUNT = Configure.countPages;
         PAGE_CURRENT = Configure.curentPage;
         StatService.onPause(this);
+        appUpdate.callOnPause();
 
     }
 
@@ -625,5 +639,7 @@ public class MainActivity extends RoboActivity {
         EventBus.getDefault().registerSticky(this);
 
         StatService.onResume(this);
+
+        appUpdate.callOnResume();
     }
 }

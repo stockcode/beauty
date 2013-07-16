@@ -41,7 +41,7 @@ public class LoadingActivity extends Activity {
             checkItems();
         }
     };
-    private AppUpdate appUpdate;
+
     private OSSClient ossClient;
 
     @Override
@@ -51,10 +51,9 @@ public class LoadingActivity extends Activity {
 
         database = new LaucherDataBase(getApplicationContext());
 
-        appUpdate = AppUpdateService.getAppUpdate(this);
 
-        appUpdate.checkLatestVersion(Data.UPDATE_URL,
-                new SimpleJSONParser());
+
+
 
         PushManager.startWork(getApplicationContext(),
                 PushConstants.LOGIN_TYPE_API_KEY, Utils.getMetaValue(LoadingActivity.this, "api_key"));
@@ -67,7 +66,7 @@ public class LoadingActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        appUpdate.callOnPause();
+
         StatService.onPause(this);
 
     }
@@ -75,7 +74,7 @@ public class LoadingActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        appUpdate.callOnResume();
+
         StatService.onResume(this);
     }
 

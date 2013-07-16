@@ -1,5 +1,7 @@
 package cn.nit.beauty.ui;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +64,6 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
         	
         	List<FolderInfo> folderInfos = new ArrayList<FolderInfo>();
         	
-        	try {
 				if (!Helper.checkConnection(mContext))
 					return null;
 
@@ -76,7 +77,10 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
 					if (objectSummary.getKey().equals(objectKey))
 						continue;
 
+
                     String key = objectSummary.getKey();
+
+
                     //key = key.substring(0, key.lastIndexOf("/")) + "/thumb" + key.substring(key.lastIndexOf("/"), key.length());
 					FolderInfo newsInfo1 = new FolderInfo();
 					newsInfo1.setAlbid(key);
@@ -86,11 +90,6 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
 				}
 
 				return folderInfos;
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
         }
 
         @Override

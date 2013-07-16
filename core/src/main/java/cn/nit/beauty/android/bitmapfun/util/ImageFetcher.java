@@ -22,6 +22,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,8 +34,11 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
 import cn.nit.beauty.BuildConfig;
 
@@ -162,9 +166,9 @@ public class ImageFetcher extends ImageResizer {
 		Utils.disableConnectionReuseIfNecessary();
 
 		try {
-
-			if (ossClient.downloadObject("nit-photo", urlString, cacheFile))
-				return cacheFile;
+            downloadImage(urlString, cacheFile.getPath());
+			return cacheFile;
+            //if (ossClient.downloadObject("nit-photo", urlString, cacheFile))
 		} catch (Exception e) {
 			Log.d(TAG, "fail to downloadBitmap " + e.toString());
 		}
@@ -175,4 +179,54 @@ public class ImageFetcher extends ImageResizer {
 	public void setOssClient(OSSClient ossClient) {
 		this.ossClient = ossClient;
 	}
+
+        public String downloadImage(String uri, String filename) {
+            int count;
+            try {
+                try {
+                    uri = URLEncoder.encode(uri, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                URL url = new URL("http://oss.aliyuncs.com/nit-photo/" + uri);
+                URLConnection conection = url.openConnection();
+                conection.connect();
+                // this will be useful so that you can show a tipical 0-100% progress bar
+                int lenghtOfFile = conection.getContentLength();
+
+                // download the file
+                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+
+                // Output stream
+                OutputStream output = new FileOutputStream(filename);
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    // After this onProgressUpdate will be called
+                    //publishProgress(""+(int)((total*100)/lenghtOfFile));
+
+                    // writing data to file
+                    output.write(data, 0, count);
+                }
+
+                // flushing output
+                output.flush();
+
+                // closing streams
+                output.close();
+                input.close();
+
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
+            }
+
+            return null;
+        }
+
 }

@@ -78,7 +78,6 @@ android {
     productFlavors {
         mm {
             packageName "cn.nit.beauty"
-            versionCode 2
         }
     }
 //    defaultConfig {
