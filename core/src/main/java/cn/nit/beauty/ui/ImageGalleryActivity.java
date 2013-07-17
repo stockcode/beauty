@@ -12,6 +12,9 @@ import com.aliyun.android.oss.OSSClient;
 import com.aliyun.android.oss.model.OSSObjectSummary;
 import com.aliyun.android.util.Pagination;
 import com.baidu.mobstat.StatService;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
@@ -19,6 +22,7 @@ import cn.nit.beauty.adapter.GalleryAdapter;
 import cn.nit.beauty.bus.ImageChangeEvent;
 import cn.nit.beauty.gallery.HackyViewPager;
 import cn.nit.beauty.model.FolderInfo;
+import cn.nit.beauty.utils.Data;
 import de.greenrobot.event.EventBus;
 
 import android.content.Context;
@@ -50,6 +54,7 @@ public class ImageGalleryActivity extends SherlockActivity {
 	
 	private String objectKey;
 
+    List<FolderInfo> folderInfos;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,22 @@ public class ImageGalleryActivity extends SherlockActivity {
 		mViewPager = new HackyViewPager(this);
 		setContentView(mViewPager);
 
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                createShareIntent(Data.OSS_URL + folderInfos.get(i).getIsrc());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
 		mAdapter = new GalleryAdapter(this);
 		mViewPager.setAdapter(mAdapter);
 		
@@ -103,30 +124,15 @@ public class ImageGalleryActivity extends SherlockActivity {
     private Intent createShareIntent(String key) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
-        
-        
 
-//        final File cacheDir = DiskLruCache.getDiskCacheDir(getApplicationContext(),
-//				HTTP_CACHE_DIR);
-//
-//		final DiskLruCache cache = DiskLruCache.openCache(getApplicationContext(), cacheDir,
-//				HTTP_CACHE_SIZE);
-//
-//		final File cacheFile = new File(cache.createFilePath(key));
-//
-//		if (cache.containsKey(key)) {
-//			Uri uri = Uri.fromFile(cacheFile);
-//			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-//		}
-		
-        
-        
+        File cacheFile = DiscCacheUtil.findInCache(key, ImageLoader.getInstance().getDiscCache());
+
+		Uri uri = Uri.fromFile(cacheFile);
+		shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+
         return shareIntent;
     }
 
-    public void onEvent(ImageChangeEvent event) {
-        actionProvider.setShareIntent(createShareIntent(event.getObjectkey()));
-    }
     
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -141,7 +147,6 @@ public class ImageGalleryActivity extends SherlockActivity {
 		super.onPause();
 		StatService.onPause(this);
 
-        EventBus.getDefault().unregister(this);
 	}
 
     @Override
@@ -154,8 +159,7 @@ public class ImageGalleryActivity extends SherlockActivity {
 		super.onResume();
 		StatService.onResume(this);
 
-        EventBus.getDefault().register(this);
-	}	
+	}
 	
 	ContentTask task = new ContentTask(this);
 
@@ -172,7 +176,7 @@ public class ImageGalleryActivity extends SherlockActivity {
         protected List<FolderInfo> doInBackground(String... params) {
         	String folder = params[0];
         	
-        	List<FolderInfo> folderInfos = new ArrayList<FolderInfo>();
+        	folderInfos = new ArrayList<FolderInfo>();
         	
         	try {
 				if (!Helper.checkConnection(mContext))

@@ -214,8 +214,8 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
                 holder = new ViewHolder();
                 holder.imageView = (ScaleImageView) convertView
                         .findViewById(R.id.news_pic);
-                holder.contentView = (TextView) convertView
-                        .findViewById(R.id.news_title);
+                //holder.contentView = (TextView) convertView
+                //        .findViewById(R.id.news_title);
                 convertView.setTag(holder);
                 convertView.setOnClickListener(new OnClickListener() {
 
@@ -232,8 +232,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             }
 
             holder = (ViewHolder) convertView.getTag();
-            //holder.imageView.setImageWidth(duitangInfo.getWidth());
-            //holder.imageView.setImageHeight(duitangInfo.getHeight());
             //holder.contentView.setText(duitangInfo.getMsg());
             holder.objectKey = duitangInfo.getAlbid();
             ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getIsrc(), holder.imageView);
