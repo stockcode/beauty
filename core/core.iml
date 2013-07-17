@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.path="C:\GitHub\beauty" external.system.id="GRADLE" type="JAVA_MODULE" version="4">
+<module external.linked.project.path="D:\git\beauty" external.system.id="GRADLE" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
@@ -79,7 +79,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android SDK" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android 4.2.2 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="support-v4-r6" level="project" />
     <orderEntry type="library" name="greendao-1.3.1" level="project" />
