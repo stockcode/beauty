@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mobstat.StatService;
+import com.baidu.oauth.BaiduOAuth;
 import com.capricorn.ArcMenu;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
@@ -48,7 +49,6 @@ import cn.nit.beauty.database.Category;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
-import cn.nit.beauty.utils.FileOperation;
 import cn.nit.beauty.widget.DragGridView;
 import cn.nit.beauty.widget.MyAnimations;
 import cn.nit.beauty.widget.ScrollLayout;
@@ -105,10 +105,10 @@ public class MainActivity extends RoboActivity {
     IntentFilter setbgFilter;
     int[] ITEM_DRAWABLES = {R.drawable.composer_add, R.drawable.composer_camera, R.drawable.composer_music,
             R.drawable.composer_place, R.drawable.composer_with};
-    private boolean areButtonsShowing;
-    private RelativeLayout composerButtonsWrapper;
-    private ImageView composerButtonsShowHideButtonIcon;
-    private RelativeLayout composerButtonsShowHideButton;
+
+    private SharedPreferences settings;
+
+
     private Handler finishHandler = new Handler() {
         public void handleMessage(Message msg) {
             progressDialog.dismiss();
@@ -119,6 +119,8 @@ public class MainActivity extends RoboActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         appUpdate = AppUpdateService.getAppUpdate(this);
         appUpdate.checkLatestVersion(Data.UPDATE_URL,
@@ -499,15 +501,51 @@ public class MainActivity extends RoboActivity {
                     //    Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
                     //    return;
                     //}
+                    if (position == itemCount - 1) {
+                        StartLogin();
+                    }
+                    else {
                         Intent intent = new Intent(MainActivity.this, classes[position]);
                     try {
                         startActivity(intent);
                     }catch (RuntimeException e) {
                         Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
                     }
+                    }
                 }
             });// Add a menu item
         }
+    }
+
+    private void StartLogin() {
+        String accessToken = settings.getString("accessToken", null);
+        if (accessToken != null) {
+            Toast.makeText(getApplicationContext(), "您已经登录过了", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        BaiduOAuth oauthClient = new BaiduOAuth();
+
+        oauthClient.startOAuth(this, Data.mbApiKey, new String[]{"basic", "netdisk"}, new BaiduOAuth.OAuthListener() {
+            @Override
+            public void onException(String msg) {
+                Toast.makeText(getApplicationContext(), "登录失败，错误原因：" + msg, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onComplete(BaiduOAuth.BaiduOAuthResponse response) {
+                if(null != response){
+                    String mbOauth = response.getAccessToken();
+                    settings.edit().putString("accessToken", mbOauth)
+                            .putString("userName", response.getUserName())
+                            .apply();
+                    Toast.makeText(getApplicationContext(), response.getUserName() + "登录成功！", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onCancel() {
+                Toast.makeText(getApplicationContext(), "登录已取消", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void onEvent(LauncherChangeEvent event) {
@@ -568,11 +606,7 @@ public class MainActivity extends RoboActivity {
 
                             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                             boolean isClearImage = settings.getBoolean("checkbox_clearimage", false);
-                            if (isClearImage) {
-                                File f = new File("/sdcard/night_girls/weibos");
-                                FileOperation.deleteFile(f);
-                                f.delete();
-                            }
+
                             sm.unregisterListener(lsn);
 
 

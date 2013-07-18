@@ -1,6 +1,9 @@
 package cn.nit.beauty.ui;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +28,7 @@ import cn.nit.beauty.model.FolderInfo;
 import cn.nit.beauty.utils.Data;
 import de.greenrobot.event.EventBus;
 
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -32,8 +36,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.AsyncTask.Status;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.widget.Toast;
 
 public class ImageGalleryActivity extends SherlockActivity {
 	
@@ -55,7 +64,8 @@ public class ImageGalleryActivity extends SherlockActivity {
 	private String objectKey;
 
     List<FolderInfo> folderInfos;
-
+    private Message message = new Message();
+    private Boolean autoPlay = false;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -116,11 +126,48 @@ public class ImageGalleryActivity extends SherlockActivity {
         return true;
     }
 
-    /**
-     * Creates a sharing {@link Intent}.
-     *
-     * @return The sharing intent.
-     */
+    public boolean onOptionsItemSelected(MenuItem mi){
+        switch (mi.getItemId()) {
+            case R.id.mnuPlay:
+
+                autoPlay = true;
+                AutoPlayHandler autoPlayHandler = new AutoPlayHandler();
+                autoPlayHandler.sendMessageDelayed(message, 2000);// 延迟两秒发送消息
+                Toast.makeText(this, "开启自动播放，按返回键即可关闭", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.mnuWallpaper:
+                WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+                try {
+                    File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + folderInfos.get(mViewPager.getCurrentItem()).getIsrc(), ImageLoader.getInstance().getDiscCache());
+                    InputStream is = new FileInputStream(cacheFile);
+                    wallpaperManager.setStream(is);
+                    is.close();;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.mnuOriginal:
+                break;
+        }
+        return true;
+
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && autoPlay) {
+            autoPlay = false;
+            Toast.makeText(this, "自动播放已关闭", Toast.LENGTH_SHORT).show();
+            return  true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+        /**
+         * Creates a sharing {@link Intent}.
+         *
+         * @return The sharing intent.
+         */
     private Intent createShareIntent(String key) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
@@ -221,5 +268,20 @@ public class ImageGalleryActivity extends SherlockActivity {
         }
                 
     }
-	
+
+    class AutoPlayHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (autoPlay) {
+                int nextItem = (mViewPager.getCurrentItem() + 1) % folderInfos.size();
+                if (nextItem == 0) {
+                    Toast.makeText(ImageGalleryActivity.this, "已经播放完了，从头开始", Toast.LENGTH_SHORT).show();
+                }
+                mViewPager.setCurrentItem(nextItem);// 换页，同时实现了循环播放
+                message = obtainMessage(0);// 重新给message赋值，因为前一个message“还在使用中”
+                sendMessageDelayed(message, 2000);
+            }
+        }
+    }
 }

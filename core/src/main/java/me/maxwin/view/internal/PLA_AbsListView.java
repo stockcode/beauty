@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.nit.beauty.pla.lib.internal;
+package me.maxwin.view.internal;
 
 import java.util.ArrayList;
 import java.util.List;

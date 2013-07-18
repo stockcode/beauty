@@ -14,7 +14,7 @@
  * limitations under the License.
  *******************************************************************************/
 
-package cn.nit.beauty.pla.lib;
+package me.maxwin.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -24,7 +24,7 @@ import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.View;
 
-import cn.nit.beauty.pla.lib.internal.PLA_ListView;
+import me.maxwin.view.internal.PLA_ListView;
 
 import cn.nit.beauty.R;
 

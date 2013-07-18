@@ -4,7 +4,7 @@ import java.util.List;
 
 import cn.nit.beauty.R;
 import cn.nit.beauty.database.Category;
-import cn.nit.beauty.utils.ImgAsync_List;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +20,6 @@ public class DragGridAdapter extends BaseAdapter {
 	private Context context;
 	private List<Category> lstDate;
 	private TextView txt;private ImageView img;private RelativeLayout relate;
-	ImgAsync_List asyncImageLoader_Weibo;
 	@SuppressWarnings("unused")
 	private GridView listview;
 
@@ -28,7 +27,6 @@ public class DragGridAdapter extends BaseAdapter {
 		this.context = mContext;
 		lstDate = list;
 		this.listview = listview;
-		asyncImageLoader_Weibo = new ImgAsync_List();
 	}
 
 	@Override

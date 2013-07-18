@@ -9,9 +9,8 @@
 package me.maxwin.view;
 
 import cn.nit.beauty.R;
-import cn.nit.beauty.pla.lib.MultiColumnListView;
-import cn.nit.beauty.pla.lib.internal.PLA_AbsListView;
-import cn.nit.beauty.pla.lib.internal.PLA_AbsListView.OnScrollListener;
+import me.maxwin.view.internal.PLA_AbsListView;
+import me.maxwin.view.internal.PLA_AbsListView.OnScrollListener;
 
 import android.content.Context;
 import android.util.AttributeSet;

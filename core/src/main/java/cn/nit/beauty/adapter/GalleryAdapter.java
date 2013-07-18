@@ -52,6 +52,7 @@ public class GalleryAdapter extends PagerAdapter {
         final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
 
+        ImageLoader.getInstance().cancelDisplayTask(photoView);
         ImageLoader.getInstance().displayImage(Data.OSS_URL + imageSrc, photoView, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {

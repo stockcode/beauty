@@ -221,7 +221,9 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
         
         Intent intent = getIntent();
         objectKey = intent.getStringExtra("objectKey");
-        
+
+        String[] strs = objectKey.split("/");
+        setTitle(strs[strs.length - 2]);
         ossClient = new OSSClient();
 		ossClient.setAccessId("tEPWqYKJGESwhRo5");
 		ossClient.setAccessKey("oUkPZvE5HghfRbkX5wklu6qAiDnMrw");

@@ -50,9 +50,6 @@ public class Configure{
 
 		public static void inits(Activity context) {
 
-			if(Configure.NO_IMAGE==null)
-				Configure.NO_IMAGE = ImageOperation.readNoImageBitmap(context,R.drawable.icon);
-
 			if(screenDensity==0||screenWidth==0||screenHeight==0){
 				DisplayMetrics dm = new DisplayMetrics();
 				context.getWindowManager().getDefaultDisplay().getMetrics(dm);

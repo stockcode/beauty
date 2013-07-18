@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.nit.beauty.pla.lib.internal;
+package me.maxwin.view.internal;
 
 import java.util.ArrayList;
 
@@ -23,10 +23,7 @@ import cn.nit.beauty.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;

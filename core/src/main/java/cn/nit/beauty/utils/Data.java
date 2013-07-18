@@ -15,7 +15,8 @@ public class Data {
 
     public final static String OSS_URL = "http://oss.aliyuncs.com/nit-photo/";
 	public final static String UPDATE_URL = "http://nit-app.oss.aliyuncs.com/beauty/update.json";
-	
+    public final static String mbApiKey = "6NxlGErC78G5tGB2aWPblquO";//请替换申请客户端应用时获取的Api Key串
+
 	public final static String INDEX_KEY = "index.ini";
 	
 	public final static String BUCKET_NAME = "nit-photo";
