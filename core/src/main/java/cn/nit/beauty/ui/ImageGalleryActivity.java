@@ -174,8 +174,10 @@ public class ImageGalleryActivity extends SherlockActivity {
 
         File cacheFile = DiscCacheUtil.findInCache(key, ImageLoader.getInstance().getDiscCache());
 
-		Uri uri = Uri.fromFile(cacheFile);
-		shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        if (cacheFile != null) {
+		    Uri uri = Uri.fromFile(cacheFile);
+		    shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        }
 
         return shareIntent;
     }
