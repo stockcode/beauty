@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.nit.beauty"
-    android:versionCode="6"
-    android:versionName="1.0.6">
+    package="cn.nit.beauty">
 
     <uses-sdk android:minSdkVersion="7" />
 

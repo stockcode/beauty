@@ -1,6 +1,7 @@
 package cn.nit.beauty;
 
 import android.app.Application;
+import android.graphics.Bitmap;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
@@ -36,6 +37,7 @@ public class BeautyApplication extends Application {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
             .cacheInMemory(true)
             .cacheOnDisc(true)
+            .bitmapConfig(Bitmap.Config.RGB_565)
             .build();
 
         File cacheDir = StorageUtils.getCacheDirectory(this.getApplicationContext());

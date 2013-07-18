@@ -37,7 +37,15 @@ tasks.withType(com.android.build.gradle.tasks.PackageApplication) { pkgTask ->pk
         into 'build/native-libs'
     }
 
+
 android {
+    defaultConfig {
+//        minSdkVersion 7
+//        targetSdkVersion 16
+        versionCode 6
+        versionName "1.0.6"
+    }
+
     compileSdkVersion 17
     buildToolsVersion "17.0.0"
 
@@ -52,6 +60,8 @@ android {
         }
     }
 
+
+
     buildTypes {
         debug {
             packageNameSuffix = ".debug"
@@ -62,34 +72,22 @@ android {
         release {
             signingConfig signingConfigs.release
         }
-//        buildVariants.each { variant ->
-//
-//            apk = variant.packageApplication.outputFile;
-//
-//            if (variant.buildType.name == "release") {
-//                newName = apk.name.replace(".apk", "-v" + defaultConfig.versionName + "-RELEASE.apk");
-//            } else {
-//                newName = apk.name.replace(".apk", "-v" + defaultConfig.versionName + "-SNAPSHOT.apk");
-//            }
-//
-//            newName = newName.replace("-" + variant.buildType.name, "");
-//
-//            variant.packageApplication.outputFile = new File(apk.parentFile, newName);
-//            if (variant.zipAlign) {
-//                variant.zipAlign.outputFile = new File(apk.parentFile, newName.replace("-unaligned", ""));
-//            }
-//        }
+
     }
 
 
     productFlavors {
         mm {
             packageName "cn.nit.beauty"
+
         }
     }
-//    defaultConfig {
-//        minSdkVersion 7
-//        targetSdkVersion 16
-//    }
+
+    applicationVariants.each { variant ->
+
+        def file = variant.outputFile
+        variant.outputFile = new File(file.parent, file.name.replace(".apk", "-" + defaultConfig.versionCode + "-" + defaultConfig.versionName + ".apk"))
+    }
+
 }
 
