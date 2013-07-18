@@ -4,6 +4,7 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
@@ -13,6 +14,8 @@ import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -25,6 +28,8 @@ import com.aliyun.android.util.Pagination;
 import com.baidu.mobstat.StatService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,9 +41,12 @@ import java.util.List;
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.GalleryAdapter;
+import cn.nit.beauty.bus.ImageChangeEvent;
 import cn.nit.beauty.gallery.HackyViewPager;
 import cn.nit.beauty.model.FolderInfo;
 import cn.nit.beauty.utils.Data;
+import de.greenrobot.event.EventBus;
+import uk.co.senab.photoview.PhotoView;
 
 public class ImageGalleryActivity extends SherlockActivity {
 
@@ -129,17 +137,10 @@ public class ImageGalleryActivity extends SherlockActivity {
                 Toast.makeText(this, "开启自动播放，按返回键即可关闭", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.mnuWallpaper:
-                WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
-                try {
-                    File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + folderInfos.get(mViewPager.getCurrentItem()).getIsrc(), ImageLoader.getInstance().getDiscCache());
-                    InputStream is = new FileInputStream(cacheFile);
-                    wallpaperManager.setStream(is);
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                changeWallpaper();
                 return true;
             case R.id.mnuOriginal:
+                changeOriginal();
                 return true;
 
             default:
@@ -147,6 +148,72 @@ public class ImageGalleryActivity extends SherlockActivity {
         }
 
 
+    }
+
+    private void changeOriginal() {
+        FolderInfo folderInfo = mAdapter.getItem(mViewPager.getCurrentItem());
+        String imageSrc = folderInfo.getIsrc().replaceAll("thumb", "original");
+        folderInfo.setIsrc(imageSrc);
+
+        View imageLayout = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
+        mViewPager.removeView(imageLayout);
+
+        PhotoView photoView = (PhotoView) imageLayout.findViewById(R.id.image);
+
+        final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
+
+
+        ImageLoader.getInstance().displayImage(Data.OSS_URL + imageSrc, photoView, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                spinner.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                String message = null;
+                switch (failReason.getType()) {
+                    case IO_ERROR:
+                        message = "Input/Output error";
+                        break;
+                    case DECODING_ERROR:
+                        message = "Image can't be decoded";
+                        break;
+                    case NETWORK_DENIED:
+                        message = "Downloads are denied";
+                        break;
+                    case OUT_OF_MEMORY:
+                        message = "Out Of Memory error";
+                        break;
+                    case UNKNOWN:
+                        message = "Unknown error";
+                        break;
+                }
+                Toast.makeText(ImageGalleryActivity.this, message, Toast.LENGTH_SHORT).show();
+
+                spinner.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                spinner.setVisibility(View.GONE);
+                Toast.makeText(ImageGalleryActivity.this, "文件大小：" + loadedImage.getByteCount(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mViewPager.addView(imageLayout, mViewPager.getCurrentItem());
+    }
+
+    private void changeWallpaper() {
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+        try {
+            File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + folderInfos.get(mViewPager.getCurrentItem()).getIsrc(), ImageLoader.getInstance().getDiscCache());
+            InputStream is = new FileInputStream(cacheFile);
+            wallpaperManager.setStream(is);
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

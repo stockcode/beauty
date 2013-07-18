@@ -46,9 +46,10 @@ public class GalleryAdapter extends PagerAdapter {
         View imageLayout = inflater.inflate(R.layout.item_pager_image, container, false);
 
         FolderInfo folderInfo = mInfos.get(position);
-        String imageSrc = folderInfo.getIsrc(); //.replaceAll("thumb", "original");
+        String imageSrc = folderInfo.getIsrc();
 
         PhotoView photoView = (PhotoView) imageLayout.findViewById(R.id.image);
+
         final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
 
@@ -86,11 +87,11 @@ public class GalleryAdapter extends PagerAdapter {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 spinner.setVisibility(View.GONE);
-                EventBus.getDefault().post(new ImageChangeEvent(imageUri));
             }
         });
 
         ((ViewPager) container).addView(imageLayout, 0);
+        imageLayout.setTag(position);
         return imageLayout;
     }
 
