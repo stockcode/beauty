@@ -541,7 +541,7 @@ public class MainActivity extends RoboActivity {
     }
 
     private void StartLogin(final Category launcher) {
-        String accessToken = settings.getString("accessToken", null);
+        String accessToken = Configure.accessToken;
         if (accessToken != null) {
             Toast.makeText(getApplicationContext(), "您已经登录过了", Toast.LENGTH_SHORT).show();
             return;
@@ -561,6 +561,7 @@ public class MainActivity extends RoboActivity {
                     settings.edit().putString("accessToken", mbOauth)
                             .putString("userName", response.getUserName())
                             .apply();
+                    Configure.save(settings);
                     Toast.makeText(getApplicationContext(), response.getUserName() + "登录成功！", Toast.LENGTH_SHORT).show();
 
                     if (launcher != null) {

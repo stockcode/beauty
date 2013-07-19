@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"    
-    xmlns:baiduadsdk="http://schemas.android.com/apk/res/cn.nit.beauty"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="fill_parent" >
 
@@ -10,14 +9,16 @@
          android:fastScrollEnabled="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-<!--
-    <com.baidu.mobads.AdView android:id="@+id/adView"        
+
+    <com.baidu.mobads.AdView android:id="@+id/adView"
+        xmlns:baiduadsdk="http://schemas.android.com/apk/res"
 		android:layout_width="fill_parent" 
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
-		android:layout_alignParentLeft="true"  
+		android:layout_alignParentLeft="true"
+        android:layout_gravity="bottom"
 		baiduadsdk:adSize="0"
 		baiduadsdk:adId = "debug_m0000001"/>
--->
+
 	<!-- 注： baiduadsdk:adId可以指定为"",表示默认广告位-->
 </merge>

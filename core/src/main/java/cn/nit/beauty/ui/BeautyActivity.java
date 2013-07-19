@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.aliyun.android.oss.OSSClient;
+import com.baidu.mobads.AdView;
 import com.baidu.mobstat.StatService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -25,6 +26,7 @@ import cn.nit.beauty.R;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.model.FolderInfo;
+import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.ScaleImageView;
 import me.maxwin.view.XListView;
@@ -149,6 +151,11 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (Configure.accessToken != null) {
+            AdView adView = (AdView)findViewById(R.id.adView);
+            adView.setVisibility(adView.INVISIBLE);
+        }
         mAdapterView.setAdapter(mAdapter);
         StatService.onResume(this);
     }

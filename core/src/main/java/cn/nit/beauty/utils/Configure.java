@@ -17,7 +17,10 @@ public class Configure{
 	public static int screenHeight=0;
 	public static int screenWidth=0;
 	public static float screenDensity=0;
-	
+
+    public static String userName;
+    public static String accessToken;
+
 	public static int curentPage=0;public static int countPages=0;public static int removeItem=0;
 
 	public static Integer[] images = { R.drawable.default_homebg, R.drawable.bg_cb,
@@ -92,4 +95,9 @@ public class Configure{
 		}
 
 		public static int _position;
+
+    public static void save(SharedPreferences settings) {
+        userName = settings.getString("userName", null);
+        accessToken = settings.getString("accessToken", null);
+    }
 }

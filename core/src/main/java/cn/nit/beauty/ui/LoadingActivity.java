@@ -2,7 +2,9 @@ package cn.nit.beauty.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 
 import com.aliyun.android.oss.OSSClient;
@@ -42,6 +44,7 @@ public class LoadingActivity extends Activity {
         }
     };
 
+    private SharedPreferences settings;
     private OSSClient ossClient;
 
     @Override
@@ -59,6 +62,9 @@ public class LoadingActivity extends Activity {
                 PushConstants.LOGIN_TYPE_API_KEY, Utils.getMetaValue(LoadingActivity.this, "api_key"));
 
         Configure.inits(LoadingActivity.this);
+
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
+        Configure.save(settings);
 
         new Thread(runnable).start();
     }
