@@ -17,6 +17,8 @@ import org.acra.annotation.ReportsCrashes;
 
 import java.io.File;
 
+import cn.nit.beauty.widget.RotateBitmapProcessor;
+
 /**
  * Created by gengke on 13-7-15.
  */
@@ -38,6 +40,7 @@ public class BeautyApplication extends Application {
             .cacheInMemory(true)
             .cacheOnDisc(true)
             .bitmapConfig(Bitmap.Config.RGB_565)
+            .preProcessor(new RotateBitmapProcessor())
             .build();
 
         File cacheDir = StorageUtils.getCacheDirectory(this.getApplicationContext());

@@ -12,12 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class GalleryAdapter extends PagerAdapter {
     private LayoutInflater inflater;
     private Context mContext;
     private LinkedList<FolderInfo> mInfos;
+    DecimalFormat df   =   new   DecimalFormat("##0.000");
 
     public GalleryAdapter(Context context) {
         mContext = context;
@@ -49,7 +52,8 @@ public class GalleryAdapter extends PagerAdapter {
         String imageSrc = folderInfo.getIsrc();
 
         PhotoView photoView = (PhotoView) imageLayout.findViewById(R.id.image);
-
+        final TextView tvInfo = (TextView) imageLayout.findViewById(R.id.tvInfo);
+        tvInfo.setText((position+1) + "/" + mInfos.size());
         final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
 
@@ -87,6 +91,8 @@ public class GalleryAdapter extends PagerAdapter {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 spinner.setVisibility(View.GONE);
+                //float size = loadedImage.getByteCount() / (1024*1024);
+                //tvInfo.setText(tvInfo.getText() + "    " + df.format(size) + "MB");
             }
         });
 

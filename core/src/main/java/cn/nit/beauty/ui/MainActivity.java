@@ -1,7 +1,9 @@
 package cn.nit.beauty.ui;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -37,6 +39,7 @@ import com.capricorn.ArcMenu;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
 import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -284,11 +287,31 @@ public class MainActivity extends RoboActivity {
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     final int arg2, long arg3) {
 
-                Category launcher = lists.get(ii).get(arg2);
+                final Category launcher = lists.get(ii).get(arg2);
 
                 if (launcher.getTITLE().equals("none")) return;
 
-                if (launcher.getURL().equals("favorite") || launcher.getURL().equals("vip") || launcher.getURL().equals("more")) {
+                if (launcher.getURL().equals("vip")) {
+                    String accessToken = settings.getString("accessToken", null);
+                    if (accessToken == null) {
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("提示")
+                                .setMessage("您需要登录才能浏览VIP专区")
+                                .setPositiveButton("登录", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        StartLogin(launcher);
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                })
+                                .show();
+                        return;
+                    }
+                }
+                if (launcher.getURL().equals("favorite") || launcher.getURL().equals("more")) {
                     Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -502,7 +525,7 @@ public class MainActivity extends RoboActivity {
                     //    return;
                     //}
                     if (position == itemCount - 1) {
-                        StartLogin();
+                        StartLogin(null);
                     }
                     else {
                         Intent intent = new Intent(MainActivity.this, classes[position]);
@@ -517,7 +540,7 @@ public class MainActivity extends RoboActivity {
         }
     }
 
-    private void StartLogin() {
+    private void StartLogin(final Category launcher) {
         String accessToken = settings.getString("accessToken", null);
         if (accessToken != null) {
             Toast.makeText(getApplicationContext(), "您已经登录过了", Toast.LENGTH_SHORT).show();
@@ -539,6 +562,13 @@ public class MainActivity extends RoboActivity {
                             .putString("userName", response.getUserName())
                             .apply();
                     Toast.makeText(getApplicationContext(), response.getUserName() + "登录成功！", Toast.LENGTH_SHORT).show();
+
+                    if (launcher != null) {
+                        Intent intent = new Intent();
+                        intent.putExtra("launcher", launcher);
+                        intent.setClass(MainActivity.this, BeautyActivity.class);
+                        startActivity(intent);
+                    }
                 }
             }
             @Override
