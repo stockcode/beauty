@@ -13,6 +13,7 @@ dependencies {
     compile  'de.greenrobot:eventbus:2.0.2'
     compile  'com.baidu.android:mobstat:3.1'
     compile  'com.baidu.android:mobads:3.2'
+    compile  'com.baidu.android:mobads_wall:1.1'
     compile  'com.baidu.android:pushservice:2.2.1'
     compile 'ch.acra:acra:4.5.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.5'
@@ -42,8 +43,8 @@ android {
     defaultConfig {
 //        minSdkVersion 7
 //        targetSdkVersion 16
-        versionCode 8
-        versionName "1.0.8"
+        versionCode 9
+        versionName "1.0.9"
     }
 
     compileSdkVersion 17

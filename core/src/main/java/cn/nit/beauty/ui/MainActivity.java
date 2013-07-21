@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.mobads.appoffers.OffersManager;
 import com.baidu.mobstat.StatService;
 import com.baidu.oauth.BaiduOAuth;
 import com.capricorn.ArcMenu;
@@ -524,6 +525,11 @@ public class MainActivity extends RoboActivity {
                     //    Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
                     //    return;
                     //}
+
+                    if (position == 1) {
+                        OffersManager.showOffers(MainActivity.this);
+                    }
+
                     if (position == itemCount - 1) {
                         StartLogin(null);
                     }

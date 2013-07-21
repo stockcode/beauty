@@ -25,6 +25,8 @@
         android:theme="@style/Theme.Sherlock.Light"
         android:name="BeautyApplication">
 
+        <activity android:name="com.baidu.mobads.appoffers.OffersActivity" android:configChanges="keyboard|keyboardHidden|orientation" />
+
         <!-- 注册AppActivity -->
 		<activity android:name="com.baidu.mobads.AppActivity" android:configChanges="keyboard|keyboardHidden|orientation" />
 		<!-- 您从百度移动联盟网站获取的APPSID -->

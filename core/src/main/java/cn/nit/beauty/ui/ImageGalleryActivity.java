@@ -94,7 +94,9 @@ public class ImageGalleryActivity extends SherlockActivity {
 
             @Override
             public void onPageSelected(int i) {
-                createShareIntent(Data.OSS_URL + folderInfos.get(i).getIsrc());
+                if (actionProvider != null) {
+                    createShareIntent(Data.OSS_URL + folderInfos.get(i).getIsrc());
+                }
             }
 
             @Override
@@ -233,7 +235,7 @@ public class ImageGalleryActivity extends SherlockActivity {
      *
      * @return The sharing intent.
      */
-    private Intent createShareIntent(String key) {
+    private void createShareIntent(String key) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
 
@@ -242,9 +244,8 @@ public class ImageGalleryActivity extends SherlockActivity {
         if (cacheFile != null) {
             Uri uri = Uri.fromFile(cacheFile);
             shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            actionProvider.setShareIntent(shareIntent);
         }
-
-        return shareIntent;
     }
 
     @Override
