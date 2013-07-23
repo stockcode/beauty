@@ -161,7 +161,7 @@ public class ImageGalleryActivity extends SherlockActivity {
 
         View imageLayout = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
 
-        PhotoView photoView = (PhotoView) imageLayout.findViewById(R.id.image);
+        final PhotoView photoView = (PhotoView) imageLayout.findViewById(R.id.image);
 
         final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
@@ -200,12 +200,12 @@ public class ImageGalleryActivity extends SherlockActivity {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 spinner.setVisibility(View.GONE);
-                Toast.makeText(ImageGalleryActivity.this, "文件大小：" + loadedImage.getByteCount(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImageGalleryActivity.this, "原图已加载", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ImageGalleryActivity.this, "文件大小：" + loadedImage.getByteCount() / (1024*1024) + "MB", Toast.LENGTH_SHORT).show();
+                PhotoViewAttacher mAttacher = new PhotoViewAttacher(photoView);
+                mAttacher.update();
             }
         });
-
-        PhotoViewAttacher mAttacher = new PhotoViewAttacher(photoView);
-        mAttacher.update();
     }
 
     private void changeWallpaper() {
