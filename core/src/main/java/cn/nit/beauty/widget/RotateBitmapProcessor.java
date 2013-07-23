@@ -1,7 +1,6 @@
 package cn.nit.beauty.widget;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
 import com.nostra13.universalimageloader.core.process.BitmapProcessor;
@@ -19,9 +18,15 @@ public class RotateBitmapProcessor implements BitmapProcessor {
         matrix.reset();
         matrix.setRotate(90);
 
-        Bitmap tmpBitmap = Bitmap.createBitmap(bitmap,0,0, bitmap.getWidth(), bitmap.getHeight(),matrix, true);
-        bitmap.recycle();
 
-        return tmpBitmap;
+        try {
+            Bitmap tmpBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            bitmap = null;
+            return tmpBitmap;
+        } catch (RuntimeException re) {
+        }
+
+        return bitmap;
     }
 }

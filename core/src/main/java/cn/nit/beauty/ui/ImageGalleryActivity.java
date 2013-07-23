@@ -176,19 +176,19 @@ public class ImageGalleryActivity extends SherlockActivity {
                 String message = null;
                 switch (failReason.getType()) {
                     case IO_ERROR:
-                        message = "Input/Output error";
+                        message = "读取错误";
                         break;
                     case DECODING_ERROR:
-                        message = "Image can't be decoded";
+                        message = "图片解码错误";
                         break;
                     case NETWORK_DENIED:
-                        message = "Downloads are denied";
+                        message = "下载图片被拒绝";
                         break;
                     case OUT_OF_MEMORY:
-                        message = "Out Of Memory error";
+                        message = "内存溢出";
                         break;
                     case UNKNOWN:
-                        message = "Unknown error";
+                        message = "未知错误";
                         break;
                 }
                 Toast.makeText(ImageGalleryActivity.this, message, Toast.LENGTH_SHORT).show();
