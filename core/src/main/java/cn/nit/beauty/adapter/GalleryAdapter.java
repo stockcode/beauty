@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ public class GalleryAdapter extends PagerAdapter {
         String imageSrc = folderInfo.getIsrc();
 
         PhotoView photoView = (PhotoView) imageLayout.findViewById(R.id.image);
+
         final TextView tvInfo = (TextView) imageLayout.findViewById(R.id.tvInfo);
         tvInfo.setText((position+1) + "/" + mInfos.size());
         final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
@@ -96,7 +98,7 @@ public class GalleryAdapter extends PagerAdapter {
             }
         });
 
-        ((ViewPager) container).addView(imageLayout, 0);
+        container.addView(imageLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         imageLayout.setTag(position);
         return imageLayout;
     }

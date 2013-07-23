@@ -339,7 +339,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 			 */
 			if (top != mIvTop || bottom != mIvBottom || left != mIvLeft || right != mIvRight) {
 				// Update our base matrix, as the bounds have changed
-				updateBaseMatrix(imageView.getDrawable());
+				//updateBaseMatrix(imageView.getDrawable());
 
 				// Update values as something has changed
 				mIvTop = top;

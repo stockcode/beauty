@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ import cn.nit.beauty.model.FolderInfo;
 import cn.nit.beauty.utils.Data;
 import de.greenrobot.event.EventBus;
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageGalleryActivity extends SherlockActivity {
 
@@ -158,7 +160,6 @@ public class ImageGalleryActivity extends SherlockActivity {
         folderInfo.setIsrc(imageSrc);
 
         View imageLayout = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
-        mViewPager.removeView(imageLayout);
 
         PhotoView photoView = (PhotoView) imageLayout.findViewById(R.id.image);
 
@@ -203,7 +204,8 @@ public class ImageGalleryActivity extends SherlockActivity {
             }
         });
 
-        mViewPager.addView(imageLayout, mViewPager.getCurrentItem());
+        PhotoViewAttacher mAttacher = new PhotoViewAttacher(photoView);
+        mAttacher.update();
     }
 
     private void changeWallpaper() {
