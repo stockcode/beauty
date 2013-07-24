@@ -7,11 +7,9 @@ package cn.nit.beauty.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,23 +23,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cn.nit.beauty.R;
-import cn.nit.beauty.Utils;
-import cn.nit.beauty.bus.ImageChangeEvent;
-import cn.nit.beauty.model.FolderInfo;
+import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.utils.Data;
-import de.greenrobot.event.EventBus;
 import uk.co.senab.photoview.PhotoView;
 
 public class GalleryAdapter extends PagerAdapter {
 
     private LayoutInflater inflater;
     private Context mContext;
-    private LinkedList<FolderInfo> mInfos;
+    private LinkedList<ImageInfo> mInfos;
     DecimalFormat df   =   new   DecimalFormat("##0.000");
 
     public GalleryAdapter(Context context) {
         mContext = context;
-        mInfos = new LinkedList<FolderInfo>();
+        mInfos = new LinkedList<ImageInfo>();
         inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -49,8 +44,8 @@ public class GalleryAdapter extends PagerAdapter {
     public View instantiateItem(ViewGroup container, int position) {
         View imageLayout = inflater.inflate(R.layout.item_pager_image, container, false);
 
-        FolderInfo folderInfo = mInfos.get(position);
-        String imageSrc = folderInfo.getIsrc();
+        ImageInfo imageInfo = mInfos.get(position);
+        String imageSrc = imageInfo.getUrl();
 
         PhotoView photoView = (PhotoView) imageLayout.findViewById(R.id.image);
 
@@ -118,17 +113,17 @@ public class GalleryAdapter extends PagerAdapter {
         return mInfos.size();
     }
 
-    public void addItemLast(List<FolderInfo> datas) {
+    public void addItemLast(List<ImageInfo> datas) {
         mInfos.addAll(datas);
     }
 
-    public void addItemTop(List<FolderInfo> datas) {
-        for (FolderInfo info : datas) {
+    public void addItemTop(List<ImageInfo> datas) {
+        for (ImageInfo info : datas) {
             mInfos.addFirst(info);
         }
     }
 
-    public FolderInfo getItem(int location) {
+    public ImageInfo getItem(int location) {
         return mInfos.get(location);
     }
 

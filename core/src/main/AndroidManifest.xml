@@ -167,6 +167,10 @@
             android:value="6NxlGErC78G5tGB2aWPblquO" />
         <!-- push service end -->
 
+        <service
+                android:name="com.octo.android.robospice.GsonSpringAndroidSpiceService"
+                android:exported="false" />
+
     </application>
 
 </manifest>

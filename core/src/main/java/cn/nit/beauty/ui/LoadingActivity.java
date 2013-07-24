@@ -6,15 +6,21 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
-import com.aliyun.android.oss.OSSClient;
-import com.aliyun.android.oss.model.OSSObject;
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.mobstat.StatService;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
 import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
+import com.octo.android.robospice.GsonSpringAndroidSpiceService;
+import com.octo.android.robospice.JacksonSpringAndroidSpiceService;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.UncachedSpiceService;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,23 +35,21 @@ import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.database.Category;
+import cn.nit.beauty.model.Index;
+import cn.nit.beauty.request.IndexRequest;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 
 public class LoadingActivity extends Activity {
 
+    private SpiceManager spiceManager = new SpiceManager(
+            GsonSpringAndroidSpiceService.class);
+
     LaucherDataBase database;
     boolean isLaucher;
     boolean isFinish = false;
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            checkItems();
-        }
-    };
 
     private SharedPreferences settings;
-    private OSSClient ossClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,10 +57,6 @@ public class LoadingActivity extends Activity {
         setContentView(R.layout.layout_loading);
 
         database = new LaucherDataBase(getApplicationContext());
-
-
-
-
 
         PushManager.startWork(getApplicationContext(),
                 PushConstants.LOGIN_TYPE_API_KEY, Utils.getMetaValue(LoadingActivity.this, "api_key"));
@@ -66,7 +66,8 @@ public class LoadingActivity extends Activity {
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         Configure.save(settings);
 
-        new Thread(runnable).start();
+        IndexRequest indexRequest = new IndexRequest(Data.OSS_URL + Data.INDEX_KEY);
+        spiceManager.execute(indexRequest, "beauty.index", DurationInMillis.ONE_DAY, new IndexRequestListener());
     }
 
     @Override
@@ -82,6 +83,18 @@ public class LoadingActivity extends Activity {
         super.onResume();
 
         StatService.onResume(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        spiceManager.start( this );
+    }
+
+    @Override
+    protected void onStop() {
+        spiceManager.shouldStop();
+        super.onStop();
     }
 
     public void checkItems() {
@@ -104,67 +117,7 @@ public class LoadingActivity extends Activity {
             database.insertLauncher(launchers);
         }
 
-        ArrayList<Category> add_items = new ArrayList<Category>();
 
-
-        ossClient = new OSSClient();
-        ossClient.setAccessId(Data.OSS_ACCESSID);
-        ossClient.setAccessKey(Data.OSS_ACCESSKEY);
-
-        OSSObject ossObject = ossClient.getObject(Data.BUCKET_NAME, Data.INDEX_KEY);
-
-        if (ossObject != null) {
-
-
-            try {
-
-                List<Category> categories = new ArrayList<Category>();
-
-                String json = new String(ossObject.getData(), "UTF-8");
-
-                JSONObject jsonObject = new JSONObject(json);
-                JSONArray jsonCategories = jsonObject.getJSONArray("categories");
-                for (int i = 0; i < jsonCategories.length(); i++) {
-                    JSONObject obj = jsonCategories.getJSONObject(i);
-                    Category category = new Category();
-                    category.setURL(obj.getString("URL"));
-                    category.setCATEGORY(obj.getString("CATEGORY"));
-                    category.setCATEGORY_ICON(obj.getInt("CATEGORY_ICON"));
-                    category.setTITLE(obj.getString("TITLE"));
-                    category.setICON(obj.getInt("ICON"));
-                    category.setCHOICE(false);
-                    categories.add(category);
-                }
-                database.insertItems(categories);
-
-                JSONObject mapObj = jsonObject.getJSONObject("roots");
-                Iterator iter = mapObj.keys();
-                while (iter.hasNext()) {
-                    String category = iter.next().toString();
-                    JSONArray jsonUrls = mapObj.getJSONArray(category);
-
-                    List<String> urls = new ArrayList<String>();
-                    for (int i = 0; i < jsonUrls.length(); i++) {
-                        urls.add(jsonUrls.getString(i));
-                    }
-
-                    Data.categoryMap.put(category, urls);
-
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-
-        Intent intent = new Intent();
-        intent.setClass(LoadingActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     @Override
@@ -181,6 +134,31 @@ public class LoadingActivity extends Activity {
     }
 
 
+    private class IndexRequestListener implements RequestListener<Index> {
+        @Override
+        public void onRequestFailure(SpiceException e) {
+            Toast.makeText( LoadingActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_LONG ).show();
+            startMain();
+        }
+
+        @Override
+        public void onRequestSuccess(Index index) {
+            if ( index != null ) {
+                database.insertItems(index.getCategories());
+                Data.categoryMap = index.getRoots();
+            }
+            startMain();
+        }
+
+        private void startMain() {
+            checkItems();
+
+            Intent intent = new Intent();
+            intent.setClass(LoadingActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
 }
 
 

@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.aliyun.android.oss.OSSClient;
 import com.baidu.mobads.AdView;
 import com.baidu.mobstat.StatService;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -25,7 +24,7 @@ import java.util.List;
 import cn.nit.beauty.R;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.database.Category;
-import cn.nit.beauty.model.FolderInfo;
+import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.ScaleImageView;
@@ -40,7 +39,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     private StaggeredAdapter mAdapter = null;
     private int currentPage = 0;
     private int pageCount = 10;
-    private OSSClient ossClient;
     private List<String> filters = new ArrayList<String>();
     ;
     private String selectedFilter = "全部";
@@ -59,20 +57,20 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             mAdapter.clear();
         }
 
-        List<FolderInfo> folderInfos = new ArrayList<FolderInfo>();
+        List<ImageInfo> imageInfos = new ArrayList<ImageInfo>();
 
         for (int i = pageindex * pageCount; i < (pageindex + 1) * pageCount; i++) {
             if (i >= selectedFolders.size()) break;
 
-            FolderInfo newsInfo1 = new FolderInfo();
-            newsInfo1.setAlbid(selectedFolders.get(i));
-            newsInfo1.setIsrc(selectedFolders.get(i) + "thumb/cover.jpg");
-            newsInfo1.setMsg(selectedFolders.get(i));
-            folderInfos.add(newsInfo1);
+            ImageInfo newsInfo1 = new ImageInfo();
+            newsInfo1.setKey(selectedFolders.get(i));
+            newsInfo1.setUrl(selectedFolders.get(i) + "thumb/cover.jpg");
+            newsInfo1.setTitle(selectedFolders.get(i));
+            imageInfos.add(newsInfo1);
         }
 
-        if (folderInfos.size() > 0) {
-            mAdapter.addItemLast(folderInfos);
+        if (imageInfos.size() > 0) {
+            mAdapter.addItemLast(imageInfos);
             mAdapter.notifyDataSetChanged();
         }
         mAdapterView.stopRefresh();
@@ -103,10 +101,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
         if (folders == null) folders = new ArrayList<String>();
 
         database = new LaucherDataBase(getApplicationContext());
-
-        ossClient = new OSSClient();
-        ossClient.setAccessId(Data.OSS_ACCESSID);
-        ossClient.setAccessKey(Data.OSS_ACCESSKEY);
 
         mAdapterView = (XListView) findViewById(R.id.list);
         mAdapterView.setPullLoadEnable(true);
@@ -199,12 +193,12 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
     public class StaggeredAdapter extends BaseAdapter {
         private Context mContext;
-        private LinkedList<FolderInfo> mInfos;
+        private LinkedList<ImageInfo> mInfos;
         private XListView mListView;
 
         public StaggeredAdapter(Context context, XListView xListView) {
             mContext = context;
-            mInfos = new LinkedList<FolderInfo>();
+            mInfos = new LinkedList<ImageInfo>();
             mListView = xListView;
         }
 
@@ -212,7 +206,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
         public View getView(int position, View convertView, ViewGroup parent) {
 
             ViewHolder holder;
-            FolderInfo duitangInfo = mInfos.get(position);
+            ImageInfo duitangInfo = mInfos.get(position);
 
             if (convertView == null) {
                 LayoutInflater layoutInflator = LayoutInflater.from(parent
@@ -240,8 +234,8 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
             holder = (ViewHolder) convertView.getTag();
             //holder.contentView.setText(duitangInfo.getMsg());
-            holder.objectKey = duitangInfo.getAlbid();
-            ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getIsrc(), holder.imageView);
+            holder.objectKey = duitangInfo.getKey();
+            ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getUrl(), holder.imageView);
             return convertView;
         }
 
@@ -260,12 +254,12 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             return 0;
         }
 
-        public void addItemLast(List<FolderInfo> datas) {
+        public void addItemLast(List<ImageInfo> datas) {
             mInfos.addAll(datas);
         }
 
-        public void addItemTop(List<FolderInfo> datas) {
-            for (FolderInfo info : datas) {
+        public void addItemTop(List<ImageInfo> datas) {
+            for (ImageInfo info : datas) {
                 mInfos.addFirst(info);
             }
         }

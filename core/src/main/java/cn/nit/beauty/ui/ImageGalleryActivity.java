@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -23,14 +21,16 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
-import com.aliyun.android.oss.OSSClient;
-import com.aliyun.android.oss.model.OSSObjectSummary;
-import com.aliyun.android.util.Pagination;
 import com.baidu.mobstat.StatService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.octo.android.robospice.GsonSpringAndroidSpiceService;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,32 +42,29 @@ import java.util.List;
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.GalleryAdapter;
-import cn.nit.beauty.bus.ImageChangeEvent;
 import cn.nit.beauty.gallery.HackyViewPager;
-import cn.nit.beauty.model.FolderInfo;
+import cn.nit.beauty.model.ImageInfo;
+import cn.nit.beauty.model.ImageInfos;
+import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Data;
-import de.greenrobot.event.EventBus;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageGalleryActivity extends SherlockActivity {
 
-    public static final String HTTP_CACHE_DIR = "http";
-    private static final String SHARED_FILE_NAME = "shared.png";
-    private static final int HTTP_CACHE_SIZE = 10 * 1024 * 1024; // 10MB
     // 屏幕宽度
     public static int screenWidth;
     // 屏幕高度
     public static int screenHeight;
-    List<FolderInfo> folderInfos;
-    ContentTask task = new ContentTask(this);
+    List<ImageInfo> imageInfoList;
     private GalleryAdapter mAdapter;
     private ViewPager mViewPager;
     private ShareActionProvider actionProvider;
-    private OSSClient ossClient;
-    private String objectKey;
+    private String objectKey, folder;
     private Message message;
     private Boolean autoPlay = false;
+    private SpiceManager spiceManager = new SpiceManager(
+            GsonSpringAndroidSpiceService.class);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,15 +72,13 @@ public class ImageGalleryActivity extends SherlockActivity {
 
 
         Intent intent = getIntent();
+
         objectKey = intent.getStringExtra("objectKey");
-        String folder = intent.getStringExtra("folder");
+        folder = intent.getStringExtra("folder");
 
         screenWidth = getWindow().getWindowManager().getDefaultDisplay().getWidth();
         screenHeight = getWindow().getWindowManager().getDefaultDisplay().getHeight();
 
-        ossClient = new OSSClient();
-        ossClient.setAccessId("tEPWqYKJGESwhRo5");
-        ossClient.setAccessKey("oUkPZvE5HghfRbkX5wklu6qAiDnMrw");
 
         mViewPager = new HackyViewPager(this);
         setContentView(mViewPager);
@@ -97,7 +92,7 @@ public class ImageGalleryActivity extends SherlockActivity {
             @Override
             public void onPageSelected(int i) {
                 if (actionProvider != null) {
-                    createShareIntent(Data.OSS_URL + folderInfos.get(i).getIsrc());
+                    createShareIntent(Data.OSS_URL + imageInfoList.get(i).getUrl());
                 }
             }
 
@@ -108,11 +103,6 @@ public class ImageGalleryActivity extends SherlockActivity {
         });
         mAdapter = new GalleryAdapter(this);
         mViewPager.setAdapter(mAdapter);
-
-        if (task.getStatus() != Status.RUNNING) {
-            ContentTask task = new ContentTask(this);
-            task.execute(folder);
-        }
 
     }
 
@@ -155,9 +145,9 @@ public class ImageGalleryActivity extends SherlockActivity {
     }
 
     private void changeOriginal() {
-        FolderInfo folderInfo = mAdapter.getItem(mViewPager.getCurrentItem());
-        String imageSrc = folderInfo.getIsrc().replaceAll("thumb", "original");
-        folderInfo.setIsrc(imageSrc);
+        ImageInfo imageInfo = mAdapter.getItem(mViewPager.getCurrentItem());
+        String imageSrc = imageInfo.getUrl().replaceAll("thumb", "original");
+        imageInfo.setUrl(imageSrc);
 
         View imageLayout = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
 
@@ -211,7 +201,7 @@ public class ImageGalleryActivity extends SherlockActivity {
     private void changeWallpaper() {
         WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
         try {
-            File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + folderInfos.get(mViewPager.getCurrentItem()).getIsrc(), ImageLoader.getInstance().getDiscCache());
+            File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + imageInfoList.get(mViewPager.getCurrentItem()).getUrl(), ImageLoader.getInstance().getDiscCache());
             InputStream is = new FileInputStream(cacheFile);
             wallpaperManager.setStream(is);
             is.close();
@@ -268,6 +258,13 @@ public class ImageGalleryActivity extends SherlockActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        spiceManager.start(this);
+    }
+
+    @Override
+    protected void onStop() {
+        spiceManager.shouldStop();
+        super.onStop();
     }
 
     @Override
@@ -275,69 +272,28 @@ public class ImageGalleryActivity extends SherlockActivity {
         super.onResume();
         StatService.onResume(this);
 
+        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + folder.replaceAll("thumb/", "") + Data.INDEX_KEY);
+        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
     }
 
-    private class ContentTask extends AsyncTask<String, Integer, List<FolderInfo>> {
-
-        private Context mContext;
-
-        public ContentTask(Context context) {
-            super();
-            mContext = context;
+    private class ImageListRequestListener implements RequestListener<ImageInfos> {
+        @Override
+        public void onRequestFailure(SpiceException e) {
+            Toast.makeText(ImageGalleryActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         @Override
-        protected List<FolderInfo> doInBackground(String... params) {
-            String folder = params[0];
-
-            folderInfos = new ArrayList<FolderInfo>();
-
-            try {
-                if (!Helper.checkConnection(mContext))
-                    return null;
-
-                FolderInfo newsInfo1 = new FolderInfo();
-
-                Pagination<OSSObjectSummary> pagination = ossClient.viewFolder("nit-photo", folder);
-                for (OSSObjectSummary objectSummary : pagination.getContents()) {
-
-
-                    if (objectSummary.getKey().equals(folder))
-                        continue;
-
-                    newsInfo1 = new FolderInfo();
-                    newsInfo1.setAlbid(objectSummary.getKey());
-                    newsInfo1.setIsrc(objectSummary.getKey());
-                    newsInfo1.setMsg(objectSummary.getKey());
-
-
-                    folderInfos.add(newsInfo1);
-                }
-
-                return folderInfos;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<FolderInfo> result) {
-            mAdapter.addItemLast(result);
+        public void onRequestSuccess(ImageInfos imageInfos) {
+            imageInfoList = imageInfos.getResults();
+            mAdapter.addItemLast(imageInfoList);
             mAdapter.notifyDataSetChanged();
             mViewPager.setCurrentItem(getCurrentItem());
         }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
     }
 
     public int getCurrentItem() {
-        for (int i = 0; i < folderInfos.size(); i++) {
-            if (folderInfos.get(i).getAlbid().equals(objectKey)) return i;
+        for (int i = 0; i < imageInfoList.size(); i++) {
+            if (imageInfoList.get(i).getKey().equals(objectKey)) return i;
         }
         return 0;
     }
@@ -347,7 +303,7 @@ public class ImageGalleryActivity extends SherlockActivity {
         @Override
         public void handleMessage(Message msg) {
             if (autoPlay) {
-                int nextItem = (mViewPager.getCurrentItem() + 1) % folderInfos.size();
+                int nextItem = (mViewPager.getCurrentItem() + 1) % imageInfoList.size();
                 if (nextItem == 0) {
                     Toast.makeText(ImageGalleryActivity.this, "已经播放完了，从头开始", Toast.LENGTH_SHORT).show();
                 }
