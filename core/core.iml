@@ -10,6 +10,7 @@
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
+        <option name="UPDATE_PROPERTY_FILES" value="true" />
       </configuration>
     </facet>
     <facet type="android-gradle" name="Android-Gradle">
@@ -114,7 +115,7 @@
     <orderEntry type="library" name="spring-android-core-1.0.1.RELEASE" level="project" />
     <orderEntry type="library" name="spring-android-rest-template-1.0.1.RELEASE" level="project" />
     <orderEntry type="library" name="robospice-spring-android-1.4.6" level="project" />
-    <orderEntry type="jdk" jdkName="Android SDK" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android 4.2.2 Platform" jdkType="Android SDK" />
     <orderEntry type="library" name="gson-2.2.4" level="project" />
   </component>
 </module>

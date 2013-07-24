@@ -1,12 +1,10 @@
 package cn.nit.beauty.ui;
 
 import android.app.WallpaperManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,10 +34,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
-import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.GalleryAdapter;
 import cn.nit.beauty.gallery.HackyViewPager;
@@ -213,11 +209,26 @@ public class ImageGalleryActivity extends SherlockActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-            if (autoPlay) {
-                autoPlay = false;
-                Toast.makeText(this, "自动播放已关闭", Toast.LENGTH_SHORT).show();
-                return true;
+        if (autoPlay) {
+            autoPlay = false;
+            Toast.makeText(this, "自动播放已关闭", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                int nextItem = (mViewPager.getCurrentItem() + 1) % imageInfoList.size();
+                mViewPager.setCurrentItem(nextItem);
             }
+            return true;
+        } else if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                int prevItem = (mViewPager.getCurrentItem() - 1) % imageInfoList.size();
+                mViewPager.setCurrentItem(prevItem);
+            }
+            return true;
+        }
+
 
         return super.dispatchKeyEvent(event);
     }
@@ -276,6 +287,13 @@ public class ImageGalleryActivity extends SherlockActivity {
         spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
     }
 
+    public int getCurrentItem() {
+        for (int i = 0; i < imageInfoList.size(); i++) {
+            if (imageInfoList.get(i).getKey().equals(objectKey)) return i;
+        }
+        return 0;
+    }
+
     private class ImageListRequestListener implements RequestListener<ImageInfos> {
         @Override
         public void onRequestFailure(SpiceException e) {
@@ -289,13 +307,6 @@ public class ImageGalleryActivity extends SherlockActivity {
             mAdapter.notifyDataSetChanged();
             mViewPager.setCurrentItem(getCurrentItem());
         }
-    }
-
-    public int getCurrentItem() {
-        for (int i = 0; i < imageInfoList.size(); i++) {
-            if (imageInfoList.get(i).getKey().equals(objectKey)) return i;
-        }
-        return 0;
     }
 
     class AutoPlayHandler extends Handler {
