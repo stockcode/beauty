@@ -1,5 +1,6 @@
 package cn.nit.beauty.database;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.nit.beauty.database.CategoryDao.Properties;
@@ -117,4 +118,27 @@ public class LaucherDataBase {
 
 	}
 
+    public List<String> getFavoriteList() {
+        List<String> list = new ArrayList<String>();
+
+        Query<Category> query = categoryDao.queryBuilder().where(Properties.CATEGORY.eq("favorite")).build();
+
+        for(Category category : query.list()) {
+            list.add(category.getURL());
+        }
+        return  list;
+    }
+
+    public void updateFavorite(String objectKey) {
+        Query<Category> query = categoryDao.queryBuilder().where(Properties.URL.eq(objectKey)).build();
+        Category category = query.unique();
+        if (category == null) {
+            category = new Category();
+            category.setCATEGORY("favorite");
+            category.setURL(objectKey);
+            String[] strs = objectKey.split("/");
+            category.setTITLE(strs[strs.length - 1]);
+            categoryDao.insert(category);
+        }
+    }
 }

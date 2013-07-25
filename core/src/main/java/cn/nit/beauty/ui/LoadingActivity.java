@@ -146,6 +146,7 @@ public class LoadingActivity extends Activity {
             if ( index != null ) {
                 database.insertItems(index.getCategories());
                 Data.categoryMap = index.getRoots();
+                Data.categoryMap.put("favorite", database.getFavoriteList());
             }
             startMain();
         }

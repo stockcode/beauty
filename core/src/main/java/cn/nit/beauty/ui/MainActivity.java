@@ -312,7 +312,7 @@ public class MainActivity extends RoboActivity {
                         return;
                     }
                 }
-                if (launcher.getURL().equals("favorite") || launcher.getURL().equals("more")) {
+                if (launcher.getURL().equals("more")) {
                     Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
                     return;
                 }

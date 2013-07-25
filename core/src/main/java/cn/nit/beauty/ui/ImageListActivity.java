@@ -1,12 +1,11 @@
 package cn.nit.beauty.ui;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.StaggeredAdapter;
+import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.model.ImageInfos;
 import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Configure;
@@ -14,39 +13,30 @@ import cn.nit.beauty.utils.Data;
 import me.maxwin.view.XListView;
 import me.maxwin.view.XListView.IXListViewListener;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.AsyncTask.Status;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.nit.beauty.model.ImageInfo;
-import cn.nit.beauty.widget.ScaleImageView;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.baidu.mobads.AdView;
 import com.baidu.mobstat.StatService;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class ImageListActivity extends FragmentActivity implements IXListViewListener {
+public class ImageListActivity extends SherlockActivity implements IXListViewListener {
     private XListView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private int currentPage = 0;
     private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
     private String objectKey;
-
+    private LaucherDataBase database;
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
 
@@ -82,6 +72,7 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
         String[] strs = objectKey.split("/");
         setTitle(strs[strs.length - 2]);
 
+        database = new LaucherDataBase(getApplicationContext());
 
         mAdapterView = (XListView) findViewById(R.id.list);
         mAdapterView.setPullLoadEnable(true);
@@ -90,7 +81,26 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
         mAdapter = new StaggeredAdapter(this, mAdapterView, objectKey);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.imagelist_action, menu);
 
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem mi) {
+        switch (mi.getItemId()) {
+            case R.id.mnuFavoriate:
+                database.updateFavorite(objectKey.replaceAll("/thumb", ""));
+                Data.categoryMap.put("favorite", database.getFavoriteList());
+                Toast.makeText(getApplicationContext(), "收藏完毕", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(mi);
+        }
+
+
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -99,6 +109,8 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
             AdView adView = (AdView)findViewById(R.id.adView);
             adView.setVisibility(adView.INVISIBLE);
         }
+
+        setProgressBarIndeterminateVisibility(true);
 
         ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey.replaceAll("thumb/", "") + Data.INDEX_KEY);
         spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
@@ -155,6 +167,7 @@ public class ImageListActivity extends FragmentActivity implements IXListViewLis
         public void onRequestSuccess(ImageInfos imageInfos) {
             imageInfoList = imageInfos.getResults();
             AddItemToContainer(currentPage, 2);
+            setProgressBarIndeterminateVisibility(false);
         }
     }
 }// end of class

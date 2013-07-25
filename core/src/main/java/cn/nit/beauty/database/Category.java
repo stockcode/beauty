@@ -17,7 +17,7 @@ public class Category implements Serializable{
     /** Not-null value. */
     private String TITLE;
     private String URL;
-    private Boolean CHOICE;
+    private Boolean CHOICE = false;
 
     public Category() {
     }
