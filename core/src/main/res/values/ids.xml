@@ -3,4 +3,7 @@
     <item
         type="id"
         name="scrapped_view" />
+
+    <item type="id" name="view_pager" />
+
 </resources>    

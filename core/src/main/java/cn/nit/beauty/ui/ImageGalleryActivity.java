@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
@@ -46,7 +47,7 @@ import cn.nit.beauty.utils.Data;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class ImageGalleryActivity extends SherlockActivity {
+public class ImageGalleryActivity extends SherlockFragmentActivity {
 
     // 屏幕宽度
     public static int screenWidth;
@@ -97,8 +98,9 @@ public class ImageGalleryActivity extends SherlockActivity {
 
             }
         });
-        mAdapter = new GalleryAdapter(this);
+        mAdapter = new GalleryAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mAdapter);
+        mViewPager.setId(R.id.view_pager);
 
     }
 
@@ -141,7 +143,7 @@ public class ImageGalleryActivity extends SherlockActivity {
     }
 
     private void changeOriginal() {
-        ImageInfo imageInfo = mAdapter.getItem(mViewPager.getCurrentItem());
+        ImageInfo imageInfo = mAdapter.getImageInfo(mViewPager.getCurrentItem());
         String imageSrc = imageInfo.getUrl().replaceAll("thumb", "original");
         imageInfo.setUrl(imageSrc);
 
