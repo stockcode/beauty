@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.path="D:\git\beauty" external.system.id="GRADLE" type="JAVA_MODULE" version="4">
+<module external.linked.project.path="C:\GitHub\beauty" external.system.id="GRADLE" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
@@ -10,7 +10,6 @@
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
-        <option name="UPDATE_PROPERTY_FILES" value="true" />
       </configuration>
     </facet>
     <facet type="android-gradle" name="Android-Gradle">
@@ -68,9 +67,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/instrumentTest/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/instrumentTest/res" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/instrumentTest/resources" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/.settings" />
-      <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/build/apk" />
       <excludeFolder url="file://$MODULE_DIR$/build/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/bundles" />
@@ -83,7 +80,9 @@
       <excludeFolder url="file://$MODULE_DIR$/build/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
+    <orderEntry type="jdk" jdkName="Android SDK" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="support-v4-r7" level="project" />
     <orderEntry type="library" name="greendao-1.3.1" level="project" />
     <orderEntry type="library" name="javax.inject-1" level="project" />
     <orderEntry type="library" name="aopalliance-1.0" level="project" />
@@ -92,22 +91,6 @@
     <orderEntry type="library" name="guice-3.0-no_aop" level="project" />
     <orderEntry type="library" name="roboguice-2.0" level="project" />
     <orderEntry type="library" name="roboguice-sherlock-1.5" level="project" />
-    <orderEntry type="library" name="eventbus-2.0.2" level="project" />
-    <orderEntry type="library" name="mobstat-3.1" level="project" />
-    <orderEntry type="library" name="mobads-3.2" level="project" />
-    <orderEntry type="library" name="pushservice-2.2.1" level="project" />
-    <orderEntry type="library" name="acra-4.5.0" level="project" />
-    <orderEntry type="library" name="universal-image-loader-1.8.5" level="project" />
-    <orderEntry type="library" name="CnNitAutoupdate100.aar" level="project" />
-    <orderEntry type="library" name="ComActionbarsherlockActionbarsherlock432SNAPSHOT.aar" level="project" />
-    <orderEntry type="library" name="ComCapricornArcmenu100.aar" level="project" />
-    <orderEntry type="library" name="pcs-2.1.0" level="project" />
-    <orderEntry type="library" name="oauth-2.0.0" level="project" />
-    <orderEntry type="library" name="httpcore-4.2.4" level="project" />
-    <orderEntry type="library" name="httpmime-4.2.5" level="project" />
-    <orderEntry type="library" name="pcs-sd-1.0.0" level="project" />
-    <orderEntry type="library" name="mobads_wall-1.1" level="project" />
-    <orderEntry type="library" name="support-v4-r7" level="project" />
     <orderEntry type="library" name="commons-lang3-3.1" level="project" />
     <orderEntry type="library" name="commons-io-1.3.2" level="project" />
     <orderEntry type="library" name="robospice-cache-1.4.6" level="project" />
@@ -115,8 +98,22 @@
     <orderEntry type="library" name="spring-android-core-1.0.1.RELEASE" level="project" />
     <orderEntry type="library" name="spring-android-rest-template-1.0.1.RELEASE" level="project" />
     <orderEntry type="library" name="robospice-spring-android-1.4.6" level="project" />
-    <orderEntry type="jdk" jdkName="Android SDK" jdkType="Android SDK" />
     <orderEntry type="library" name="gson-2.2.4" level="project" />
+    <orderEntry type="library" name="eventbus-2.0.2" level="project" />
+    <orderEntry type="library" name="mobstat-3.1" level="project" />
+    <orderEntry type="library" name="mobads-3.2" level="project" />
+    <orderEntry type="library" name="mobads_wall-1.1" level="project" />
+    <orderEntry type="library" name="pushservice-2.2.1" level="project" />
+    <orderEntry type="library" name="acra-4.5.0" level="project" />
+    <orderEntry type="library" name="universal-image-loader-1.8.5" level="project" />
+    <orderEntry type="library" name="pcs-2.1.0" level="project" />
+    <orderEntry type="library" name="pcs-sd-1.0.0" level="project" />
+    <orderEntry type="library" name="oauth-2.0.0" level="project" />
+    <orderEntry type="library" name="httpcore-4.2.4" level="project" />
+    <orderEntry type="library" name="httpmime-4.2.5" level="project" />
+    <orderEntry type="library" name="CnNitAutoupdate100.aar" level="project" />
+    <orderEntry type="library" name="ComActionbarsherlockActionbarsherlock432SNAPSHOT.aar" level="project" />
+    <orderEntry type="library" name="ComCapricornArcmenu100.aar" level="project" />
   </component>
 </module>
 

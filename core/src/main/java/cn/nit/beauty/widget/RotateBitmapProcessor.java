@@ -24,7 +24,7 @@ public class RotateBitmapProcessor implements BitmapProcessor {
             bitmap.recycle();
             bitmap = null;
             return tmpBitmap;
-        } catch (RuntimeException re) {
+        } catch (OutOfMemoryError re) {
         }
 
         return bitmap;
