@@ -10,8 +10,6 @@ import cn.nit.beauty.model.ImageInfos;
 import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
-import me.maxwin.view.XListView;
-import me.maxwin.view.IXListViewLoadMore;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,10 +27,11 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-import com.youxiachai.onexlistview.XMultiColumnListView;
 
-public class ImageListActivity extends SherlockActivity implements IXListViewLoadMore {
-    private XMultiColumnListView mAdapterView = null;
+import org.lucasr.smoothie.AsyncGridView;
+
+public class ImageListActivity extends SherlockActivity {
+    private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private int currentPage = 0;
     private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
@@ -55,7 +54,6 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLoa
             mAdapter.addItemTop(imageInfoList.get(i));
         }
         mAdapter.notifyDataSetChanged();
-        mAdapterView.stopLoadMore();
     }
 
 
@@ -74,8 +72,7 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLoa
 
         database = new LaucherDataBase(getApplicationContext());
 
-        mAdapterView = (XMultiColumnListView) findViewById(R.id.list);
-        mAdapterView.setPullLoadEnable(this);
+        mAdapterView = (AsyncGridView) findViewById(R.id.list);
 
         mAdapter = new StaggeredAdapter(this, objectKey);
     }
@@ -145,11 +142,8 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLoa
 
 
 
-    @Override
-    public void onLoadMore() {
-        AddItemToContainer(++currentPage, 2);
 
-    }
+
 
     private class ImageListRequestListener implements RequestListener<ImageInfos> {
         @Override

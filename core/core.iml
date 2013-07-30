@@ -82,7 +82,6 @@
     </content>
     <orderEntry type="jdk" jdkName="Android SDK" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="support-v4-r7" level="project" />
     <orderEntry type="library" name="greendao-1.3.1" level="project" />
     <orderEntry type="library" name="javax.inject-1" level="project" />
     <orderEntry type="library" name="aopalliance-1.0" level="project" />
@@ -114,7 +113,7 @@
     <orderEntry type="library" name="CnNitAutoupdate100.aar" level="project" />
     <orderEntry type="library" name="ComActionbarsherlockActionbarsherlock432SNAPSHOT.aar" level="project" />
     <orderEntry type="library" name="ComCapricornArcmenu100.aar" level="project" />
-    <orderEntry type="library" name="MeMaxwinViewOneXListview100.aar" level="project" />
+    <orderEntry type="library" name="support-v4-r13" level="project" />
   </component>
 </module>
 

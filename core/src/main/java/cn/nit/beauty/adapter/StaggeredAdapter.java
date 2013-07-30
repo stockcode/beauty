@@ -19,7 +19,6 @@ import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.ui.ImageGalleryActivity;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.ScaleImageView;
-import me.maxwin.view.XListView;
 
 /**
  * Created by Administrator on 13-7-24.

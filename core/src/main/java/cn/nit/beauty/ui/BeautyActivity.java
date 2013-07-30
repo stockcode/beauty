@@ -17,6 +17,9 @@ import com.baidu.mobads.AdView;
 import com.baidu.mobstat.StatService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.lucasr.smoothie.AsyncGridView;
+import org.lucasr.smoothie.ItemManager;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,14 +31,11 @@ import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.ScaleImageView;
-import com.youxiachai.onexlistview.XMultiColumnListView;
-import me.maxwin.view.IXListViewLoadMore;
 
-public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavigationListener,
-        IXListViewLoadMore {
+public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavigationListener {
 
     LaucherDataBase database;
-    private XMultiColumnListView mAdapterView = null;
+    private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private int currentPage = 0;
     private int pageCount = 10;
@@ -73,7 +73,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             mAdapter.addItemLast(imageInfos);
             mAdapter.notifyDataSetChanged();
         }
-        mAdapterView.stopLoadMore();
     }
 
     @SuppressWarnings("unchecked")
@@ -101,11 +100,18 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
         database = new LaucherDataBase(getApplicationContext());
 
-        mAdapterView = (XMultiColumnListView) findViewById(R.id.list);
-        mAdapterView.setPullLoadEnable(this);
-
+        mAdapterView = (AsyncGridView) findViewById(R.id.list);
         mAdapter = new StaggeredAdapter(this);
+        mAdapterView.setAdapter(mAdapter);
 
+        GalleryLoader loader = new GalleryLoader(this);
+
+        ItemManager.Builder builder = new ItemManager.Builder(loader);
+        builder.setPreloadItemsEnabled(true).setPreloadItemsCount(10);
+        builder.setThreadPoolSize(4);
+        ItemManager itemManager = builder.build();
+
+        mAdapterView.setItemManager(itemManager);
 
         updateFilters();
 
@@ -148,7 +154,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             AdView adView = (AdView)findViewById(R.id.adView);
             adView.setVisibility(adView.INVISIBLE);
         }
-        mAdapterView.setAdapter(mAdapter);
+
         AddItemToContainer(++currentPage, 2);
         StatService.onResume(this);
     }
@@ -160,7 +166,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     }
 
 
-    @Override
     public void onLoadMore() {
         AddItemToContainer(++currentPage, 2);
 
