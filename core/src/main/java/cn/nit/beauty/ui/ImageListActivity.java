@@ -11,7 +11,7 @@ import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import me.maxwin.view.XListView;
-import me.maxwin.view.XListView.IXListViewListener;
+import me.maxwin.view.IXListViewLoadMore;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,9 +29,10 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.youxiachai.onexlistview.XMultiColumnListView;
 
-public class ImageListActivity extends SherlockActivity implements IXListViewListener {
-    private XListView mAdapterView = null;
+public class ImageListActivity extends SherlockActivity implements IXListViewLoadMore {
+    private XMultiColumnListView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private int currentPage = 0;
     private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
@@ -54,7 +55,6 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLis
             mAdapter.addItemTop(imageInfoList.get(i));
         }
         mAdapter.notifyDataSetChanged();
-        mAdapterView.stopRefresh();
         mAdapterView.stopLoadMore();
     }
 
@@ -74,11 +74,10 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLis
 
         database = new LaucherDataBase(getApplicationContext());
 
-        mAdapterView = (XListView) findViewById(R.id.list);
-        mAdapterView.setPullLoadEnable(true);
-        mAdapterView.setXListViewListener(this);
+        mAdapterView = (XMultiColumnListView) findViewById(R.id.list);
+        mAdapterView.setPullLoadEnable(this);
 
-        mAdapter = new StaggeredAdapter(this, mAdapterView, objectKey);
+        mAdapter = new StaggeredAdapter(this, objectKey);
     }
 
     @Override
@@ -145,11 +144,6 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLis
 
 
 
-    @Override
-    public void onRefresh() {
-        AddItemToContainer(++currentPage, 1);
-
-    }
 
     @Override
     public void onLoadMore() {

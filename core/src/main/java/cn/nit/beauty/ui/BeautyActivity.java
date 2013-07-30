@@ -28,14 +28,14 @@ import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.ScaleImageView;
-import me.maxwin.view.XListView;
-import me.maxwin.view.XListView.IXListViewListener;
+import com.youxiachai.onexlistview.XMultiColumnListView;
+import me.maxwin.view.IXListViewLoadMore;
 
 public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavigationListener,
-        IXListViewListener {
+        IXListViewLoadMore {
 
     LaucherDataBase database;
-    private XListView mAdapterView = null;
+    private XMultiColumnListView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private int currentPage = 0;
     private int pageCount = 10;
@@ -73,7 +73,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             mAdapter.addItemLast(imageInfos);
             mAdapter.notifyDataSetChanged();
         }
-        mAdapterView.stopRefresh();
         mAdapterView.stopLoadMore();
     }
 
@@ -102,11 +101,10 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
         database = new LaucherDataBase(getApplicationContext());
 
-        mAdapterView = (XListView) findViewById(R.id.list);
-        mAdapterView.setPullLoadEnable(true);
-        mAdapterView.setXListViewListener(this);
+        mAdapterView = (XMultiColumnListView) findViewById(R.id.list);
+        mAdapterView.setPullLoadEnable(this);
 
-        mAdapter = new StaggeredAdapter(this, mAdapterView);
+        mAdapter = new StaggeredAdapter(this);
 
 
         updateFilters();
@@ -151,6 +149,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             adView.setVisibility(adView.INVISIBLE);
         }
         mAdapterView.setAdapter(mAdapter);
+        AddItemToContainer(++currentPage, 2);
         StatService.onResume(this);
     }
 
@@ -160,11 +159,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
     }
 
-    @Override
-    public void onRefresh() {
-        AddItemToContainer(++currentPage, 1);
-
-    }
 
     @Override
     public void onLoadMore() {
@@ -193,13 +187,11 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
     public class StaggeredAdapter extends BaseAdapter {
         private Context mContext;
-        private LinkedList<ImageInfo> mInfos;
-        private XListView mListView;
+        private List<ImageInfo> mInfos;
 
-        public StaggeredAdapter(Context context, XListView xListView) {
+        public StaggeredAdapter(Context context) {
             mContext = context;
-            mInfos = new LinkedList<ImageInfo>();
-            mListView = xListView;
+            mInfos = new ArrayList<ImageInfo>();
         }
 
         @Override
@@ -256,12 +248,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
         public void addItemLast(List<ImageInfo> datas) {
             mInfos.addAll(datas);
-        }
-
-        public void addItemTop(List<ImageInfo> datas) {
-            for (ImageInfo info : datas) {
-                mInfos.addFirst(info);
-            }
         }
 
         public void clear() {

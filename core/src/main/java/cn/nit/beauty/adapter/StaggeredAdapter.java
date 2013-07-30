@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,14 +26,12 @@ import me.maxwin.view.XListView;
  */
 public class StaggeredAdapter extends BaseAdapter {
     private Context mContext;
-    private LinkedList<ImageInfo> mInfos;
-    private XListView mListView;
+    private List<ImageInfo> mInfos;
     private String folder;
 
-    public StaggeredAdapter(Context context, XListView xListView, String folder) {
+    public StaggeredAdapter(Context context, String folder) {
         mContext = context;
-        mInfos = new LinkedList<ImageInfo>();
-        mListView = xListView;
+        mInfos = new ArrayList<ImageInfo>();
         this.folder = folder;
     }
 
@@ -99,6 +98,6 @@ public class StaggeredAdapter extends BaseAdapter {
     }
 
     public void addItemTop(ImageInfo imageInfo) {
-        mInfos.addFirst(imageInfo);
+        mInfos.add(imageInfo);
     }
 }

@@ -23,7 +23,7 @@ dependencies {
     compile 'cn.nit:autoupdate:1.0.0'
     compile 'com.actionbarsherlock:actionbarsherlock:4.3.2-SNAPSHOT'
     compile 'com.capricorn:arcmenu:1.0.0'
-
+    compile 'me.maxwin.view:OneXListview:1.0.0'
 
     compile 'com.baidu.android:pcs:2.1.0'
     compile 'com.baidu.android:pcs-sd:1.0.0'

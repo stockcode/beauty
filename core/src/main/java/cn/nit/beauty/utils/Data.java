@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import cn.nit.beauty.R;
 
@@ -33,4 +34,12 @@ public class Data {
 		,R.drawable.c_entertainment,R.drawable.c_financial,R.drawable.c_technoledge};
 
 
+    public static String getRandomKey() {
+        Random rd = new Random();
+        Object[] lists = categoryMap.values().toArray();
+        int i = rd.nextInt(lists.length);
+        List<String> list = (List<String>) lists[i];
+
+        return  list.get(rd.nextInt(list.size()));
+    }
 }

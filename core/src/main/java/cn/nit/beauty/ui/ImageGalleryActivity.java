@@ -203,6 +203,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
             InputStream is = new FileInputStream(cacheFile);
             wallpaperManager.setStream(is);
             is.close();
+            Toast.makeText(ImageGalleryActivity.this, "壁纸已换好", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
