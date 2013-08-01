@@ -37,99 +37,46 @@ import android.support.v4.util.LruCache;
 import android.view.View;
 import android.widget.Adapter;
 
-public class GalleryLoader extends SimpleItemLoader<Long, Bitmap> {
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import cn.nit.beauty.adapter.StaggeredAdapter;
+import cn.nit.beauty.model.ImageInfo;
+import cn.nit.beauty.utils.Data;
+
+public class GalleryLoader extends SimpleItemLoader<String, String> {
     private final Context mContext;
-    private final LruCache<Long, Bitmap> mMemCache;
 
     public GalleryLoader(Context context) {
         mContext = context;
-
-        int maxSize = (int) (Runtime.getRuntime().maxMemory() * 0.4f);
-        mMemCache = new LruCache<Long, Bitmap>(maxSize) {
-            @Override
-            protected int sizeOf(Long id, Bitmap bitmap) {
-                return bitmap.getRowBytes() * bitmap.getHeight();
-            }
-        };
     }
 
     @Override
-    public Bitmap loadItemFromMemory(Long id) {
-        return mMemCache.get(id);
+    public String loadItemFromMemory(String url) {
+        return url;
     }
 
     @Override
-    public Long getItemParams(Adapter adapter, int position) {
-        return null;
-        //Cursor c = (Cursor) adapter.getItem(position);
-        //return c.getLong(c.getColumnIndex(ImageColumns._ID));
+    public String getItemParams(Adapter adapter, int position) {
+
+        ImageInfo imageInfo = (ImageInfo) adapter.getItem(position);
+        return imageInfo.getUrl();
+
     }
 
-    private int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth) {
-            if (width > height) {
-                inSampleSize = Math.round((float) height / (float) reqHeight);
-            } else {
-                inSampleSize = Math.round((float) width / (float) reqWidth);
-            }
-        }
-
-        return inSampleSize;
-    }
-
-    private Bitmap decodeSampledBitmapFromResource(Uri imageUri,
-            int reqWidth, int reqHeight) {
-        InputStream is = null;
-        try {
-            is = mContext.getContentResolver().openInputStream(imageUri);
-
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(is, null, options);
-
-            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-            options.inJustDecodeBounds = false;
-
-            is = mContext.getContentResolver().openInputStream(imageUri);
-            return BitmapFactory.decodeStream(is, null, options);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    @Override
+    public String loadItem(String url) {
+        return url;
     }
 
     @Override
-    public Bitmap loadItem(Long id) {
-        Uri imageUri = Uri.withAppendedPath(Images.Media.EXTERNAL_CONTENT_URI, String.valueOf(id));
-
-        Resources res = mContext.getResources();
-
-        Bitmap bitmap = null;
-        if (bitmap != null) {
-            mMemCache.put(id, bitmap);
-        }
-
-        return bitmap;
-    }
-
-    @Override
-    public void displayItem(View itemView, Bitmap result, boolean fromMemory) {
+    public void displayItem(View itemView, String result, boolean fromMemory) {
         if (result == null) {
             return;
         }
 
-//        ViewHolder holder = (ViewHolder) itemView.getTag();
+        StaggeredAdapter.ViewHolder holder = (StaggeredAdapter.ViewHolder) itemView.getTag();
+        ImageLoader.getInstance().displayImage(Data.OSS_URL + result, holder.imageView);
 //
 //        BitmapDrawable imageDrawable = new BitmapDrawable(itemView.getResources(), result);
 //

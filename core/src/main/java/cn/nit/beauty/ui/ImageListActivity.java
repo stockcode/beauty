@@ -13,6 +13,7 @@ import cn.nit.beauty.utils.Data;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import cn.nit.beauty.model.ImageInfo;
@@ -29,11 +30,11 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.lucasr.smoothie.AsyncGridView;
+import org.lucasr.smoothie.ItemManager;
 
 public class ImageListActivity extends SherlockActivity {
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
-    private int currentPage = 0;
     private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
     private String objectKey;
     private LaucherDataBase database;
@@ -43,14 +44,11 @@ public class ImageListActivity extends SherlockActivity {
     /**
      * 添加内容
      * 
-     * @param pageindex
-     * @param type
      *            1为下拉刷新 2为加载更多
      */
-    private void AddItemToContainer(int pageindex, int type) {
-        int count = Math.min(imageInfoList.size(), (pageindex + 1) * Data.PAGE_COUNT);
+    private void AddItemToContainer() {
 
-        for(int i = pageindex * Data.PAGE_COUNT ; i < count; i++) {
+        for(int i = 0 ; i < imageInfoList.size(); i++) {
             mAdapter.addItemTop(imageInfoList.get(i));
         }
         mAdapter.notifyDataSetChanged();
@@ -74,7 +72,30 @@ public class ImageListActivity extends SherlockActivity {
 
         mAdapterView = (AsyncGridView) findViewById(R.id.list);
 
-        mAdapter = new StaggeredAdapter(this, objectKey);
+        mAdapter = new StaggeredAdapter(this, objectKey, new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                StaggeredAdapter.ViewHolder holder = (StaggeredAdapter.ViewHolder) v.getTag();
+
+                Intent intent = new Intent(ImageListActivity.this, ImageGalleryActivity.class);
+                intent.putExtra("objectKey", holder.objectKey);
+                intent.putExtra("folder", objectKey);
+
+                startActivity(intent);
+            }
+        });
+
+        mAdapterView.setAdapter(mAdapter);
+
+        GalleryLoader loader = new GalleryLoader(this);
+
+        ItemManager.Builder builder = new ItemManager.Builder(loader);
+        builder.setPreloadItemsEnabled(true).setPreloadItemsCount(10);
+        builder.setThreadPoolSize(4);
+        ItemManager itemManager = builder.build();
+
+        mAdapterView.setItemManager(itemManager);
     }
 
     @Override
@@ -111,7 +132,6 @@ public class ImageListActivity extends SherlockActivity {
         ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey.replaceAll("thumb/", "") + Data.INDEX_KEY);
         spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
 
-        mAdapterView.setAdapter(mAdapter);
         StatService.onResume(this);
     }
 
@@ -154,7 +174,7 @@ public class ImageListActivity extends SherlockActivity {
         @Override
         public void onRequestSuccess(ImageInfos imageInfos) {
             imageInfoList = imageInfos.getResults();
-            AddItemToContainer(currentPage, 2);
+            AddItemToContainer();
             setProgressBarIndeterminateVisibility(false);
         }
     }
