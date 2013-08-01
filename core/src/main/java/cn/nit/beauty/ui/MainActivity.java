@@ -41,10 +41,12 @@ import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
 import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.DragGridAdapter;
@@ -126,6 +128,7 @@ public class MainActivity extends RoboActivity {
         super.onCreate(savedInstanceState);
 
         settings = PreferenceManager.getDefaultSharedPreferences(this);
+
 
         appUpdate = AppUpdateService.getAppUpdate(this);
         appUpdate.checkLatestVersion(Data.UPDATE_URL,
@@ -439,9 +442,17 @@ public class MainActivity extends RoboActivity {
     }
 
     public void setImageBgAndRun() {
-        System.out.println(getSharedPreferences("mysetup", 0).getInt("bg_id", 0) + "==");
-        Bitmap bitmap = BitmapFactory.decodeStream(getResources()
-                .openRawResource(Configure.images[getSharedPreferences("mysetup", 0).getInt("bg_id", 0)]), null, null);
+        Bitmap bitmap = null;
+
+        File cacheDir = StorageUtils.getCacheDirectory(this);
+        String[] files = cacheDir.list();
+        if (files.length > 0) {
+            Random rd = new Random();
+            String bg = files[rd.nextInt(files.length)];
+            bitmap = BitmapFactory.decodeFile(cacheDir.getPath() + "/" + bg);
+        } else {
+            bitmap = BitmapFactory.decodeStream(getResources().openRawResource(R.drawable.default_homebg));
+        }
         bitmap_width = bitmap.getWidth();
         bitmap_height = bitmap.getHeight();
 

@@ -308,7 +308,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
             imageInfoList = imageInfos.getResults();
             mAdapter.addItemLast(imageInfoList);
             mAdapter.notifyDataSetChanged();
-            mViewPager.setCurrentItem(getCurrentItem());
+            mViewPager.setCurrentItem(getCurrentItem(), false);
         }
     }
 
