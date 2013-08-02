@@ -11,7 +11,12 @@ import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -112,12 +117,31 @@ public class ImageListActivity extends SherlockActivity {
                 Data.categoryMap.put("favorite", database.getFavoriteList());
                 Toast.makeText(getApplicationContext(), "收藏完毕", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.mnuDownload:
+                String url = Data.OSS_URL + objectKey.replaceAll("/thumb/", "/original.zip");
+                DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                downloadManager.enqueue(request);
+
+                registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+                        Toast.makeText(getApplicationContext(), "套图开始下载，请稍等", Toast.LENGTH_SHORT).show();
+                return true;
             default:
                 return super.onOptionsItemSelected(mi);
         }
 
 
     }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //这里可以取得下载的id，这样就可以知道哪个文件下载完成了。适用与多个下载任务的监听
+            Toast.makeText(getApplicationContext(), "ID:" + intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0), Toast.LENGTH_SHORT).show();
+        }
+    };
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -139,7 +163,8 @@ public class ImageListActivity extends SherlockActivity {
 	protected void onPause() {
 		super.onPause();
 		StatService.onPause(this);
-	}
+        unregisterReceiver(receiver);
+    }
 
 	@Override
     protected void onDestroy() {
