@@ -10,11 +10,15 @@ import cn.nit.beauty.model.ImageInfos;
 import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
-import me.maxwin.view.XListView;
-import me.maxwin.view.XListView.IXListViewListener;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import cn.nit.beauty.model.ImageInfo;
@@ -30,10 +34,12 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class ImageListActivity extends SherlockActivity implements IXListViewListener {
-    private XListView mAdapterView = null;
+import org.lucasr.smoothie.AsyncGridView;
+import org.lucasr.smoothie.ItemManager;
+
+public class ImageListActivity extends SherlockActivity {
+    private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
-    private int currentPage = 0;
     private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
     private String objectKey;
     private LaucherDataBase database;
@@ -43,19 +49,14 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLis
     /**
      * 添加内容
      * 
-     * @param pageindex
-     * @param type
      *            1为下拉刷新 2为加载更多
      */
-    private void AddItemToContainer(int pageindex, int type) {
-        int count = Math.min(imageInfoList.size(), (pageindex + 1) * Data.PAGE_COUNT);
+    private void AddItemToContainer() {
 
-        for(int i = pageindex * Data.PAGE_COUNT ; i < count; i++) {
+        for(int i = 0 ; i < imageInfoList.size(); i++) {
             mAdapter.addItemTop(imageInfoList.get(i));
         }
         mAdapter.notifyDataSetChanged();
-        mAdapterView.stopRefresh();
-        mAdapterView.stopLoadMore();
     }
 
 
@@ -74,11 +75,32 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLis
 
         database = new LaucherDataBase(getApplicationContext());
 
-        mAdapterView = (XListView) findViewById(R.id.list);
-        mAdapterView.setPullLoadEnable(true);
-        mAdapterView.setXListViewListener(this);
+        mAdapterView = (AsyncGridView) findViewById(R.id.list);
 
-        mAdapter = new StaggeredAdapter(this, mAdapterView, objectKey);
+        mAdapter = new StaggeredAdapter(this, objectKey, new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                StaggeredAdapter.ViewHolder holder = (StaggeredAdapter.ViewHolder) v.getTag();
+
+                Intent intent = new Intent(ImageListActivity.this, ImageGalleryActivity.class);
+                intent.putExtra("objectKey", holder.objectKey);
+                intent.putExtra("folder", objectKey);
+
+                startActivity(intent);
+            }
+        });
+
+        mAdapterView.setAdapter(mAdapter);
+
+        GalleryLoader loader = new GalleryLoader(this);
+
+        ItemManager.Builder builder = new ItemManager.Builder(loader);
+        builder.setPreloadItemsEnabled(true).setPreloadItemsCount(10);
+        builder.setThreadPoolSize(4);
+        ItemManager itemManager = builder.build();
+
+        mAdapterView.setItemManager(itemManager);
     }
 
     @Override
@@ -95,12 +117,31 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLis
                 Data.categoryMap.put("favorite", database.getFavoriteList());
                 Toast.makeText(getApplicationContext(), "收藏完毕", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.mnuDownload:
+                String url = Data.OSS_URL + objectKey.replaceAll("/thumb/", "/original.zip");
+                DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                downloadManager.enqueue(request);
+
+                registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+                        Toast.makeText(getApplicationContext(), "套图开始下载，请稍等", Toast.LENGTH_SHORT).show();
+                return true;
             default:
                 return super.onOptionsItemSelected(mi);
         }
 
 
     }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //这里可以取得下载的id，这样就可以知道哪个文件下载完成了。适用与多个下载任务的监听
+            Toast.makeText(getApplicationContext(), "ID:" + intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0), Toast.LENGTH_SHORT).show();
+        }
+    };
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -115,7 +156,6 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLis
         ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey.replaceAll("thumb/", "") + Data.INDEX_KEY);
         spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
 
-        mAdapterView.setAdapter(mAdapter);
         StatService.onResume(this);
     }
 
@@ -123,7 +163,8 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLis
 	protected void onPause() {
 		super.onPause();
 		StatService.onPause(this);
-	}
+        //unregisterReceiver(receiver);
+    }
 
 	@Override
     protected void onDestroy() {
@@ -145,17 +186,9 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLis
 
 
 
-    @Override
-    public void onRefresh() {
-        AddItemToContainer(++currentPage, 1);
 
-    }
 
-    @Override
-    public void onLoadMore() {
-        AddItemToContainer(++currentPage, 2);
 
-    }
 
     private class ImageListRequestListener implements RequestListener<ImageInfos> {
         @Override
@@ -166,7 +199,7 @@ public class ImageListActivity extends SherlockActivity implements IXListViewLis
         @Override
         public void onRequestSuccess(ImageInfos imageInfos) {
             imageInfoList = imageInfos.getResults();
-            AddItemToContainer(currentPage, 2);
+            AddItemToContainer();
             setProgressBarIndeterminateVisibility(false);
         }
     }

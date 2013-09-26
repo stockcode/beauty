@@ -67,7 +67,7 @@ public class LoadingActivity extends Activity {
         Configure.save(settings);
 
         IndexRequest indexRequest = new IndexRequest(Data.OSS_URL + Data.INDEX_KEY);
-        spiceManager.execute(indexRequest, "beauty.index", DurationInMillis.ONE_DAY, new IndexRequestListener());
+        spiceManager.execute(indexRequest, "beauty.index", DurationInMillis.ALWAYS_EXPIRED, new IndexRequestListener());
     }
 
     @Override

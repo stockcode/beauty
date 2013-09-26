@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,22 +19,21 @@ import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.ui.ImageGalleryActivity;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.ScaleImageView;
-import me.maxwin.view.XListView;
 
 /**
  * Created by Administrator on 13-7-24.
  */
 public class StaggeredAdapter extends BaseAdapter {
     private Context mContext;
-    private LinkedList<ImageInfo> mInfos;
-    private XListView mListView;
+    private List<ImageInfo> mInfos;
     private String folder;
+    private View.OnClickListener mOnClickListener;
 
-    public StaggeredAdapter(Context context, XListView xListView, String folder) {
+    public StaggeredAdapter(Context context, String folder, View.OnClickListener onClickListener) {
         mContext = context;
-        mInfos = new LinkedList<ImageInfo>();
-        mListView = xListView;
+        mInfos = new ArrayList<ImageInfo>();
         this.folder = folder;
+        mOnClickListener = onClickListener;
     }
 
     @Override
@@ -49,34 +49,26 @@ public class StaggeredAdapter extends BaseAdapter {
             holder.imageView = (ScaleImageView) convertView.findViewById(R.id.news_pic);
             //holder.contentView = (TextView) convertView.findViewById(R.id.news_title);
             convertView.setTag(holder);
-            convertView.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    ViewHolder holder = (ViewHolder) v.getTag();
-
-                    Intent intent = new Intent(mContext, ImageGalleryActivity.class);
-                    intent.putExtra("objectKey", holder.objectKey);
-                    intent.putExtra("folder", folder);
-
-                    mContext.startActivity(intent);
-                }
-            });
+            convertView.setOnClickListener(mOnClickListener);
         }
 
         holder = (ViewHolder) convertView.getTag();
 
         //holder.contentView.setText(duitangInfo.getMsg());
         holder.objectKey = duitangInfo.getKey();
-        ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getUrl(), holder.imageView);
+        //ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getUrl(), holder.imageView);
         return convertView;
     }
 
-    class ViewHolder {
-        ScaleImageView imageView;
+    public void clear() {
+        mInfos.clear();
+    }
+
+    public class ViewHolder {
+        public ScaleImageView imageView;
         TextView contentView;
         TextView timeView;
-        String objectKey;
+        public String objectKey;
     }
 
     @Override
@@ -99,6 +91,6 @@ public class StaggeredAdapter extends BaseAdapter {
     }
 
     public void addItemTop(ImageInfo imageInfo) {
-        mInfos.addFirst(imageInfo);
+        mInfos.add(imageInfo);
     }
 }

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="types">
-        <item>中国</item>
-        <item>亚洲</item>
-        <item>欧美</item>
-    </string-array>
-</resources>

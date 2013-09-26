@@ -41,16 +41,19 @@ import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
 import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.DragGridAdapter;
 import cn.nit.beauty.bus.LauncherChangeEvent;
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.database.LaucherDataBase;
+import cn.nit.beauty.ui.listener.ShakeListener;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.DragGridView;
@@ -63,6 +66,8 @@ import roboguice.inject.InjectView;
 
 @ContentView(R.layout.layout_milaucher)
 public class MainActivity extends RoboActivity {
+
+    private ShakeListener mShaker;
 
     public static final int PAGE_SIZE = 8;
     public int PAGE_COUNT = 2, PAGE_CURRENT = 0;
@@ -93,9 +98,7 @@ public class MainActivity extends RoboActivity {
     ArrayList<DragGridView> gridviews = new ArrayList<DragGridView>();
     ArrayList<List<Category>> lists = new ArrayList<List<Category>>();// 全部数据的集合集lists.size()==countpage;
     List<Category> lstDate = new ArrayList<Category>();// 每一页的数据
-    SensorManager sm;
-    ;
-    SensorEventListener lsn;
+
     boolean isClean = false;
     Vibrator vibrator;
     int rockCount = 0;
@@ -125,6 +128,7 @@ public class MainActivity extends RoboActivity {
         super.onCreate(savedInstanceState);
 
         settings = PreferenceManager.getDefaultSharedPreferences(this);
+
 
         appUpdate = AppUpdateService.getAppUpdate(this);
         appUpdate.checkLatestVersion(Data.UPDATE_URL,
@@ -157,47 +161,23 @@ public class MainActivity extends RoboActivity {
 
         setImageBgAndRun();
 
+        final Vibrator vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
-        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        lsn = new
-                SensorEventListener() {
-                    public void onSensorChanged(SensorEvent e) {
-                        if (e.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                            if (!isClean && rockCount >= 7) {
-                                isClean = true;
-                                rockCount = 0;
-                                vibrator.vibrate(100);
-                                CleanItems();
-                                return;
-                            }
-                            float newX = e.values[SensorManager.DATA_X];
-                            float newY = e.values[SensorManager.DATA_Y];
-                            float newZ = e.values[SensorManager.DATA_Z];
-                            // if ((newX >= 18 || newY >= 20||newZ >= 20 )&&rockCount<4)
-                            // {
-                            if ((newX >= 16 || newY >= 18 || newZ >= 18)
-                                    && rockCount % 2 == 0) {
-                                rockCount++;
-                                return;
-                            }
-                            if ((newX <= -16 || newY <= -18 || newZ <= -18)
-                                    && rockCount % 2 == 1) {
-                                rockCount++;
-                                return;
-                            }
+        mShaker = new ShakeListener(this);
+        mShaker.setOnShakeListener(new ShakeListener.OnShakeListener () {
+            public void onShake()
+            {
+                vibe.vibrate(100);
+                String objectkey = Data.getRandomKey();
+                if (!objectkey.equals("")) {
+                    Intent intent = new Intent(MainActivity.this,
+                            ImageListActivity.class);
+                    intent.putExtra("objectKey", objectkey + "thumb/");
+                    startActivity(intent);
+                }
+            }
+        });
 
-                        }
-                    }
-
-                    @Override
-                    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-                    }
-                };
-
-        sm.registerListener(lsn, sensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     public void init() {
@@ -464,9 +444,20 @@ public class MainActivity extends RoboActivity {
     }
 
     public void setImageBgAndRun() {
-        System.out.println(getSharedPreferences("mysetup", 0).getInt("bg_id", 0) + "==");
-        Bitmap bitmap = BitmapFactory.decodeStream(getResources()
-                .openRawResource(Configure.images[getSharedPreferences("mysetup", 0).getInt("bg_id", 0)]), null, null);
+        Bitmap bitmap = null;
+
+        File cacheDir = StorageUtils.getCacheDirectory(this);
+        String[] files = cacheDir.list();
+        if (files.length > 0) {
+            Random rd = new Random();
+            String bg = files[rd.nextInt(files.length)];
+            bitmap = BitmapFactory.decodeFile(cacheDir.getPath() + "/" + bg);
+        }
+
+        if (bitmap == null) {
+            bitmap = BitmapFactory.decodeStream(getResources().openRawResource(R.drawable.default_homebg));
+        }
+
         bitmap_width = bitmap.getWidth();
         bitmap_height = bitmap.getHeight();
 
@@ -644,8 +635,6 @@ public class MainActivity extends RoboActivity {
                             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                             boolean isClearImage = settings.getBoolean("checkbox_clearimage", false);
 
-                            sm.unregisterListener(lsn);
-
 
                             if (!android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
                                 clear(MainActivity.this.getCacheDir());
@@ -681,7 +670,7 @@ public class MainActivity extends RoboActivity {
         PAGE_CURRENT = Configure.curentPage;
         StatService.onPause(this);
         appUpdate.callOnPause();
-
+        mShaker.pause();
     }
 
     @Override
@@ -712,5 +701,6 @@ public class MainActivity extends RoboActivity {
         StatService.onResume(this);
 
         appUpdate.callOnResume();
+        mShaker.resume();
     }
 }

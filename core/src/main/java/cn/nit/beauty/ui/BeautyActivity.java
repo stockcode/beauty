@@ -17,28 +17,27 @@ import com.baidu.mobads.AdView;
 import com.baidu.mobstat.StatService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.lucasr.smoothie.AsyncGridView;
+import org.lucasr.smoothie.ItemManager;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import cn.nit.beauty.R;
+import cn.nit.beauty.adapter.StaggeredAdapter;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.ScaleImageView;
-import me.maxwin.view.XListView;
-import me.maxwin.view.XListView.IXListViewListener;
 
-public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavigationListener,
-        IXListViewListener {
+public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavigationListener {
 
     LaucherDataBase database;
-    private XListView mAdapterView = null;
+    private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
-    private int currentPage = 0;
-    private int pageCount = 10;
     private List<String> filters = new ArrayList<String>();
     ;
     private String selectedFilter = "全部";
@@ -48,20 +47,13 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
     /**
      * 添加内容
-     *
-     * @param pageindex
-     * @param type      1为下拉刷新 2为加载更多
      */
-    private void AddItemToContainer(int pageindex, int type) {
-        if (type == 3) {
-            mAdapter.clear();
-        }
+    private void AddItemToContainer() {
 
         List<ImageInfo> imageInfos = new ArrayList<ImageInfo>();
 
-        for (int i = pageindex * pageCount; i < (pageindex + 1) * pageCount; i++) {
-            if (i >= selectedFolders.size()) break;
 
+        for(int i = 0; i < selectedFolders.size(); i++) {
             ImageInfo newsInfo1 = new ImageInfo();
             newsInfo1.setKey(selectedFolders.get(i));
             newsInfo1.setUrl(selectedFolders.get(i) + "thumb/cover.jpg");
@@ -69,12 +61,8 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             imageInfos.add(newsInfo1);
         }
 
-        if (imageInfos.size() > 0) {
             mAdapter.addItemLast(imageInfos);
             mAdapter.notifyDataSetChanged();
-        }
-        mAdapterView.stopRefresh();
-        mAdapterView.stopLoadMore();
     }
 
     @SuppressWarnings("unchecked")
@@ -102,12 +90,31 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
         database = new LaucherDataBase(getApplicationContext());
 
-        mAdapterView = (XListView) findViewById(R.id.list);
-        mAdapterView.setPullLoadEnable(true);
-        mAdapterView.setXListViewListener(this);
+        mAdapterView = (AsyncGridView) findViewById(R.id.list);
 
-        mAdapter = new StaggeredAdapter(this, mAdapterView);
+        mAdapter = new StaggeredAdapter(this, null, new OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                StaggeredAdapter.ViewHolder holder = (StaggeredAdapter.ViewHolder) v.getTag();
+
+                Intent intent = new Intent(BeautyActivity.this,
+                        ImageListActivity.class);
+                intent.putExtra("objectKey", holder.objectKey + "thumb/");
+                startActivity(intent);
+            }
+        });
+
+        mAdapterView.setAdapter(mAdapter);
+
+        GalleryLoader loader = new GalleryLoader(this);
+
+        ItemManager.Builder builder = new ItemManager.Builder(loader);
+        builder.setPreloadItemsEnabled(true).setPreloadItemsCount(10);
+        builder.setThreadPoolSize(4);
+        ItemManager itemManager = builder.build();
+
+        mAdapterView.setItemManager(itemManager);
 
         updateFilters();
 
@@ -120,6 +127,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
         getSupportActionBar().setListNavigationCallbacks(list, this);
         getSupportActionBar().setSelectedNavigationItem(list.getPosition(selectedFilter));
 
+        AddItemToContainer();
     }
 
     private void updateFilterFolder() {
@@ -150,7 +158,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             AdView adView = (AdView)findViewById(R.id.adView);
             adView.setVisibility(adView.INVISIBLE);
         }
-        mAdapterView.setAdapter(mAdapter);
+
         StatService.onResume(this);
     }
 
@@ -160,17 +168,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
     }
 
-    @Override
-    public void onRefresh() {
-        AddItemToContainer(++currentPage, 1);
-
-    }
-
-    @Override
-    public void onLoadMore() {
-        AddItemToContainer(++currentPage, 2);
-
-    }
 
     @Override
     protected void onPause() {
@@ -187,94 +184,9 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         selectedFilter = filters.get(itemPosition);
         updateFilterFolder();
-        AddItemToContainer(0, 3);
+        mAdapter.clear();
+        AddItemToContainer();
         return true;
     }
-
-    public class StaggeredAdapter extends BaseAdapter {
-        private Context mContext;
-        private LinkedList<ImageInfo> mInfos;
-        private XListView mListView;
-
-        public StaggeredAdapter(Context context, XListView xListView) {
-            mContext = context;
-            mInfos = new LinkedList<ImageInfo>();
-            mListView = xListView;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder;
-            ImageInfo duitangInfo = mInfos.get(position);
-
-            if (convertView == null) {
-                LayoutInflater layoutInflator = LayoutInflater.from(parent
-                        .getContext());
-                convertView = layoutInflator.inflate(R.layout.infos_list, null);
-                holder = new ViewHolder();
-                holder.imageView = (ScaleImageView) convertView
-                        .findViewById(R.id.news_pic);
-                //holder.contentView = (TextView) convertView
-                //        .findViewById(R.id.news_title);
-                convertView.setTag(holder);
-                convertView.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        ViewHolder holder = (ViewHolder) v.getTag();
-
-                        Intent intent = new Intent(BeautyActivity.this,
-                                ImageListActivity.class);
-                        intent.putExtra("objectKey", holder.objectKey + "thumb/");
-                        startActivity(intent);
-                    }
-                });
-            }
-
-            holder = (ViewHolder) convertView.getTag();
-            //holder.contentView.setText(duitangInfo.getMsg());
-            holder.objectKey = duitangInfo.getKey();
-            ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getUrl(), holder.imageView);
-            return convertView;
-        }
-
-        @Override
-        public int getCount() {
-            return mInfos.size();
-        }
-
-        @Override
-        public Object getItem(int arg0) {
-            return mInfos.get(arg0);
-        }
-
-        @Override
-        public long getItemId(int arg0) {
-            return 0;
-        }
-
-        public void addItemLast(List<ImageInfo> datas) {
-            mInfos.addAll(datas);
-        }
-
-        public void addItemTop(List<ImageInfo> datas) {
-            for (ImageInfo info : datas) {
-                mInfos.addFirst(info);
-            }
-        }
-
-        public void clear() {
-            mInfos.clear();
-        }
-
-        class ViewHolder {
-            ScaleImageView imageView;
-            TextView contentView;
-            TextView timeView;
-            String objectKey;
-        }
-    }
-
 
 }
