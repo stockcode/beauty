@@ -163,7 +163,7 @@ public class ImageListActivity extends SherlockActivity {
 	protected void onPause() {
 		super.onPause();
 		StatService.onPause(this);
-        unregisterReceiver(receiver);
+        //unregisterReceiver(receiver);
     }
 
 	@Override

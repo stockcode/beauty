@@ -169,10 +169,12 @@ public class MainActivity extends RoboActivity {
             {
                 vibe.vibrate(100);
                 String objectkey = Data.getRandomKey();
-                Intent intent = new Intent(MainActivity.this,
-                        ImageListActivity.class);
-                intent.putExtra("objectKey", objectkey + "thumb/");
-                startActivity(intent);
+                if (!objectkey.equals("")) {
+                    Intent intent = new Intent(MainActivity.this,
+                            ImageListActivity.class);
+                    intent.putExtra("objectKey", objectkey + "thumb/");
+                    startActivity(intent);
+                }
             }
         });
 
@@ -450,9 +452,12 @@ public class MainActivity extends RoboActivity {
             Random rd = new Random();
             String bg = files[rd.nextInt(files.length)];
             bitmap = BitmapFactory.decodeFile(cacheDir.getPath() + "/" + bg);
-        } else {
+        }
+
+        if (bitmap == null) {
             bitmap = BitmapFactory.decodeStream(getResources().openRawResource(R.drawable.default_homebg));
         }
+
         bitmap_width = bitmap.getWidth();
         bitmap_height = bitmap.getHeight();
 

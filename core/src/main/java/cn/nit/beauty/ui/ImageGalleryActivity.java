@@ -49,10 +49,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageGalleryActivity extends SherlockFragmentActivity {
 
-    // 屏幕宽度
-    public static int screenWidth;
-    // 屏幕高度
-    public static int screenHeight;
     List<ImageInfo> imageInfoList;
     private GalleryAdapter mAdapter;
     private ViewPager mViewPager;
@@ -72,10 +68,6 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
         objectKey = intent.getStringExtra("objectKey");
         folder = intent.getStringExtra("folder");
-
-        screenWidth = getWindow().getWindowManager().getDefaultDisplay().getWidth();
-        screenHeight = getWindow().getWindowManager().getDefaultDisplay().getHeight();
-
 
         mViewPager = new HackyViewPager(this);
         setContentView(mViewPager);
@@ -254,13 +246,6 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         }
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        Log.i("manager", "onConfigurationChanged...");
-        screenWidth = getWindow().getWindowManager().getDefaultDisplay().getWidth();
-        screenHeight = getWindow().getWindowManager().getDefaultDisplay().getHeight();
-        super.onConfigurationChanged(newConfig);
-    }
 
     @Override
     protected void onPause() {
