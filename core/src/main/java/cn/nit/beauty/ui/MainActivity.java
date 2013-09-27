@@ -544,36 +544,9 @@ public class MainActivity extends RoboActivity {
             return;
         }
 
-        BaiduOAuth oauthClient = new BaiduOAuth();
-
-        oauthClient.startOAuth(this, Data.mbApiKey, new String[]{"basic", "netdisk"}, new BaiduOAuth.OAuthListener() {
-            @Override
-            public void onException(String msg) {
-                Toast.makeText(getApplicationContext(), "登录失败，错误原因：" + msg, Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onComplete(BaiduOAuth.BaiduOAuthResponse response) {
-                if(null != response){
-                    String mbOauth = response.getAccessToken();
-                    settings.edit().putString("accessToken", mbOauth)
-                            .putString("userName", response.getUserName())
-                            .apply();
-                    Configure.save(settings);
-                    Toast.makeText(getApplicationContext(), response.getUserName() + "登录成功！", Toast.LENGTH_SHORT).show();
-
-                    if (launcher != null) {
-                        Intent intent = new Intent();
-                        intent.putExtra("launcher", launcher);
-                        intent.setClass(MainActivity.this, BeautyActivity.class);
-                        startActivity(intent);
-                    }
-                }
-            }
-            @Override
-            public void onCancel() {
-                Toast.makeText(getApplicationContext(), "登录已取消", Toast.LENGTH_SHORT).show();
-            }
-        });
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 
     public void onEvent(LauncherChangeEvent event) {

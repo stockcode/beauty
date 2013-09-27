@@ -120,6 +120,18 @@
             android:label="Push_notification_test" >
         </activity>
 
+        <activity
+            android:name=".ui.LoginActivity"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateVisible">
+        </activity>
+
+        <activity
+            android:name=".ui.RegisterActivity"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateVisible">
+        </activity>
+
         <!-- push service client -->
         <receiver android:name="cn.nit.beauty.PushMessageReceiver" >
             <intent-filter>
