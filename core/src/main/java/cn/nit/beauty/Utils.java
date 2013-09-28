@@ -5,6 +5,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 
 import java.io.File;
 
@@ -62,5 +65,29 @@ public class Utils {
                 size += getFolderSize(file);
         }
         return size;
+    }
+
+    public static int getScreenWidth(Context context) {
+        WindowManager manager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = manager.getDefaultDisplay();
+        return display.getWidth();
+    }
+
+    public static int getScreenHeight(Context context) {
+        WindowManager manager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = manager.getDefaultDisplay();
+        return display.getHeight();
+    }
+
+    public static float getScreenDensity(Context context) {
+        try {
+            DisplayMetrics dm = new DisplayMetrics();
+            WindowManager manager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+            manager.getDefaultDisplay().getMetrics(dm);
+            return dm.density;
+        } catch(Exception ex) {
+
+        }
+        return 1.0f;
     }
 }

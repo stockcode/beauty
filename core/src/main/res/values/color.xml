@@ -4,4 +4,7 @@
         <color name="red">#DE8677</color>
         <color name="trans">#00000000</color>
         <color name="white">#FFF</color>
+
+        <color name="button_unselected">#ff54acea</color>
+        <color name="button_selected">#ff419de4</color>
     </resources>
