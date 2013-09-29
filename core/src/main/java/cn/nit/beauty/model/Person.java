@@ -1,7 +1,10 @@
 package cn.nit.beauty.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Person {
 
     private Integer pkid;
@@ -12,6 +15,7 @@ public class Person {
     private Integer score;
     private String email;
     private String phone;
+    private String err;
 
     public Integer getPkid() {
         return pkid;
@@ -77,6 +81,14 @@ public class Person {
         this.phone = phone;
     }
 
+    public String getErr() {
+        return err;
+    }
+
+    public void setErr(String err) {
+        this.err = err;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Person{");
@@ -88,6 +100,7 @@ public class Person {
         sb.append(", score=").append(score);
         sb.append(", email='").append(email).append('\'');
         sb.append(", phone='").append(phone).append('\'');
+        sb.append(", err='").append(err).append('\'');
         sb.append('}');
         return sb.toString();
     }

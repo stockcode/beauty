@@ -6,6 +6,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -34,8 +36,9 @@ public class RegisterRequest extends SpringAndroidSpiceRequest<Person> {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(parameters, headers);
 
         RestTemplate restTemplate = getRestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
 
-        return restTemplate.postForObject("http://192.168.1.102:8080/beauty-ajax/api/register", request, Person.class);
+        return restTemplate.postForObject("http://192.168.1.100:8080/beauty-ajax/api/register", request, Person.class);
     }
 }

@@ -35,7 +35,6 @@ import android.widget.Toast;
 
 import com.baidu.mobads.appoffers.OffersManager;
 import com.baidu.mobstat.StatService;
-import com.baidu.oauth.BaiduOAuth;
 import com.capricorn.ArcMenu;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;

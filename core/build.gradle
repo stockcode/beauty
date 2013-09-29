@@ -12,6 +12,7 @@ dependencies {
     compile 'com.octo.android.robospice:robospice:1.4.6'
     compile 'com.octo.android.robospice:robospice-spring-android:1.4.6'
     compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
     //compile  'com.github.chrisbanes.photoview:library:1.2.1'
     compile  'de.greenrobot:eventbus:2.0.2'
     compile  'com.baidu.android:mobstat:3.1'
@@ -27,9 +28,6 @@ dependencies {
     //compile 'com.origamilabs.library:staggeredgridview:1.0.0'
     //compile 'org.lucasr.smoothie:library:0.1'
 
-    compile 'com.baidu.android:pcs:2.1.0'
-    compile 'com.baidu.android:pcs-sd:1.0.0'
-    compile 'com.baidu.android:oauth:2.0.0'
     compile 'org.apache.httpcomponents:httpmime:4.2.5'
 }
 
