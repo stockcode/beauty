@@ -113,12 +113,12 @@ public class ImageListActivity extends SherlockActivity {
     public boolean onOptionsItemSelected(MenuItem mi) {
         switch (mi.getItemId()) {
             case R.id.mnuFavoriate:
-                database.updateFavorite(objectKey.replaceAll("/thumb", ""));
+                database.updateFavorite(objectKey.replaceAll("/smallthumb", ""));
                 Data.categoryMap.put("favorite", database.getFavoriteList());
                 Toast.makeText(getApplicationContext(), "收藏完毕", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.mnuDownload:
-                String url = Data.OSS_URL + objectKey.replaceAll("/thumb/", "/original.zip");
+                String url = Data.OSS_URL + objectKey.replaceAll("/smallthumb/", "/original.zip");
                 DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
                 downloadManager.enqueue(request);
@@ -146,15 +146,15 @@ public class ImageListActivity extends SherlockActivity {
     protected void onResume() {
         super.onResume();
 
-        if (Configure.accessToken != null) {
+        //if (Configure.accessToken != null) {
             AdView adView = (AdView)findViewById(R.id.adView);
             adView.setVisibility(adView.INVISIBLE);
-        }
+        //}
 
         setProgressBarIndeterminateVisibility(true);
 
-        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey.replaceAll("thumb/", "") + Data.INDEX_KEY);
-        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
+        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey + Data.INDEX_KEY);
+        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ALWAYS_EXPIRED, new ImageListRequestListener());
 
         StatService.onResume(this);
     }

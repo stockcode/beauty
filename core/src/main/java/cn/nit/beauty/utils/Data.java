@@ -21,14 +21,13 @@ public class Data {
     public final static int PAGE_COUNT = 10;
 	public final static String INDEX_KEY = "index.json";
 	
-	public static String[] Items_url = { "asian", "occident", "china", "favorite", "vip",
-			"more"};
+	public static String[] Items_url = { "asian", "occident", "china", "favorite", "daily"};
 	public static int[] Items_icon = { R.drawable.add_emercy, R.drawable.add_beauty,
 			R.drawable.add_constellate, R.drawable.add_emercy,
 			R.drawable.add_news, R.drawable.add_ideas, R.drawable.add_fun,
 			R.drawable.add_weibo };
 
-	public static String[] Item0 = { "亚洲", "欧美", "中国","我的收藏","VIP专区","更多"};
+	public static String[] Item0 = { "亚洲", "欧美", "中国","我的收藏","每日更新"};
 	public static Map<String, List<String>> categoryMap = new HashMap<String, List<String>>();
 	public static int[] Item0_icon = { R.drawable.c_love_channel,R.drawable.c_net_new, R.drawable.c_user
 		,R.drawable.c_entertainment,R.drawable.c_financial,R.drawable.c_technoledge};

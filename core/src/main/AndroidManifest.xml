@@ -100,8 +100,7 @@
         <activity
             android:name=".ui.ImageGalleryActivity"
             android:parentActivityName=".ui.ImageListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.ImageListActivity" />

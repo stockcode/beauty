@@ -66,8 +66,8 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
         Intent intent = getIntent();
 
-        objectKey = intent.getStringExtra("objectKey");
-        folder = intent.getStringExtra("folder");
+        objectKey = intent.getStringExtra("objectKey").replaceAll("small", "big");
+        folder = intent.getStringExtra("folder").replaceAll("small", "big");
 
         mViewPager = new HackyViewPager(this);
         setContentView(mViewPager);
@@ -136,7 +136,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
     private void changeOriginal() {
         ImageInfo imageInfo = mAdapter.getImageInfo(mViewPager.getCurrentItem());
-        String imageSrc = imageInfo.getUrl().replaceAll("thumb", "original");
+        String imageSrc = imageInfo.getUrl().replaceAll("bigthumb", "original");
         imageInfo.setUrl(imageSrc);
 
         View imageLayout = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
@@ -271,8 +271,8 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         super.onResume();
         StatService.onResume(this);
 
-        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + folder.replaceAll("thumb/", "") + Data.INDEX_KEY);
-        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
+        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + folder + Data.INDEX_KEY);
+        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ALWAYS_EXPIRED, new ImageListRequestListener());
     }
 
     public int getCurrentItem() {
