@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true" 
-        android:layout_margin="20dip">
+        android:layout_margin="10dip">
         <TextView
             android:id="@+id/tv_page"
             android:layout_width="wrap_content"
@@ -34,17 +34,54 @@
             android:text="1"	android:gravity="center"	android:textColor="#ffffff"
             android:layout_centerHorizontal="true"
             android:background="@drawable/pageid" />
-    </RelativeLayout>
 
-
-    <com.capricorn.ArcMenu
-            android:id="@+id/arc_menu"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="-100dp"
-            android:layout_marginRight="-100dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal">
+
+
+                <Button
+                    android:id="@+id/btnAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="40dp"
+                    android:background="@drawable/rootblock_add_selector"/>
+
+                <Button
+                    android:id="@+id/btnSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/btnAdd"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/rootblock_set_selector"/>
+
+                <Button
+                    android:id="@+id/btnAds"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/btnSettings"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/rootblock_appstroe_selector"/>
+
+                <Button
+                    android:id="@+id/btnDownload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/btnAds"
+                    android:layout_marginBottom="15dp"
+                    android:visibility="invisible"
+                    android:background="@drawable/rootblock_download_selector"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
 
 	<ImageView android:id="@+id/dels"	android:layout_height="wrap_content"	android:layout_width="wrap_content"
 	    android:background="@drawable/del_check"	android:visibility="gone"

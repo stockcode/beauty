@@ -23,7 +23,7 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.6'
     compile 'cn.nit:autoupdate:1.0.0'
     compile 'com.actionbarsherlock:actionbarsherlock:4.3.2-SNAPSHOT'
-    compile 'com.capricorn:arcmenu:1.0.0'
+    //compile 'com.capricorn:arcmenu:1.0.0'
     //compile 'me.maxwin.view:OneXListview:1.0.0'
     //compile 'com.origamilabs.library:staggeredgridview:1.0.0'
     //compile 'org.lucasr.smoothie:library:0.1'

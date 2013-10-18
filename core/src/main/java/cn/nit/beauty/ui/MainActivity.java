@@ -25,17 +25,10 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import com.baidu.mobads.appoffers.OffersManager;
 import com.baidu.mobstat.StatService;
-import com.capricorn.ArcMenu;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
 import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
@@ -88,8 +81,17 @@ public class MainActivity extends RoboActivity {
     ImageView runImage;
     @InjectView(R.id.dels)
     ImageView delImage;
-    @InjectView(R.id.arc_menu)
-    ArcMenu arcMenu;
+    @InjectView(R.id.btnAdd)
+    Button btnAdd;
+    @InjectView(R.id.btnSettings)
+    Button btnSettings;
+    @InjectView(R.id.btnAds)
+    Button btnAds;
+    @InjectView(R.id.btnDownload)
+    Button btnDownload;
+
+
+
     float bitmap_width, bitmap_height;
     LinearLayout.LayoutParams param;
     TranslateAnimation left, right;
@@ -105,12 +107,10 @@ public class MainActivity extends RoboActivity {
     SharedPreferences sp_skin;
     IntentFilter setPositionFilter;
     boolean finishCount = false;
-    Class<?>[] classes = {AddItemActivity.class, AboutActivity.class, UserCenterActivity.class, SettingActivity.class, HelpActivity.class, FeedbackActivity.class};
+
     ProgressDialog progressDialog;
     //0227更新壁纸切换：
     IntentFilter setbgFilter;
-    int[] ITEM_DRAWABLES = {R.drawable.composer_add, R.drawable.composer_camera, R.drawable.composer_music,
-            R.drawable.composer_place, R.drawable.composer_with};
 
     private SharedPreferences settings;
 
@@ -177,6 +177,33 @@ public class MainActivity extends RoboActivity {
             }
         });
 
+        initButtons();
+    }
+
+    private void initButtons() {
+
+        btnAdd.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnSettings.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnAds.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OffersManager.showOffers(MainActivity.this);
+            }
+        });
     }
 
     public void init() {
@@ -501,39 +528,6 @@ public class MainActivity extends RoboActivity {
 
         sp_skin = getSharedPreferences("skin", MODE_PRIVATE);
 
-        final int itemCount = ITEM_DRAWABLES.length;
-        for (int i = 0; i < itemCount; i++) {
-            ImageView item = new ImageView(this);
-            item.setImageResource(ITEM_DRAWABLES[i]);
-
-            final int position = i;
-            arcMenu.addItem(item, new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    //if (position > 0) {
-                    //    Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
-                    //    return;
-                    //}
-
-                    if (position == 1) {
-                        OffersManager.showOffers(MainActivity.this);
-                    }
-
-                    if (position == itemCount - 1) {
-                        StartLogin(null);
-                    }
-                    else {
-                        Intent intent = new Intent(MainActivity.this, classes[position]);
-                    try {
-                        startActivity(intent);
-                    }catch (RuntimeException e) {
-                        Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
-                    }
-                    }
-                }
-            });// Add a menu item
-        }
     }
 
     private void StartLogin(final Category launcher) {
