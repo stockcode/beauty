@@ -55,9 +55,10 @@ public class StaggeredAdapter extends BaseAdapter {
 
         holder = (ViewHolder) convertView.getTag();
 
-        String[] strs = duitangInfo.getTitle().split("/");
+        String title = duitangInfo.getTitle().split(":")[0];
+        String[] strs = title.split("/");
         holder.contentView.setText(strs[strs.length-1]);
-        holder.objectKey = duitangInfo.getKey();
+        holder.objectKey = title;
         //ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getUrl(), holder.imageView);
         return convertView;
     }

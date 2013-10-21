@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import cn.nit.beauty.database.Category;
+import cn.nit.beauty.ui.BeautyActivity;
 import com.baidu.android.pushservice.PushConstants;
 
 import cn.nit.beauty.ui.CustomActivity;
@@ -93,16 +95,26 @@ public class PushMessageReceiver extends BroadcastReceiver {
 				PushConstants.ACTION_RECEIVER_NOTIFICATION_CLICK)) {
 			Log.d(TAG, "intent=" + intent.toUri(0));
 			
-			Intent aIntent = new Intent();
-			aIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			aIntent.setClass(context, CustomActivity.class);
-			String title = intent
-					.getStringExtra(PushConstants.EXTRA_NOTIFICATION_TITLE);
-			aIntent.putExtra(PushConstants.EXTRA_NOTIFICATION_TITLE, title);
-			String content = intent
-					.getStringExtra(PushConstants.EXTRA_NOTIFICATION_CONTENT);
-			aIntent.putExtra(PushConstants.EXTRA_NOTIFICATION_CONTENT, content);
+//			Intent aIntent = new Intent();
 
+//			aIntent.setClass(context, CustomActivity.class);
+//			String title = intent
+//					.getStringExtra(PushConstants.EXTRA_NOTIFICATION_TITLE);
+//			aIntent.putExtra(PushConstants.EXTRA_NOTIFICATION_TITLE, title);
+//			String content = intent
+//					.getStringExtra(PushConstants.EXTRA_NOTIFICATION_CONTENT);
+//			aIntent.putExtra(PushConstants.EXTRA_NOTIFICATION_CONTENT, content);
+
+            Category launcher = new Category();
+            launcher.setTITLE("每日更新");
+            launcher.setURL("daily");
+            launcher.setCATEGORY("daily");
+
+            Intent aIntent = new Intent();
+
+            aIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            aIntent.putExtra("launcher", launcher);
+            aIntent.setClass(context, BeautyActivity.class);
 			context.startActivity(aIntent);
 		}
 	}
