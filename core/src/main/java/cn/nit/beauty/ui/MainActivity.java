@@ -89,6 +89,8 @@ public class MainActivity extends RoboActivity {
     Button btnAds;
     @InjectView(R.id.btnDownload)
     Button btnDownload;
+    @InjectView(R.id.btnSearch)
+    Button btnSearch;
 
 
 
@@ -204,6 +206,21 @@ public class MainActivity extends RoboActivity {
                 OffersManager.showOffers(MainActivity.this);
             }
         });
+
+        btnSearch.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSearchRequested();
+            }
+        });
+    }
+
+    @Override
+    public boolean onSearchRequested() {
+        Bundle appData = new Bundle();
+        //appData.putBoolean(SearchableActivity.JARGON, true);
+        startSearch(null, false, appData, false);
+        return true;
     }
 
     public void init() {

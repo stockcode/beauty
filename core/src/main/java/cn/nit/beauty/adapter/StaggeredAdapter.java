@@ -55,7 +55,7 @@ public class StaggeredAdapter extends BaseAdapter {
 
         holder = (ViewHolder) convertView.getTag();
 
-        String title = duitangInfo.getTitle().split(":")[0];
+        String title = duitangInfo.getTitle();
         String[] strs = title.split("/");
         holder.contentView.setText(strs[strs.length-1]);
         holder.objectKey = title;

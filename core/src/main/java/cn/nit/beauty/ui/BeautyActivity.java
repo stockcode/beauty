@@ -1,5 +1,6 @@
 package cn.nit.beauty.ui;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -54,10 +55,11 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
 
         for(int i = 0; i < selectedFolders.size(); i++) {
+            String url = selectedFolders.get(i).split(":")[0];
             ImageInfo newsInfo1 = new ImageInfo();
-            newsInfo1.setKey(selectedFolders.get(i));
-            newsInfo1.setUrl(selectedFolders.get(i) + "smallthumb/cover.jpg");
-            newsInfo1.setTitle(selectedFolders.get(i));
+            newsInfo1.setKey(url);
+            newsInfo1.setUrl(url + "smallthumb/cover.jpg");
+            newsInfo1.setTitle(url);
             imageInfos.add(newsInfo1);
         }
 
@@ -72,7 +74,13 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
         setContentView(R.layout.act_pull_to_refresh_sample);
 
         Intent intent = getIntent();
-        launcher = (Category) intent.getSerializableExtra("launcher");
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+
+        } else {
+            launcher = (Category) intent.getSerializableExtra("launcher");
+        }
 
         if (launcher.getCATEGORY().equals("ROOT")) {
             category = launcher.getURL();
