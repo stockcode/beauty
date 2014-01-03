@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -85,8 +86,7 @@ public class MainActivity extends RoboActivity {
     Button btnAdd;
     @InjectView(R.id.btnSettings)
     Button btnSettings;
-    @InjectView(R.id.btnAds)
-    Button btnAds;
+
     @InjectView(R.id.btnDownload)
     Button btnDownload;
     @InjectView(R.id.btnSearch)
@@ -147,8 +147,7 @@ public class MainActivity extends RoboActivity {
         init();
         initData();
         initPath();
-        //initBroadCast();
-        // initBgBroadCast();
+
         for (int i = 0; i < Configure.countPages; i++) {
             lst_views.addView(addGridView(i));
         }
@@ -160,7 +159,7 @@ public class MainActivity extends RoboActivity {
             }
         });
 
-        setImageBgAndRun();
+        //setImageBgAndRun();
 
         final Vibrator vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -169,11 +168,13 @@ public class MainActivity extends RoboActivity {
             public void onShake()
             {
                 vibe.vibrate(100);
+
                 String objectkey = Data.getRandomKey();
+
                 if (!objectkey.equals("")) {
                     Intent intent = new Intent(MainActivity.this,
                             ImageListActivity.class);
-                    intent.putExtra("objectKey", objectkey + "thumb/");
+                    intent.putExtra("objectKey", objectkey.split(":")[0] + "smallthumb/");
                     startActivity(intent);
                 }
             }
@@ -200,28 +201,18 @@ public class MainActivity extends RoboActivity {
             }
         });
 
-        btnAds.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OffersManager.showOffers(MainActivity.this);
-            }
-        });
 
         btnSearch.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSearchRequested();
+                if (onSearchRequested())
+                    Log.e("search", "true");
+                else
+                    Log.e("search", "false");
             }
         });
     }
 
-    @Override
-    public boolean onSearchRequested() {
-        Bundle appData = new Bundle();
-        //appData.putBoolean(SearchableActivity.JARGON, true);
-        startSearch(null, false, appData, false);
-        return true;
-    }
 
     public void init() {
 
@@ -271,17 +262,8 @@ public class MainActivity extends RoboActivity {
         isClean = false;
         lst_views.snapToScreen(0);
     }
-//	public void initBgBroadCast(){
-//		setbgreceiver = new BroadcastReceiver() {
-//			@Override
-//			public void onReceive(Context context, Intent intent) {
-//				setImageBgAndRun();
-//			}
-//		};
-//		setbgFilter = new IntentFilter(
-//				"intentToBgChange");
-//		registerReceiver(setbgreceiver, setbgFilter);
-//	}
+
+
 
     public int getFristNonePosition(List<Category> array) {
         for (int i = 0; i < array.size(); i++) {
@@ -335,8 +317,8 @@ public class MainActivity extends RoboActivity {
                         return;
                     }
                 }
-                if (launcher.getURL().equals("more")) {
-                    Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
+                if (launcher.getURL().equals("game")) {
+                    OffersManager.showOffers(MainActivity.this);
                     return;
                 }
 

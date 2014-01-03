@@ -1,9 +1,14 @@
 package cn.nit.beauty.ui;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -46,7 +51,7 @@ public class LoadingActivity extends Activity {
             GsonSpringAndroidSpiceService.class);
 
     LaucherDataBase database;
-    boolean isLaucher;
+    boolean isLaucher, isDaily;
     boolean isFinish = false;
 
     private SharedPreferences settings;
@@ -55,6 +60,10 @@ public class LoadingActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_loading);
+
+        Intent intent = getIntent();
+
+        isDaily = intent.hasExtra("isDaily");
 
         database = new LaucherDataBase(getApplicationContext());
 
@@ -65,6 +74,11 @@ public class LoadingActivity extends Activity {
 
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         Configure.save(settings);
+
+        if (!settings.getBoolean("shortcut", false)) {
+            createShortCut(this);
+            settings.edit().putBoolean("shortcut", true).apply();
+        }
 
         IndexRequest indexRequest = new IndexRequest(Data.OSS_URL + Data.INDEX_KEY);
         spiceManager.execute(indexRequest, "beauty.index", DurationInMillis.ALWAYS_EXPIRED, new IndexRequestListener());
@@ -133,6 +147,20 @@ public class LoadingActivity extends Activity {
         return super.dispatchKeyEvent(event);
     }
 
+    public static void createShortCut(Context context) {
+        final Intent addIntent = new Intent(
+                "com.android.launcher.action.INSTALL_SHORTCUT");
+        final Parcelable icon = Intent.ShortcutIconResource.fromContext(
+                context, R.drawable.icon); // 获取快捷键的图标
+        addIntent.putExtra("duplicate", false);
+        final Intent myIntent = new Intent(context,LoadingActivity.class);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
+                context.getString(R.string.app_name));// 快捷方式的标题
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);// 快捷方式的图标
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, myIntent);// 快捷方式的动作
+        context.sendBroadcast(addIntent);
+    }
+
 
     private class IndexRequestListener implements RequestListener<Index> {
         @Override
@@ -155,7 +183,17 @@ public class LoadingActivity extends Activity {
             checkItems();
 
             Intent intent = new Intent();
-            intent.setClass(LoadingActivity.this, MainActivity.class);
+
+            if (isDaily) {
+                Category launcher = new Category();
+                launcher.setTITLE("每日更新");
+                launcher.setURL("daily");
+                launcher.setCATEGORY("daily");
+                intent.putExtra("launcher", launcher);
+                intent.setClass(LoadingActivity.this, BeautyActivity.class);
+            } else {
+                intent.setClass(LoadingActivity.this, MainActivity.class);
+            }
             startActivity(intent);
             finish();
         }

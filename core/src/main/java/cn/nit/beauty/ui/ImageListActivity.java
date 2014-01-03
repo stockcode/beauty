@@ -3,6 +3,10 @@ package cn.nit.beauty.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.*;
+import android.preference.PreferenceManager;
+import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.StaggeredAdapter;
 import cn.nit.beauty.database.LaucherDataBase;
@@ -12,10 +16,6 @@ import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 
 import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -41,10 +41,12 @@ public class ImageListActivity extends SherlockActivity {
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
-    private String objectKey;
+    private String objectKey, title;
     private LaucherDataBase database;
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
+
+    private SharedPreferences settings;
 
     /**
      * 添加内容
@@ -66,12 +68,15 @@ public class ImageListActivity extends SherlockActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_pull_to_refresh_sample);
-        
+
+        settings = PreferenceManager.getDefaultSharedPreferences(ImageListActivity.this);
+
         Intent intent = getIntent();
         objectKey = intent.getStringExtra("objectKey");
 
         String[] strs = objectKey.split("/");
-        setTitle(strs[strs.length - 2]);
+        title = strs[strs.length - 2];
+        setTitle(title);
 
         database = new LaucherDataBase(getApplicationContext());
 
@@ -83,11 +88,39 @@ public class ImageListActivity extends SherlockActivity {
             public void onClick(View v) {
                 StaggeredAdapter.ViewHolder holder = (StaggeredAdapter.ViewHolder) v.getTag();
 
-                Intent intent = new Intent(ImageListActivity.this, ImageGalleryActivity.class);
+                final Intent intent = new Intent(ImageListActivity.this, ImageGalleryActivity.class);
                 intent.putExtra("objectKey", holder.objectKey);
                 intent.putExtra("folder", objectKey);
+                intent.putExtra("title", title);
 
-                startActivity(intent);
+                if (Helper.isWifi(getApplicationContext()) || settings.getBoolean("notifyWIFI", false)) {
+                    startActivity(intent);
+                }
+                else {
+                    new AlertDialog.Builder(ImageListActivity.this)
+                            .setTitle("温馨提示")
+                            .setMessage("当前非WIFI网络，继续浏览会消耗您的流量(每张图片约1MB)")
+                            .setNegativeButton("继续", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNeutralButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .setPositiveButton("不再提示", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    settings.edit().putBoolean("notifyWIFI", true).apply();
+                                    startActivity(intent);
+                                }
+                            })
+                            .show();
+                }
+
+
+
             }
         });
 
@@ -101,6 +134,9 @@ public class ImageListActivity extends SherlockActivity {
         ItemManager itemManager = builder.build();
 
         mAdapterView.setItemManager(itemManager);
+
+        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey + Data.INDEX_KEY);
+        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
     }
 
     @Override
@@ -152,9 +188,6 @@ public class ImageListActivity extends SherlockActivity {
         //}
 
         setProgressBarIndeterminateVisibility(true);
-
-        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey + Data.INDEX_KEY);
-        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ALWAYS_EXPIRED, new ImageListRequestListener());
 
         StatService.onResume(this);
     }

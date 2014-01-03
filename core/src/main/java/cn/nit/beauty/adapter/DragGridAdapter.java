@@ -56,22 +56,18 @@ public class DragGridAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		convertView = LayoutInflater.from(context).inflate(R.layout.griditem_milaucher, null);
-		txt = (TextView) convertView.findViewById(R.id.item_text);
 		img = (ImageView) convertView.findViewById(R.id.item_img);
 		relate = (RelativeLayout) convertView.findViewById(R.id.item_relate);
 		Category map = lstDate.get(position);
 		
 		if(map!=null && map.getTITLE()==null){
-			txt.setText("");
 			img.setImageBitmap(null);
 			//relate.setBackgroundResource(R.drawable.red_add);
 		}
 		else if(map!=null &&map.getTITLE().equals("none")){
-			txt.setText("");
 			img.setImageBitmap(null);
 			relate.setBackgroundDrawable(null);
 		}else {
-			txt.setText(map.getTITLE().toString());
 			int url = map.getCATEGORY_ICON();
 			if(url!=-1)
 
@@ -80,23 +76,8 @@ public class DragGridAdapter extends BaseAdapter {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-		/*	Drawable cachedImage = asyncImageLoader_Weibo.loadDrawable(context,
-					url, new ImageCallback_LW() {
-						public void imageLoaded(Drawable imageDrawable,
-								String imageUrls) {
-							ImageView imageViewByTag = (ImageView) listview.findViewWithTag(imageUrls);
-							if (imageViewByTag == null || imageDrawable == null) 
-								img.setBackgroundDrawable(imageDrawable);
-							else 
-								imageViewByTag.setBackgroundDrawable(imageDrawable);
-						}
-					});
-			if (cachedImage == null) {
-				img.setBackgroundDrawable(null);
-			} else {
-				img.setBackgroundDrawable(cachedImage);
-			}*/
-			relate.setBackgroundResource(R.drawable.blue);
+
+			//relate.setBackgroundResource(R.drawable.blue);
 		}
 		
 		return convertView;

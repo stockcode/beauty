@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.ui.BeautyActivity;
+import cn.nit.beauty.ui.LoadingActivity;
 import com.baidu.android.pushservice.PushConstants;
 
 import cn.nit.beauty.ui.CustomActivity;
@@ -105,16 +106,13 @@ public class PushMessageReceiver extends BroadcastReceiver {
 //					.getStringExtra(PushConstants.EXTRA_NOTIFICATION_CONTENT);
 //			aIntent.putExtra(PushConstants.EXTRA_NOTIFICATION_CONTENT, content);
 
-            Category launcher = new Category();
-            launcher.setTITLE("每日更新");
-            launcher.setURL("daily");
-            launcher.setCATEGORY("daily");
+
 
             Intent aIntent = new Intent();
 
             aIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            aIntent.putExtra("launcher", launcher);
-            aIntent.setClass(context, BeautyActivity.class);
+            aIntent.putExtra("isDaily", true);
+            aIntent.setClass(context, LoadingActivity.class);
 			context.startActivity(aIntent);
 		}
 	}

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.path="$MODULE_DIR$/core" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="cn.nit" external.system.module.version="1.0.1" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="android-gradle" name="Android-Gradle">
+      <configuration>
+        <option name="GRADLE_PROJECT_PATH" value=":core" />
+      </configuration>
+    </facet>
+    <facet type="android" name="Android">
+      <configuration>
+        <option name="SELECTED_BUILD_VARIANT" value="MmDebug" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleMmDebug" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileMmDebug" />
+        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleMmTest" />
+        <option name="SOURCE_GEN_TASK_NAME" value="generateMmDebugSources" />
+        <option name="ALLOW_USER_CONFIGURATION" value="false" />
+        <option name="GEN_FOLDER_RELATIVE_PATH_APT" value="/core/gen" />
+        <option name="GEN_FOLDER_RELATIVE_PATH_AIDL" value="/core/gen" />
+        <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
+        <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/core/src/main/res" />
+        <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
+        <option name="LIBS_FOLDER_RELATIVE_PATH" value="/core/libs" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/core/build/classes/mm/debug" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/core">
+      <sourceFolder url="file://$MODULE_DIR$/core/build/source/r/mm/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/build/source/aidl/mm/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/build/source/rs/mm/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/build/source/buildConfig/mm/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/build/res/rs/mm/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/build/source/r/mm/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/build/source/aidl/mm/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/build/source/rs/mm/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/build/source/buildConfig/mm/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/build/res/rs/mm/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/mm/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/mm/assets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/mm/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/mm/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/mm/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/mm/res" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/mm/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTestMm/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTestMm/assets" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTestMm/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTestMm/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTestMm/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTestMm/res" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTestMm/resources" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/debug/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/debug/assets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/debug/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/debug/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/debug/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/debug/res" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/debug/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/main/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/main/assets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/main/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/main/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/main/res" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTest/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTest/assets" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTest/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTest/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTest/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTest/res" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/core/src/instrumentTest/resources" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/core/build/apk" />
+      <excludeFolder url="file://$MODULE_DIR$/core/build/assets" />
+      <excludeFolder url="file://$MODULE_DIR$/core/build/bundles" />
+      <excludeFolder url="file://$MODULE_DIR$/core/build/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/core/build/dependency-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/core/build/incremental" />
+      <excludeFolder url="file://$MODULE_DIR$/core/build/libs" />
+      <excludeFolder url="file://$MODULE_DIR$/core/build/manifests" />
+      <excludeFolder url="file://$MODULE_DIR$/core/build/symbols" />
+      <excludeFolder url="file://$MODULE_DIR$/core/build/tmp" />
+    </content>
+    <orderEntry type="jdk" jdkName="Android API 17 Platform" jdkType="Android SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="support-v4-r13" level="project" />
+    <orderEntry type="library" exported="" name="httpcore-4.2.4" level="project" />
+    <orderEntry type="library" exported="" name="aopalliance-1.0" level="project" />
+    <orderEntry type="library" exported="" name="acra-4.5.0" level="project" />
+    <orderEntry type="library" exported="" name="roboguice-sherlock-1.5" level="project" />
+    <orderEntry type="library" exported="" name="CnNitAutoupdate100.aar" level="project" />
+    <orderEntry type="library" exported="" name="mobstat-3.1" level="project" />
+    <orderEntry type="library" exported="" name="jackson-core-2.2.2" level="project" />
+    <orderEntry type="library" exported="" name="jackson-databind-2.2.2" level="project" />
+    <orderEntry type="library" exported="" name="cglib-2.2.1-v20090111" level="project" />
+    <orderEntry type="library" exported="" name="universal-image-loader-1.8.6" level="project" />
+    <orderEntry type="library" exported="" name="guice-3.0-no_aop" level="project" />
+    <orderEntry type="library" exported="" name="robospice-cache-1.4.6" level="project" />
+    <orderEntry type="library" exported="" name="eventbus-2.0.2" level="project" />
+    <orderEntry type="library" exported="" name="commons-io-1.3.2" level="project" />
+    <orderEntry type="library" exported="" name="pushservice-2.4.0" level="project" />
+    <orderEntry type="library" exported="" name="robospice-spring-android-1.4.6" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="ComActionbarsherlockActionbarsherlock432SNAPSHOT.aar" level="project" />
+    <orderEntry type="library" exported="" name="jackson-annotations-2.2.2" level="project" />
+    <orderEntry type="library" exported="" name="asm-3.1" level="project" />
+    <orderEntry type="library" exported="" name="spring-android-rest-template-1.0.1.RELEASE" level="project" />
+    <orderEntry type="library" exported="" name="mobads-3.2" level="project" />
+    <orderEntry type="library" exported="" name="roboguice-2.0" level="project" />
+    <orderEntry type="library" exported="" name="mobads_wall-1.1" level="project" />
+    <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
+    <orderEntry type="library" exported="" name="greendao-1.3.1" level="project" />
+    <orderEntry type="library" exported="" name="spring-android-core-1.0.1.RELEASE" level="project" />
+    <orderEntry type="library" exported="" name="httpmime-4.2.5" level="project" />
+    <orderEntry type="library" exported="" name="commons-lang3-3.1" level="project" />
+    <orderEntry type="library" exported="" name="robospice-1.4.6" level="project" />
+  </component>
+</module>
+
