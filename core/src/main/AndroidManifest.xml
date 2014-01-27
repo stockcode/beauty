@@ -61,7 +61,6 @@
 
         <activity
             android:name=".ui.LoadingActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>

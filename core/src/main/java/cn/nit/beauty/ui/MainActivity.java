@@ -317,10 +317,6 @@ public class MainActivity extends RoboActivity {
                         return;
                     }
                 }
-                if (launcher.getURL().equals("game")) {
-                    OffersManager.showOffers(MainActivity.this);
-                    return;
-                }
 
                 String text = launcher.getTITLE();
                 Intent intent = new Intent();

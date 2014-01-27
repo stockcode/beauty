@@ -46,7 +46,7 @@ public class ImageListActivity extends SherlockActivity {
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
 
-    private SharedPreferences settings;
+
 
     /**
      * 添加内容
@@ -69,8 +69,6 @@ public class ImageListActivity extends SherlockActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_pull_to_refresh_sample);
 
-        settings = PreferenceManager.getDefaultSharedPreferences(ImageListActivity.this);
-
         Intent intent = getIntent();
         objectKey = intent.getStringExtra("objectKey");
 
@@ -92,35 +90,7 @@ public class ImageListActivity extends SherlockActivity {
                 intent.putExtra("objectKey", holder.objectKey);
                 intent.putExtra("folder", objectKey);
                 intent.putExtra("title", title);
-
-                if (Helper.isWifi(getApplicationContext()) || settings.getBoolean("notifyWIFI", false)) {
-                    startActivity(intent);
-                }
-                else {
-                    new AlertDialog.Builder(ImageListActivity.this)
-                            .setTitle("温馨提示")
-                            .setMessage("当前非WIFI网络，继续浏览会消耗您的流量(每张图片约1MB)")
-                            .setNegativeButton("继续", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNeutralButton("取消", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            })
-                            .setPositiveButton("不再提示", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    settings.edit().putBoolean("notifyWIFI", true).apply();
-                                    startActivity(intent);
-                                }
-                            })
-                            .show();
-                }
-
-
-
+                startActivity(intent);
             }
         });
 

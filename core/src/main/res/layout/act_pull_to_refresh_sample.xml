@@ -5,7 +5,7 @@
 
     <org.lucasr.smoothie.AsyncGridView
             android:id="@+id/list"
-            android:numColumns="auto_fit"
+            android:numColumns="3"
             android:horizontalSpacing="1dp"
             android:verticalSpacing="1dp"
             android:layout_width="fill_parent"

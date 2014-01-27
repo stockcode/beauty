@@ -148,16 +148,24 @@ public class LoadingActivity extends Activity {
     }
 
     public static void createShortCut(Context context) {
+        final Intent myIntent = new Intent(context,LoadingActivity.class);
+        myIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        myIntent.setAction(Intent.ACTION_MAIN);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+
         final Intent addIntent = new Intent(
                 "com.android.launcher.action.INSTALL_SHORTCUT");
         final Parcelable icon = Intent.ShortcutIconResource.fromContext(
                 context, R.drawable.icon); // 获取快捷键的图标
         addIntent.putExtra("duplicate", false);
-        final Intent myIntent = new Intent(context,LoadingActivity.class);
+
         addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
                 context.getString(R.string.app_name));// 快捷方式的标题
         addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);// 快捷方式的图标
         addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, myIntent);// 快捷方式的动作
+
+
         context.sendBroadcast(addIntent);
     }
 

@@ -1,13 +1,17 @@
 package cn.nit.beauty.ui;
 
+import android.app.AlertDialog;
 import android.app.WallpaperManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,6 +19,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import cn.nit.beauty.Helper;
 import cn.nit.beauty.Utils;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -63,10 +68,13 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
     private MenuItem mnuSave;
 
+    private SharedPreferences settings;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        settings = PreferenceManager.getDefaultSharedPreferences(ImageGalleryActivity.this);
 
         Intent intent = getIntent();
 
@@ -149,7 +157,33 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
                 return true;
             case R.id.mnuOriginal:
                 if (mi.getTitle().equals("原图")) {
-                    changeOriginal();
+                    if (Helper.isWifi(getApplicationContext()) || settings.getBoolean("notifyWIFI", false)) {
+                        changeOriginal();
+                    }
+                    else {
+                        new AlertDialog.Builder(ImageGalleryActivity.this)
+                                .setTitle("温馨提示")
+                                .setMessage("当前非WIFI网络，继续浏览会消耗您的流量(每张图片约1MB)")
+                                .setNegativeButton("继续", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        changeOriginal();
+                                    }
+                                })
+                                .setNeutralButton("取消", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                })
+                                .setPositiveButton("不再提示", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        settings.edit().putBoolean("notifyWIFI", true).apply();
+                                        changeOriginal();
+                                    }
+                                })
+                                .show();
+                    }
+
+
                 } else {
                     savePicture();
                 }
@@ -181,6 +215,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
     }
 
     private void changeOriginal() {
+
         final ImageInfo imageInfo = mAdapter.getImageInfo(mViewPager.getCurrentItem());
         String imageSrc = imageInfo.getUrl().replaceAll("bigthumb", "original");
         imageInfo.setUrl(imageSrc);
