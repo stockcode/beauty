@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import cn.nit.beauty.Helper;
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.mobstat.StatService;
@@ -79,6 +80,8 @@ public class LoadingActivity extends Activity {
             createShortCut(this);
             settings.edit().putBoolean("shortcut", true).apply();
         }
+
+        Toast.makeText( LoadingActivity.this, "检测到网络:" + Helper.getNetworkName(this), Toast.LENGTH_SHORT ).show();
 
         IndexRequest indexRequest = new IndexRequest(Data.OSS_URL + Data.INDEX_KEY);
         spiceManager.execute(indexRequest, "beauty.index", DurationInMillis.ALWAYS_EXPIRED, new IndexRequestListener());

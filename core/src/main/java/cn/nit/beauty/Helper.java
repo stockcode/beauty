@@ -34,6 +34,21 @@ public class Helper {
 		return false;
 	}
 
+    public static String getNetworkName(Context mContext) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+
+
+        if (activeNetInfo != null) {
+            if (activeNetInfo.getType() == ConnectivityManager.TYPE_MOBILE)
+                return activeNetInfo.getExtraInfo().toLowerCase();
+            else
+                return activeNetInfo.getTypeName().toLowerCase();
+        }
+
+        return "无连接";
+    }
+
 	/**
 	 * 从网上获取内容get方式
 	 * 
