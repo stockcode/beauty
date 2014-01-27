@@ -132,7 +132,7 @@ public class MainActivity extends RoboActivity {
 
 
         appUpdate = AppUpdateService.getAppUpdate(this);
-        appUpdate.checkLatestVersion(Data.UPDATE_URL,
+        appUpdate.checkLatestVersionSilent(Data.UPDATE_URL,
                 new SimpleJSONParser());
 
         database = new LaucherDataBase(getApplicationContext());
