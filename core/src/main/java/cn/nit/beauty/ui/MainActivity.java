@@ -116,14 +116,6 @@ public class MainActivity extends RoboActivity {
 
     private SharedPreferences settings;
 
-
-    private Handler finishHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            progressDialog.dismiss();
-            finish();
-        }
-    };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -402,101 +394,6 @@ public class MainActivity extends RoboActivity {
         return linear;
     }
 
-    public void runAnimation() {
-        down = AnimationUtils.loadAnimation(MainActivity.this,
-                R.anim.griditem_del_down);
-        up = AnimationUtils
-                .loadAnimation(MainActivity.this, R.anim.griditem_del_up);
-        down.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation arg0) {
-                delImage.setVisibility(8);
-            }
-        });
-
-        right = new TranslateAnimation(Animation.ABSOLUTE, 0f,
-                Animation.ABSOLUTE, -bitmap_width + Configure.getScreenWidth(MainActivity.this),
-                Animation.ABSOLUTE, 0f, Animation.ABSOLUTE, 0f);
-        left = new TranslateAnimation(Animation.ABSOLUTE, -bitmap_width
-                + Configure.getScreenWidth(MainActivity.this), Animation.ABSOLUTE, 0f, Animation.ABSOLUTE, 0f,
-                Animation.ABSOLUTE, 0f);
-        right.setDuration(25000);
-        left.setDuration(25000);
-        right.setFillAfter(true);
-        left.setFillAfter(true);
-
-        right.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                runImage.startAnimation(left);
-            }
-        });
-        left.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                runImage.startAnimation(right);
-            }
-        });
-        runImage.startAnimation(right);
-    }
-
-    public void setImageBgAndRun() {
-        Bitmap bitmap = null;
-
-        File cacheDir = StorageUtils.getCacheDirectory(this);
-        String[] files = cacheDir.list();
-        if (files.length > 0) {
-            Random rd = new Random();
-            String bg = files[rd.nextInt(files.length)];
-            bitmap = BitmapFactory.decodeFile(cacheDir.getPath() + "/" + bg);
-        }
-
-        if (bitmap == null) {
-            bitmap = BitmapFactory.decodeStream(getResources().openRawResource(R.drawable.default_homebg));
-        }
-
-        bitmap_width = bitmap.getWidth();
-        bitmap_height = bitmap.getHeight();
-
-        // if(bitmap_width<=screen_width || bitmap_height <=screen_height){
-        Matrix matrix = new Matrix();
-        float scaleW = (Configure.getScreenWidth(MainActivity.this) * 3 / 2) / bitmap_width;
-        System.out.println(scaleW + "==");
-        float scaleH = Configure.getScreenHeight(MainActivity.this) / bitmap_height;
-        matrix.postScale(scaleW, scaleH);
-        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                bitmap.getHeight(), matrix, true);
-        bitmap_width = bitmap.getWidth();
-        bitmap_height = bitmap.getHeight();
-        // }
-        runImage.setImageBitmap(bitmap);
-        runAnimation();
-    }
-
     public void setCurPage(final int page) {
         Animation a = MyAnimations.getScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, 300);
         a.setAnimationListener(new Animation.AnimationListener() {
@@ -578,32 +475,10 @@ public class MainActivity extends RoboActivity {
             if (event.getAction() == KeyEvent.ACTION_DOWN
                     && event.getRepeatCount() == 0) {
                 if (finishCount) {
-                    if (lstDate.size() == 0) {
+
                         finish();
                         return true;
-                    }
-                    progressDialog = ProgressDialog.show(MainActivity.this, "请稍等片刻...",
-                            "正在努力的为您保存状态", true, true);
-                    new Thread() {
-                        public void run() {
 
-//							database.deleteLauncher();
-//							for (int i = 0; i < lists.size(); i++) {
-//								database.insertLauncher(lists.get(i));
-//							}
-
-
-                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                            boolean isClearImage = settings.getBoolean("checkbox_clearimage", false);
-
-
-                            if (!android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-                                clear(MainActivity.this.getCacheDir());
-                            }
-                            Message msg = finishHandler.obtainMessage();
-                            finishHandler.sendMessage(msg);
-                        }
-                    }.start();
                 } else {
                     finishCount = true;
                     Toast.makeText(MainActivity.this, "再按一次返回键退出", 2000).show();
@@ -644,12 +519,6 @@ public class MainActivity extends RoboActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    public void clear(File cacheDir) {
-        File[] files = cacheDir.listFiles();
-        for (File f : files)
-            f.delete();
     }
 
     @Override

@@ -152,10 +152,6 @@ public class ImageListActivity extends SherlockActivity {
     protected void onResume() {
         super.onResume();
 
-        //if (Configure.accessToken != null) {
-            AdView adView = (AdView)findViewById(R.id.adView);
-            adView.setVisibility(adView.INVISIBLE);
-        //}
 
         setProgressBarIndeterminateVisibility(true);
 

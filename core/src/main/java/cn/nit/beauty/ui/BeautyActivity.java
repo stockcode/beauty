@@ -186,12 +186,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     @Override
     protected void onResume() {
         super.onResume();
-
-        //if (Configure.accessToken != null) {
-            AdView adView = (AdView)findViewById(R.id.adView);
-            adView.setVisibility(adView.INVISIBLE);
-        //}
-
         StatService.onResume(this);
     }
 
