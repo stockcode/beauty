@@ -156,38 +156,56 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
                 changeWallpaper();
                 return true;
             case R.id.mnuOriginal:
-                if (mi.getTitle().equals("原图")) {
-                    if (Helper.isWifi(getApplicationContext()) || settings.getBoolean("notifyWIFI", false)) {
-                        changeOriginal();
-                    }
-                    else {
-                        new AlertDialog.Builder(ImageGalleryActivity.this)
-                                .setTitle("温馨提示")
-                                .setMessage("当前非WIFI网络，继续浏览会消耗您的流量(每张图片约1MB)")
-                                .setNegativeButton("继续", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        changeOriginal();
-                                    }
-                                })
-                                .setNeutralButton("取消", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                })
-                                .setPositiveButton("不再提示", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        settings.edit().putBoolean("notifyWIFI", true).apply();
-                                        changeOriginal();
-                                    }
-                                })
-                                .show();
-                    }
-
-
-                } else {
-                    savePicture();
-                }
+                new AlertDialog.Builder(ImageGalleryActivity.this)
+                        .setTitle("提示")
+                        .setMessage("您需要登录才能浏览原图")
+                        .setPositiveButton("登录", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent();
+                                intent.setClass(ImageGalleryActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .show();
                 return true;
+
+//                if (mi.getTitle().equals("原图")) {
+//                    if (Helper.isWifi(getApplicationContext()) || settings.getBoolean("notifyWIFI", false)) {
+//                        changeOriginal();
+//                    }
+//                    else {
+//                        new AlertDialog.Builder(ImageGalleryActivity.this)
+//                                .setTitle("温馨提示")
+//                                .setMessage("当前非WIFI网络，继续浏览会消耗您的流量(每张图片约1MB)")
+//                                .setNegativeButton("继续", new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        changeOriginal();
+//                                    }
+//                                })
+//                                .setNeutralButton("取消", new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.cancel();
+//                                    }
+//                                })
+//                                .setPositiveButton("不再提示", new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        settings.edit().putBoolean("notifyWIFI", true).apply();
+//                                        changeOriginal();
+//                                    }
+//                                })
+//                                .show();
+//                    }
+//
+//
+//                } else {
+//                    savePicture();
+//                }
+//                return true;
 
 
             default:

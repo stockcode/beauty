@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Entity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,10 +16,10 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
-import com.baidu.mobads.AdView;
 import com.baidu.mobstat.StatService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -216,4 +218,19 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
         return true;
     }
 
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN
+                    && event.getRepeatCount() == 0) {
+
+                Intent intent = new Intent();
+                intent.setClass(BeautyActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
 }

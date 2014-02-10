@@ -26,7 +26,6 @@ import cn.nit.beauty.model.ImageInfo;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.baidu.mobads.AdView;
 import com.baidu.mobstat.StatService;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;

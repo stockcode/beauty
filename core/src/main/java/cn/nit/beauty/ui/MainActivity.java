@@ -7,16 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -24,29 +17,24 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.*;
 
-import com.baidu.mobads.appoffers.OffersManager;
+import cn.nit.beauty.ui.listener.ShakeListener;
+import cn.nit.beauty.utils.ShakeDetector;
 import com.baidu.mobstat.StatService;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
 import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.utils.StorageUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.DragGridAdapter;
 import cn.nit.beauty.bus.LauncherChangeEvent;
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.database.LaucherDataBase;
-import cn.nit.beauty.ui.listener.ShakeListener;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.DragGridView;
@@ -58,9 +46,10 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 @ContentView(R.layout.layout_milaucher)
-public class MainActivity extends RoboActivity {
+public class MainActivity extends RoboActivity implements ShakeListener.OnShakeListener {
 
     private ShakeListener mShaker;
+    Vibrator vibe;
 
     public static final int PAGE_SIZE = 8;
     public int PAGE_COUNT = 2, PAGE_CURRENT = 0;
@@ -151,26 +140,10 @@ public class MainActivity extends RoboActivity {
             }
         });
 
-        //setImageBgAndRun();
-
-        final Vibrator vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+        vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
         mShaker = new ShakeListener(this);
-        mShaker.setOnShakeListener(new ShakeListener.OnShakeListener () {
-            public void onShake()
-            {
-                vibe.vibrate(100);
-
-                String objectkey = Data.getRandomKey();
-
-                if (!objectkey.equals("")) {
-                    Intent intent = new Intent(MainActivity.this,
-                            ImageListActivity.class);
-                    intent.putExtra("objectKey", objectkey.split(":")[0] + "smallthumb/");
-                    startActivity(intent);
-                }
-            }
-        });
+        mShaker.setOnShakeListener(this);
 
         initButtons();
     }
@@ -297,7 +270,7 @@ public class MainActivity extends RoboActivity {
                                 .setMessage("您需要登录才能浏览VIP专区")
                                 .setPositiveButton("登录", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        StartLogin(launcher);
+                                        StartLogin();
                                     }
                                 })
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -422,7 +395,7 @@ public class MainActivity extends RoboActivity {
 
     }
 
-    private void StartLogin(final Category launcher) {
+    private void StartLogin() {
         String accessToken = Configure.accessToken;
         if (accessToken != null) {
             Toast.makeText(getApplicationContext(), "您已经登录过了", Toast.LENGTH_SHORT).show();
@@ -532,5 +505,19 @@ public class MainActivity extends RoboActivity {
 
         appUpdate.callOnResume();
         mShaker.resume();
+    }
+
+    @Override
+    public void onShake() {
+        vibe.vibrate(100);
+
+        String objectkey = Data.getRandomKey();
+
+        if (!objectkey.equals("")) {
+            Intent intent = new Intent(MainActivity.this,
+                    ImageListActivity.class);
+            intent.putExtra("objectKey", objectkey.split(":")[0] + "smallthumb/");
+            startActivity(intent);
+        }
     }
 }
