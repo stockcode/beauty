@@ -29,6 +29,9 @@ dependencies {
     //compile 'org.lucasr.smoothie:library:0.1'
 
     compile 'org.apache.httpcomponents:httpmime:4.2.5'
+
+    compile 'com.alipay:alipay:1.2'
+    compile 'com.alipay:alipay-lib:1.2'
 }
 
 

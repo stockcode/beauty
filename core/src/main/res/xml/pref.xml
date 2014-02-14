@@ -29,6 +29,7 @@
       <Preference android:key="clear_cache" android:title="清除缓存"></Preference>
   </PreferenceCategory>
     <PreferenceCategory>
+        <Preference android:key="pay" android:title="充值"></Preference>
         <Preference android:key="userguide" android:title="用户指南" android:summary="常见问题与解决方法汇总"></Preference>
         <Preference android:key="feedback" android:title="用户反馈" android:summary="欢迎向我们提出意见"></Preference>
         <Preference android:key="version" android:title="检查更新"></Preference>

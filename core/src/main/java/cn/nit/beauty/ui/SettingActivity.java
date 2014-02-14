@@ -9,6 +9,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StatFs;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -19,6 +21,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.alipay.android.app.sdk.AliPay;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
 import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
@@ -34,9 +37,16 @@ import cn.nit.beauty.utils.Data;
 
 public class SettingActivity extends PreferenceActivity {
 	private static final String[] PREFERENCE_KEYS = {"txtPasswd"};
-	private Preference prefCache, prefVersion;
+	private Preference prefCache, prefVersion, prefPay;
     private float cacheSize= 0;
     DecimalFormat df   =   new   DecimalFormat("##0.00");
+
+    private Handler mHandler = new Handler(){
+
+        public void handleMessage(Message msg) {
+            Log.e("pay", msg.toString());
+        };
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +54,7 @@ public class SettingActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.pref);
         prefCache = findPreference("clear_cache");
         prefVersion = findPreference("version");
+        prefPay = findPreference("pay");
 
 
         final File cacheDir = StorageUtils.getCacheDirectory(this);
@@ -67,6 +78,35 @@ public class SettingActivity extends PreferenceActivity {
         for (String key: PREFERENCE_KEYS) {
 	        setPreferenceSummary(key);
         }
+
+        prefPay.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                new Thread() {
+                    public void run() {
+                        String orderInfo = "partner=\"2088101568358171\"&seller_id=\"alipay-test09@alipay.com\"&out_trade_no=" +
+                                "\"0819145412-6177\"&subject=\"《暗黑破坏神3:凯恩之书》\"&body=\"暴雪唯一官方授权" +
+                                "中文版!玩家必藏!附赠暗黑精致手绘地图!绝不仅仅是一本暗黑的故事或画册，而是一个" +
+                                "栩栩如生的游戏再现。是游戏玩家珍藏的首选。" +
+                                "\"&total_fee=\"0.01\"&notify_url=\"http%3A%2F%2Fnotify.msp.hk%2Fnotify.htm\"&servic" +
+                                "e=\"mobile.securitypay.pay\"&payment_type=\"1\"&_input_charset=\"utf-8\"&it_b_pay=\"30" +
+                                "m\"&show_url=\"m.alipay.com\"&sign=\"lBBK%2F0w5LOajrMrji7DUgEqNjIhQbidR13Gov" +
+                                "A5r3TgIbNqv231yC1NksLdw%2Ba3JnfHXoXuet6XNNHtn7VE%2BeCoRO1O%2BR1" +
+                                "KugLrQEZMtG5jmJIe2pbjm%2F3kb%2FuGkpG%2BwYQYI51%2BhA3YBbvZHVQBY" +
+                                "veBqK%2Bh8mUyb7GM1HxWs9k4%3D\"&sign_type=\"RSA\" ";
+
+                        //获取Alipay对象，构造参数为当前Activity和Handler实例对象
+                        AliPay alipay = new AliPay(SettingActivity.this, mHandler);
+                        //调用pay方法，将订单信息传入
+                        String result = alipay.pay(orderInfo);
+                        //处理返回结果
+                        Log.e("pay", result);
+                    }
+                }.start();
+
+                return true;
+            }
+        });
     }
 
     public String getPackageVersion() {

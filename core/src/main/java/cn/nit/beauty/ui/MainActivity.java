@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -21,7 +20,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.*;
 
 import cn.nit.beauty.ui.listener.ShakeListener;
-import cn.nit.beauty.utils.ShakeDetector;
 import com.baidu.mobstat.StatService;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
