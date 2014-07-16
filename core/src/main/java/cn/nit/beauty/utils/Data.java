@@ -22,13 +22,13 @@ public class Data {
     public final static int PAGE_COUNT = 10;
 	public final static String INDEX_KEY = "index.json";
 	
-	public static String[] Items_url = { "asian", "occident", "china", "favorite", "daily", "origin"};
-	public static int[] Items_icon = { R.drawable.asia, R.drawable.occident,
-			R.drawable.china, R.drawable.favorite,
-			R.drawable.daily, R.drawable.origin, R.drawable.add_fun,
+	public static String[] Items_url = { "animal", "car", "human", "landscape"};
+	public static int[] Items_icon = { R.drawable.animal, R.drawable.car,
+			R.drawable.human, R.drawable.landscape,
+			R.drawable.daily, R.drawable.favorite, R.drawable.add_fun,
 			R.drawable.add_weibo };
 
-	public static String[] Item0 = { "亚洲馆", "欧美馆", "中国馆","收藏馆","每日更新馆","原创馆"};
+	public static String[] Item0 = { "动物馆", "汽车馆", "人物馆","风景馆"};
 	public static Map<String, List<String>> categoryMap = new HashMap<String, List<String>>();
 	public static int[] Item0_icon = { R.drawable.c_love_channel,R.drawable.c_net_new, R.drawable.c_user
 		,R.drawable.c_entertainment,R.drawable.c_financial,R.drawable.c_technoledge};
