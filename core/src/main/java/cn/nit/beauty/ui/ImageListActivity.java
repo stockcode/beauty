@@ -3,6 +3,10 @@ package cn.nit.beauty.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.*;
+import android.preference.PreferenceManager;
+import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.StaggeredAdapter;
 import cn.nit.beauty.database.LaucherDataBase;
@@ -12,10 +16,6 @@ import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 
 import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +26,6 @@ import cn.nit.beauty.model.ImageInfo;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.baidu.mobads.AdView;
 import com.baidu.mobstat.StatService;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -41,10 +40,12 @@ public class ImageListActivity extends SherlockActivity {
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
-    private String objectKey;
+    private String objectKey, title;
     private LaucherDataBase database;
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
+
+
 
     /**
      * 添加内容
@@ -66,12 +67,13 @@ public class ImageListActivity extends SherlockActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_pull_to_refresh_sample);
-        
+
         Intent intent = getIntent();
         objectKey = intent.getStringExtra("objectKey");
 
         String[] strs = objectKey.split("/");
-        setTitle(strs[strs.length - 2]);
+        title = strs[strs.length - 2];
+        setTitle(title);
 
         database = new LaucherDataBase(getApplicationContext());
 
@@ -83,10 +85,10 @@ public class ImageListActivity extends SherlockActivity {
             public void onClick(View v) {
                 StaggeredAdapter.ViewHolder holder = (StaggeredAdapter.ViewHolder) v.getTag();
 
-                Intent intent = new Intent(ImageListActivity.this, ImageGalleryActivity.class);
+                final Intent intent = new Intent(ImageListActivity.this, ImageGalleryActivity.class);
                 intent.putExtra("objectKey", holder.objectKey);
                 intent.putExtra("folder", objectKey);
-
+                intent.putExtra("title", title);
                 startActivity(intent);
             }
         });
@@ -101,6 +103,9 @@ public class ImageListActivity extends SherlockActivity {
         ItemManager itemManager = builder.build();
 
         mAdapterView.setItemManager(itemManager);
+
+        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey + Data.INDEX_KEY);
+        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
     }
 
     @Override
@@ -113,12 +118,12 @@ public class ImageListActivity extends SherlockActivity {
     public boolean onOptionsItemSelected(MenuItem mi) {
         switch (mi.getItemId()) {
             case R.id.mnuFavoriate:
-                database.updateFavorite(objectKey.replaceAll("/thumb", ""));
+                database.updateFavorite(objectKey.replaceAll("/smallthumb", ""));
                 Data.categoryMap.put("favorite", database.getFavoriteList());
                 Toast.makeText(getApplicationContext(), "收藏完毕", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.mnuDownload:
-                String url = Data.OSS_URL + objectKey.replaceAll("/thumb/", "/original.zip");
+                String url = Data.OSS_URL + objectKey.replaceAll("/smallthumb/", "/original.zip");
                 DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
                 downloadManager.enqueue(request);
@@ -146,15 +151,8 @@ public class ImageListActivity extends SherlockActivity {
     protected void onResume() {
         super.onResume();
 
-        if (Configure.accessToken != null) {
-            AdView adView = (AdView)findViewById(R.id.adView);
-            adView.setVisibility(adView.INVISIBLE);
-        }
 
         setProgressBarIndeterminateVisibility(true);
-
-        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey.replaceAll("thumb/", "") + Data.INDEX_KEY);
-        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
 
         StatService.onResume(this);
     }

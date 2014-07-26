@@ -80,23 +80,8 @@ public class DragGridAdapter extends BaseAdapter {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-		/*	Drawable cachedImage = asyncImageLoader_Weibo.loadDrawable(context,
-					url, new ImageCallback_LW() {
-						public void imageLoaded(Drawable imageDrawable,
-								String imageUrls) {
-							ImageView imageViewByTag = (ImageView) listview.findViewWithTag(imageUrls);
-							if (imageViewByTag == null || imageDrawable == null) 
-								img.setBackgroundDrawable(imageDrawable);
-							else 
-								imageViewByTag.setBackgroundDrawable(imageDrawable);
-						}
-					});
-			if (cachedImage == null) {
-				img.setBackgroundDrawable(null);
-			} else {
-				img.setBackgroundDrawable(cachedImage);
-			}*/
-			relate.setBackgroundResource(R.drawable.blue);
+
+			//relate.setBackgroundResource(R.drawable.blue);
 		}
 		
 		return convertView;

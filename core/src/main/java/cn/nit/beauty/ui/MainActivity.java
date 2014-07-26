@@ -7,53 +7,32 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
-import com.baidu.mobads.appoffers.OffersManager;
+import cn.nit.beauty.ui.listener.ShakeListener;
 import com.baidu.mobstat.StatService;
-import com.baidu.oauth.BaiduOAuth;
-import com.capricorn.ArcMenu;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
 import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.utils.StorageUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.DragGridAdapter;
 import cn.nit.beauty.bus.LauncherChangeEvent;
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.database.LaucherDataBase;
-import cn.nit.beauty.ui.listener.ShakeListener;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.DragGridView;
@@ -65,9 +44,10 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 @ContentView(R.layout.layout_milaucher)
-public class MainActivity extends RoboActivity {
+public class MainActivity extends RoboActivity implements ShakeListener.OnShakeListener {
 
     private ShakeListener mShaker;
+    Vibrator vibe;
 
     public static final int PAGE_SIZE = 8;
     public int PAGE_COUNT = 2, PAGE_CURRENT = 0;
@@ -89,8 +69,18 @@ public class MainActivity extends RoboActivity {
     ImageView runImage;
     @InjectView(R.id.dels)
     ImageView delImage;
-    @InjectView(R.id.arc_menu)
-    ArcMenu arcMenu;
+    @InjectView(R.id.btnAdd)
+    Button btnAdd;
+    @InjectView(R.id.btnSettings)
+    Button btnSettings;
+
+    @InjectView(R.id.btnDownload)
+    Button btnDownload;
+    @InjectView(R.id.btnSearch)
+    Button btnSearch;
+
+
+
     float bitmap_width, bitmap_height;
     LinearLayout.LayoutParams param;
     TranslateAnimation left, right;
@@ -106,22 +96,12 @@ public class MainActivity extends RoboActivity {
     SharedPreferences sp_skin;
     IntentFilter setPositionFilter;
     boolean finishCount = false;
-    Class<?>[] classes = {AddItemActivity.class, AboutActivity.class, UserCenterActivity.class, SettingActivity.class, HelpActivity.class, FeedbackActivity.class};
+
     ProgressDialog progressDialog;
     //0227更新壁纸切换：
     IntentFilter setbgFilter;
-    int[] ITEM_DRAWABLES = {R.drawable.composer_add, R.drawable.composer_camera, R.drawable.composer_music,
-            R.drawable.composer_place, R.drawable.composer_with};
 
     private SharedPreferences settings;
-
-
-    private Handler finishHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            progressDialog.dismiss();
-            finish();
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +111,7 @@ public class MainActivity extends RoboActivity {
 
 
         appUpdate = AppUpdateService.getAppUpdate(this);
-        appUpdate.checkLatestVersion(Data.UPDATE_URL,
+        appUpdate.checkLatestVersionSilent(Data.UPDATE_URL,
                 new SimpleJSONParser());
 
         database = new LaucherDataBase(getApplicationContext());
@@ -146,8 +126,7 @@ public class MainActivity extends RoboActivity {
         init();
         initData();
         initPath();
-        //initBroadCast();
-        // initBgBroadCast();
+
         for (int i = 0; i < Configure.countPages; i++) {
             lst_views.addView(addGridView(i));
         }
@@ -159,26 +138,44 @@ public class MainActivity extends RoboActivity {
             }
         });
 
-        setImageBgAndRun();
-
-        final Vibrator vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+        vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
         mShaker = new ShakeListener(this);
-        mShaker.setOnShakeListener(new ShakeListener.OnShakeListener () {
-            public void onShake()
-            {
-                vibe.vibrate(100);
-                String objectkey = Data.getRandomKey();
-                if (!objectkey.equals("")) {
-                    Intent intent = new Intent(MainActivity.this,
-                            ImageListActivity.class);
-                    intent.putExtra("objectKey", objectkey + "thumb/");
-                    startActivity(intent);
-                }
+        mShaker.setOnShakeListener(this);
+
+        initButtons();
+    }
+
+    private void initButtons() {
+
+        btnAdd.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
+                startActivity(intent);
             }
         });
 
+        btnSettings.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        btnSearch.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onSearchRequested())
+                    Log.e("search", "true");
+                else
+                    Log.e("search", "false");
+            }
+        });
     }
+
 
     public void init() {
 
@@ -228,17 +225,8 @@ public class MainActivity extends RoboActivity {
         isClean = false;
         lst_views.snapToScreen(0);
     }
-//	public void initBgBroadCast(){
-//		setbgreceiver = new BroadcastReceiver() {
-//			@Override
-//			public void onReceive(Context context, Intent intent) {
-//				setImageBgAndRun();
-//			}
-//		};
-//		setbgFilter = new IntentFilter(
-//				"intentToBgChange");
-//		registerReceiver(setbgreceiver, setbgFilter);
-//	}
+
+
 
     public int getFristNonePosition(List<Category> array) {
         for (int i = 0; i < array.size(); i++) {
@@ -280,7 +268,7 @@ public class MainActivity extends RoboActivity {
                                 .setMessage("您需要登录才能浏览VIP专区")
                                 .setPositiveButton("登录", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        StartLogin(launcher);
+                                        StartLogin();
                                     }
                                 })
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -291,10 +279,6 @@ public class MainActivity extends RoboActivity {
                                 .show();
                         return;
                     }
-                }
-                if (launcher.getURL().equals("more")) {
-                    Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
-                    return;
                 }
 
                 String text = launcher.getTITLE();
@@ -381,101 +365,6 @@ public class MainActivity extends RoboActivity {
         return linear;
     }
 
-    public void runAnimation() {
-        down = AnimationUtils.loadAnimation(MainActivity.this,
-                R.anim.griditem_del_down);
-        up = AnimationUtils
-                .loadAnimation(MainActivity.this, R.anim.griditem_del_up);
-        down.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation arg0) {
-                delImage.setVisibility(8);
-            }
-        });
-
-        right = new TranslateAnimation(Animation.ABSOLUTE, 0f,
-                Animation.ABSOLUTE, -bitmap_width + Configure.getScreenWidth(MainActivity.this),
-                Animation.ABSOLUTE, 0f, Animation.ABSOLUTE, 0f);
-        left = new TranslateAnimation(Animation.ABSOLUTE, -bitmap_width
-                + Configure.getScreenWidth(MainActivity.this), Animation.ABSOLUTE, 0f, Animation.ABSOLUTE, 0f,
-                Animation.ABSOLUTE, 0f);
-        right.setDuration(25000);
-        left.setDuration(25000);
-        right.setFillAfter(true);
-        left.setFillAfter(true);
-
-        right.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                runImage.startAnimation(left);
-            }
-        });
-        left.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                runImage.startAnimation(right);
-            }
-        });
-        runImage.startAnimation(right);
-    }
-
-    public void setImageBgAndRun() {
-        Bitmap bitmap = null;
-
-        File cacheDir = StorageUtils.getCacheDirectory(this);
-        String[] files = cacheDir.list();
-        if (files.length > 0) {
-            Random rd = new Random();
-            String bg = files[rd.nextInt(files.length)];
-            bitmap = BitmapFactory.decodeFile(cacheDir.getPath() + "/" + bg);
-        }
-
-        if (bitmap == null) {
-            bitmap = BitmapFactory.decodeStream(getResources().openRawResource(R.drawable.default_homebg));
-        }
-
-        bitmap_width = bitmap.getWidth();
-        bitmap_height = bitmap.getHeight();
-
-        // if(bitmap_width<=screen_width || bitmap_height <=screen_height){
-        Matrix matrix = new Matrix();
-        float scaleW = (Configure.getScreenWidth(MainActivity.this) * 3 / 2) / bitmap_width;
-        System.out.println(scaleW + "==");
-        float scaleH = Configure.getScreenHeight(MainActivity.this) / bitmap_height;
-        matrix.postScale(scaleW, scaleH);
-        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                bitmap.getHeight(), matrix, true);
-        bitmap_width = bitmap.getWidth();
-        bitmap_height = bitmap.getHeight();
-        // }
-        runImage.setImageBitmap(bitmap);
-        runAnimation();
-    }
-
     public void setCurPage(final int page) {
         Animation a = MyAnimations.getScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, 300);
         a.setAnimationListener(new Animation.AnimationListener() {
@@ -502,42 +391,9 @@ public class MainActivity extends RoboActivity {
 
         sp_skin = getSharedPreferences("skin", MODE_PRIVATE);
 
-        final int itemCount = ITEM_DRAWABLES.length;
-        for (int i = 0; i < itemCount; i++) {
-            ImageView item = new ImageView(this);
-            item.setImageResource(ITEM_DRAWABLES[i]);
-
-            final int position = i;
-            arcMenu.addItem(item, new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    //if (position > 0) {
-                    //    Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
-                    //    return;
-                    //}
-
-                    if (position == 1) {
-                        OffersManager.showOffers(MainActivity.this);
-                    }
-
-                    if (position == itemCount - 1) {
-                        StartLogin(null);
-                    }
-                    else {
-                        Intent intent = new Intent(MainActivity.this, classes[position]);
-                    try {
-                        startActivity(intent);
-                    }catch (RuntimeException e) {
-                        Toast.makeText(getApplicationContext(), "该功能正在开发中... 敬请期待", Toast.LENGTH_SHORT).show();
-                    }
-                    }
-                }
-            });// Add a menu item
-        }
     }
 
-    private void StartLogin(final Category launcher) {
+    private void StartLogin() {
         String accessToken = Configure.accessToken;
         if (accessToken != null) {
             Toast.makeText(getApplicationContext(), "您已经登录过了", Toast.LENGTH_SHORT).show();
@@ -590,32 +446,10 @@ public class MainActivity extends RoboActivity {
             if (event.getAction() == KeyEvent.ACTION_DOWN
                     && event.getRepeatCount() == 0) {
                 if (finishCount) {
-                    if (lstDate.size() == 0) {
+
                         finish();
                         return true;
-                    }
-                    progressDialog = ProgressDialog.show(MainActivity.this, "请稍等片刻...",
-                            "正在努力的为您保存状态", true, true);
-                    new Thread() {
-                        public void run() {
 
-//							database.deleteLauncher();
-//							for (int i = 0; i < lists.size(); i++) {
-//								database.insertLauncher(lists.get(i));
-//							}
-
-
-                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                            boolean isClearImage = settings.getBoolean("checkbox_clearimage", false);
-
-
-                            if (!android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-                                clear(MainActivity.this.getCacheDir());
-                            }
-                            Message msg = finishHandler.obtainMessage();
-                            finishHandler.sendMessage(msg);
-                        }
-                    }.start();
                 } else {
                     finishCount = true;
                     Toast.makeText(MainActivity.this, "再按一次返回键退出", 2000).show();
@@ -658,12 +492,6 @@ public class MainActivity extends RoboActivity {
         super.onDestroy();
     }
 
-    public void clear(File cacheDir) {
-        File[] files = cacheDir.listFiles();
-        for (File f : files)
-            f.delete();
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -675,5 +503,19 @@ public class MainActivity extends RoboActivity {
 
         appUpdate.callOnResume();
         mShaker.resume();
+    }
+
+    @Override
+    public void onShake() {
+        vibe.vibrate(100);
+
+        String objectkey = Data.getRandomKey();
+
+        if (!objectkey.equals("")) {
+            Intent intent = new Intent(MainActivity.this,
+                    ImageListActivity.class);
+            intent.putExtra("objectKey", objectkey.split(":")[0] + "smallthumb/");
+            startActivity(intent);
+        }
     }
 }

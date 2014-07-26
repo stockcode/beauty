@@ -19,6 +19,7 @@ import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.ui.ImageGalleryActivity;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.ScaleImageView;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Administrator on 13-7-24.
@@ -47,14 +48,16 @@ public class StaggeredAdapter extends BaseAdapter {
             convertView = layoutInflator.inflate(R.layout.infos_list, null);
             holder = new ViewHolder();
             holder.imageView = (ScaleImageView) convertView.findViewById(R.id.news_pic);
-            //holder.contentView = (TextView) convertView.findViewById(R.id.news_title);
+            holder.contentView = (TextView) convertView.findViewById(R.id.news_title);
             convertView.setTag(holder);
             convertView.setOnClickListener(mOnClickListener);
         }
 
         holder = (ViewHolder) convertView.getTag();
 
-        //holder.contentView.setText(duitangInfo.getMsg());
+        String title = duitangInfo.getTitle();
+        String[] strs = title.split("/");
+        holder.contentView.setText(strs[strs.length-1]);
         holder.objectKey = duitangInfo.getKey();
         //ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getUrl(), holder.imageView);
         return convertView;

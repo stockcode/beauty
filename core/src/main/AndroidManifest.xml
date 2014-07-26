@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.nit.beauty">
 
-    <uses-sdk android:minSdkVersion="9" />
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -17,7 +17,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name = "android.permission.SET_WALLPAPER"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+
 
     <application
         android:icon="@drawable/icon"
@@ -25,15 +26,7 @@
         android:theme="@style/Theme.Sherlock.Light"
         android:name="BeautyApplication">
 
-        <activity android:name="com.baidu.mobads.appoffers.OffersActivity" android:configChanges="keyboard|keyboardHidden|orientation" />
 
-        <!-- 注册AppActivity -->
-		<activity android:name="com.baidu.mobads.AppActivity" android:configChanges="keyboard|keyboardHidden|orientation" />
-		<!-- 您从百度移动联盟网站获取的APPSID -->
-		<meta-data android:name="BaiduMobAd_APP_ID" android:value="debug" /> 
-		<!-- 您从百度移动联盟网站获取的计费名 -->
-		<meta-data android:name="BaiduMobAd_APP_SEC" android:value="debug" />
-        
         <!-- 您从百度网站获取的APP KEY -->
 		<meta-data android:name="BaiduMobAd_STAT_ID" android:value="9328aa564a" />
 		<!-- 渠道商编号 -->
@@ -54,14 +47,15 @@
 		<!-- 是否获取WIFI位置信息，默认为true -->
 		<meta-data android:name="BaiduMobAd_WIFI_LOCATION" android:value="true" />
 
+        <meta-data android:name="android.app.default_searchable" android:value="cn.nit.beauty.ui.BeautyActivity" />
+
         <activity
             android:name=".ui.LoadingActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -71,6 +65,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
+
         </activity>
         <activity
                 android:name=".ui.AddItemActivity"
@@ -81,13 +76,19 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".ui.MainActivity" />
         </activity>
+
+
         <activity
             android:name=".ui.BeautyActivity"
             android:launchMode="singleTask"
             android:parentActivityName=".ui.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.searchable"
+                       android:resource="@xml/searchable"/>
         </activity>
         <activity
             android:name=".ui.ImageListActivity"
@@ -99,9 +100,9 @@
         </activity>
         <activity
             android:name=".ui.ImageGalleryActivity"
+            android:launchMode="singleTask"
             android:parentActivityName=".ui.ImageListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.ImageListActivity" />
@@ -130,6 +131,11 @@
             android:name=".ui.RegisterActivity"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateVisible">
+        </activity>
+
+        <activity
+            android:name="com.alipay.android.app.sdk.WapPayActivity"
+            android:screenOrientation="portrait">
         </activity>
 
         <!-- push service client -->

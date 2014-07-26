@@ -5,6 +5,7 @@ public class ImageInfo {
 	private String key = "";
 	private String title = "";
 	private String url = "";
+    private boolean original = false;
 
     public String getKey() {
         return key;
@@ -28,5 +29,13 @@ public class ImageInfo {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public boolean isOriginal() {
+        return original;
+    }
+
+    public void setOriginal(boolean original) {
+        this.original = original;
     }
 }

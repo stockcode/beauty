@@ -9,7 +9,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
-import java.io.File;
+import java.io.*;
 
 public class Utils {
 	// 在百度开发者中心查询应用的API Key
@@ -65,6 +65,29 @@ public class Utils {
                 size += getFolderSize(file);
         }
         return size;
+    }
+
+    public static boolean copyFile(String fromFile, String toFile)
+    {
+
+        try
+        {
+            InputStream fosfrom = new FileInputStream(fromFile);
+            OutputStream fosto = new FileOutputStream(toFile);
+            byte bt[] = new byte[1024];
+            int c;
+            while ((c = fosfrom.read(bt)) > 0)
+            {
+                fosto.write(bt, 0, c);
+            }
+            fosfrom.close();
+            fosto.close();
+            return true;
+
+        } catch (Exception ex)
+        {
+            return false;
+        }
     }
 
     public static int getScreenWidth(Context context) {

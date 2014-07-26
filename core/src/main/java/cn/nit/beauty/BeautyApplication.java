@@ -37,6 +37,7 @@ public class BeautyApplication extends Application {
         // Create global configuration and initialize ImageLoader with this configuration
 
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+            .showStubImage(R.drawable.xlistview_arrow)
             .cacheInMemory(true)
             .cacheOnDisc(true)
             .bitmapConfig(Bitmap.Config.RGB_565)

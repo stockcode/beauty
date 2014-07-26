@@ -1,8 +1,13 @@
 package cn.nit.beauty.ui;
 
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Entity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,9 +16,10 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.baidu.mobads.AdView;
+import com.actionbarsherlock.view.Window;
 import com.baidu.mobstat.StatService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -23,6 +29,7 @@ import org.lucasr.smoothie.ItemManager;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.StaggeredAdapter;
@@ -54,10 +61,11 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
 
         for(int i = 0; i < selectedFolders.size(); i++) {
+            String url = selectedFolders.get(i).split(":")[0];
             ImageInfo newsInfo1 = new ImageInfo();
-            newsInfo1.setKey(selectedFolders.get(i));
-            newsInfo1.setUrl(selectedFolders.get(i) + "thumb/cover.jpg");
-            newsInfo1.setTitle(selectedFolders.get(i));
+            newsInfo1.setKey(url);
+            newsInfo1.setUrl(url + "smallthumb/cover.jpg");
+            newsInfo1.setTitle(url);
             imageInfos.add(newsInfo1);
         }
 
@@ -69,24 +77,9 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.act_pull_to_refresh_sample);
-
-        Intent intent = getIntent();
-        launcher = (Category) intent.getSerializableExtra("launcher");
-
-        if (launcher.getCATEGORY().equals("ROOT")) {
-            category = launcher.getURL();
-        } else {
-            category = launcher.getCATEGORY();
-            selectedFilter = launcher.getTITLE();
-        }
-
-        setTitle(launcher.getTITLE());
-
-
-        folders = Data.categoryMap.get(category);
-
-        if (folders == null) folders = new ArrayList<String>();
 
         database = new LaucherDataBase(getApplicationContext());
 
@@ -100,7 +93,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
                 Intent intent = new Intent(BeautyActivity.this,
                         ImageListActivity.class);
-                intent.putExtra("objectKey", holder.objectKey + "thumb/");
+                intent.putExtra("objectKey", holder.objectKey + "smallthumb/");
                 startActivity(intent);
             }
         });
@@ -116,18 +109,60 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
         mAdapterView.setItemManager(itemManager);
 
-        updateFilters();
 
-        Context context = getSupportActionBar().getThemedContext();
-        ArrayAdapter<String> list = new ArrayAdapter(context, R.layout.sherlock_spinner_item);
+        Intent intent = getIntent();
 
-        list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-        list.addAll(filters);
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        getSupportActionBar().setListNavigationCallbacks(list, this);
-        getSupportActionBar().setSelectedNavigationItem(list.getPosition(selectedFilter));
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.e("query", query);
+            setTitle(query);
 
-        AddItemToContainer();
+            selectedFolders = doSearch(query.toUpperCase());
+            AddItemToContainer();
+
+        } else {
+            launcher = (Category) intent.getSerializableExtra("launcher");
+
+            if (launcher.getCATEGORY().equals("ROOT")) {
+                category = launcher.getURL();
+            } else {
+                category = launcher.getCATEGORY();
+                selectedFilter = launcher.getTITLE();
+            }
+
+            setTitle(launcher.getTITLE());
+
+            //setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.china);
+
+            folders = Data.categoryMap.get(category);
+
+            if (folders == null) folders = new ArrayList<String>();
+
+
+
+            updateFilters();
+
+            Context context = getSupportActionBar().getThemedContext();
+            ArrayAdapter<String> list = new ArrayAdapter(context, R.layout.sherlock_spinner_item);
+
+            list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+            list.addAll(filters);
+            getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+            getSupportActionBar().setListNavigationCallbacks(list, this);
+            getSupportActionBar().setSelectedNavigationItem(list.getPosition(selectedFilter));
+        }
+
+
+    }
+
+    private List<String> doSearch(String query) {
+        List<String> result = new ArrayList<String>();
+        for(Map.Entry<String, List<String>> entry : Data.categoryMap.entrySet()) {
+            for(String str : entry.getValue()) {
+                if (str.toUpperCase().contains(query)) result.add(str);
+            }
+        }
+        return  result;
     }
 
     private void updateFilterFolder() {
@@ -153,12 +188,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (Configure.accessToken != null) {
-            AdView adView = (AdView)findViewById(R.id.adView);
-            adView.setVisibility(adView.INVISIBLE);
-        }
-
         StatService.onResume(this);
     }
 
@@ -189,4 +218,19 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
         return true;
     }
 
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN
+                    && event.getRepeatCount() == 0) {
+
+                Intent intent = new Intent();
+                intent.setClass(BeautyActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
 }

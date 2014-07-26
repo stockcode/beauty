@@ -1,13 +1,17 @@
 package cn.nit.beauty.ui;
 
+import android.app.AlertDialog;
 import android.app.WallpaperManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,6 +19,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import cn.nit.beauty.Helper;
+import cn.nit.beauty.Utils;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -25,6 +31,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -55,19 +62,26 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
     private ShareActionProvider actionProvider;
     private String objectKey, folder;
     private Message message;
-    private Boolean autoPlay = false;
+    private Boolean autoPlay = false, isOriginal = false;
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
+
+    private MenuItem mnuSave;
+
+    private SharedPreferences settings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        settings = PreferenceManager.getDefaultSharedPreferences(ImageGalleryActivity.this);
 
         Intent intent = getIntent();
 
-        objectKey = intent.getStringExtra("objectKey");
-        folder = intent.getStringExtra("folder");
+        objectKey = intent.getStringExtra("objectKey").replaceAll("small", "big");
+        folder = intent.getStringExtra("folder").replaceAll("small", "big");
+
+        setTitle(intent.getStringExtra("title"));
 
         mViewPager = new HackyViewPager(this);
         setContentView(mViewPager);
@@ -83,6 +97,9 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
                 if (actionProvider != null) {
                     createShareIntent(Data.OSS_URL + imageInfoList.get(i).getUrl());
                 }
+
+                isOriginal = imageInfoList.get(i).isOriginal();
+                invalidateOptionsMenu();
             }
 
             @Override
@@ -110,6 +127,21 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem mnuOriginal = menu.findItem(R.id.mnuOriginal);
+
+        if (isOriginal) {
+            mnuOriginal.setTitle("保存");
+        } else {
+            mnuOriginal.setTitle("原图");
+        }
+
+        return true;
+    }
+
     public boolean onOptionsItemSelected(MenuItem mi) {
         switch (mi.getItemId()) {
             case R.id.mnuPlay:
@@ -124,8 +156,57 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
                 changeWallpaper();
                 return true;
             case R.id.mnuOriginal:
-                changeOriginal();
+//                new AlertDialog.Builder(ImageGalleryActivity.this)
+//                        .setTitle("提示")
+//                        .setMessage("您需要登录才能浏览原图")
+//                        .setPositiveButton("登录", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Intent intent = new Intent();
+//                                intent.setClass(ImageGalleryActivity.this, LoginActivity.class);
+//                                startActivity(intent);
+//                            }
+//                        })
+//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.cancel();
+//                            }
+//                        })
+//                        .show();
+//                return true;
+
+                if (mi.getTitle().equals("原图")) {
+                    if (Helper.isWifi(getApplicationContext()) || settings.getBoolean("notifyWIFI", false)) {
+                        changeOriginal();
+                    }
+                    else {
+                        new AlertDialog.Builder(ImageGalleryActivity.this)
+                                .setTitle("温馨提示")
+                                .setMessage("当前非WIFI网络，继续浏览会消耗您的流量(每张图片约1MB)")
+                                .setNegativeButton("继续", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        changeOriginal();
+                                    }
+                                })
+                                .setNeutralButton("取消", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                })
+                                .setPositiveButton("不再提示", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        settings.edit().putBoolean("notifyWIFI", true).apply();
+                                        changeOriginal();
+                                    }
+                                })
+                                .show();
+                    }
+
+
+                } else {
+                    savePicture();
+                }
                 return true;
+
 
             default:
                 return super.onOptionsItemSelected(mi);
@@ -134,9 +215,27 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
     }
 
-    private void changeOriginal() {
+    private void savePicture() {
         ImageInfo imageInfo = mAdapter.getImageInfo(mViewPager.getCurrentItem());
-        String imageSrc = imageInfo.getUrl().replaceAll("thumb", "original");
+        String imageSrc = imageInfo.getUrl().replaceAll("bigthumb", "original");
+
+        File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + imageSrc, ImageLoader.getInstance().getDiscCache());
+
+        String dir = StorageUtils.getCacheDirectory(this).getPath().replaceAll("cache", "image");
+        File imageDir = new File(dir);
+        if (!imageDir.exists()) imageDir.mkdir();
+
+        String dstFile = dir + imageSrc.substring(imageSrc.lastIndexOf("/"));
+
+        Utils.copyFile(cacheFile.getAbsolutePath(), dstFile);
+
+        Toast.makeText(ImageGalleryActivity.this, "图片以保存到" + dstFile, Toast.LENGTH_SHORT).show();
+    }
+
+    private void changeOriginal() {
+
+        final ImageInfo imageInfo = mAdapter.getImageInfo(mViewPager.getCurrentItem());
+        String imageSrc = imageInfo.getUrl().replaceAll("bigthumb", "original");
         imageInfo.setUrl(imageSrc);
 
         View imageLayout = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
@@ -184,6 +283,9 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
                 //Toast.makeText(ImageGalleryActivity.this, "文件大小：" + loadedImage.getByteCount() / (1024*1024) + "MB", Toast.LENGTH_SHORT).show();
                 PhotoViewAttacher mAttacher = new PhotoViewAttacher(photoView);
                 mAttacher.update();
+                isOriginal = true;
+                invalidateOptionsMenu();
+                imageInfo.setOriginal(true);
             }
         });
     }
@@ -271,7 +373,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         super.onResume();
         StatService.onResume(this);
 
-        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + folder.replaceAll("thumb/", "") + Data.INDEX_KEY);
+        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + folder + Data.INDEX_KEY);
         spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
     }
 

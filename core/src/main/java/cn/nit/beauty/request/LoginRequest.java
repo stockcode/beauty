@@ -36,6 +36,6 @@ public class LoginRequest extends SpringAndroidSpiceRequest<Person> {
         RestTemplate restTemplate = getRestTemplate();
         restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
 
-        return restTemplate.postForObject("http://192.168.1.102:8080/beauty-ajax/api/login", request, Person.class);
+        return restTemplate.postForObject("http://192.168.1.101:8080/beauty-ajax/api/login", request, Person.class);
     }
 }
