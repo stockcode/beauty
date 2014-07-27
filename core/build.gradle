@@ -1,9 +1,5 @@
 apply plugin: 'android'
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.9'
-}
-
 
 dependencies {
     compile 'com.google.android:support-v4:r13'
@@ -18,7 +14,7 @@ dependencies {
     compile  'com.baidu.android:mobstat:3.1'
     //compile  'com.baidu.android:mobads:3.2'
     //compile  'com.baidu.android:mobads_wall:1.1'
-    compile  'com.baidu.android:pushservice:2.4.0'
+    compile  'com.baidu.android:pushservice:4.0.0'
     compile 'ch.acra:acra:4.5.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.6'
     compile 'cn.nit:autoupdate:1.0.0'
@@ -31,7 +27,7 @@ dependencies {
     compile 'org.apache.httpcomponents:httpmime:4.2.5'
 
     compile 'com.alipay:alipay:1.2'
-    compile 'com.alipay:alipay-lib:1.2'
+    compile 'com.alipay:alipay_lib:1.2'
 }
 
 

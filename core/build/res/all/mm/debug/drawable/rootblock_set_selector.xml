@@ -7,4 +7,4 @@
     <item
         android:state_pressed="true"
         android:drawable="@drawable/rootblock_icon_set_selected" />
-</selector><!-- From: file:/C:/GitHub/beauty/core/src/main/res/drawable/rootblock_set_selector.xml -->
+</selector><!-- From: file:/D:/git/beauty/core/src/main/res/drawable/rootblock_set_selector.xml -->

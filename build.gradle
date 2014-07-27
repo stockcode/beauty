@@ -23,9 +23,7 @@ allprojects {
 	mavenLocal()
   }
 
-  tasks.withType(Compile) {
-    options.encoding = "UTF-8"
-  }
+  
 }
 
 apply plugin: 'android-reporting'

@@ -111,8 +111,8 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
 
 
         appUpdate = AppUpdateService.getAppUpdate(this);
-        appUpdate.checkLatestVersionSilent(Data.UPDATE_URL,
-                new SimpleJSONParser());
+//        appUpdate.checkLatestVersionSilent(Data.UPDATE_URL,
+//                new SimpleJSONParser());
 
         database = new LaucherDataBase(getApplicationContext());
 

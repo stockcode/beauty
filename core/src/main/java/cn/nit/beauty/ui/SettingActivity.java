@@ -1,26 +1,21 @@
 package cn.nit.beauty.ui;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.StatFs;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import cn.nit.beauty.alipay.Rsa;
 import com.alipay.android.app.sdk.AliPay;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
@@ -29,13 +24,18 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.utils.Data;
 
 public class SettingActivity extends PreferenceActivity {
+    public static final String TAG = "alipay-sdk";
+
 	private static final String[] PREFERENCE_KEYS = {"txtPasswd"};
 	private Preference prefCache, prefVersion, prefPay;
     private float cacheSize= 0;
@@ -82,31 +82,91 @@ public class SettingActivity extends PreferenceActivity {
         prefPay.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                new Thread() {
-                    public void run() {
-                        String orderInfo = "partner=\"2088101568358171\"&seller_id=\"alipay-test09@alipay.com\"&out_trade_no=" +
-                                "\"0819145412-6177\"&subject=\"《暗黑破坏神3:凯恩之书》\"&body=\"暴雪唯一官方授权" +
-                                "中文版!玩家必藏!附赠暗黑精致手绘地图!绝不仅仅是一本暗黑的故事或画册，而是一个" +
-                                "栩栩如生的游戏再现。是游戏玩家珍藏的首选。" +
-                                "\"&total_fee=\"0.01\"&notify_url=\"http%3A%2F%2Fnotify.msp.hk%2Fnotify.htm\"&servic" +
-                                "e=\"mobile.securitypay.pay\"&payment_type=\"1\"&_input_charset=\"utf-8\"&it_b_pay=\"30" +
-                                "m\"&show_url=\"m.alipay.com\"&sign=\"lBBK%2F0w5LOajrMrji7DUgEqNjIhQbidR13Gov" +
-                                "A5r3TgIbNqv231yC1NksLdw%2Ba3JnfHXoXuet6XNNHtn7VE%2BeCoRO1O%2BR1" +
-                                "KugLrQEZMtG5jmJIe2pbjm%2F3kb%2FuGkpG%2BwYQYI51%2BhA3YBbvZHVQBY" +
-                                "veBqK%2Bh8mUyb7GM1HxWs9k4%3D\"&sign_type=\"RSA\" ";
+                try {
+                    Log.i("SettingActivity", "Paying");
+                    String info = getNewOrderInfo();
+                    String sign = Rsa.sign(info, Data.PRIVATE);
+                    sign = URLEncoder.encode(sign);
+                    info += "&sign=\"" + sign + "\"&" + getSignType();
+                    Log.i("SettingActivity", "start pay");
+                    // start the pay.
+                    Log.i(TAG, "info = " + info);
 
-                        //获取Alipay对象，构造参数为当前Activity和Handler实例对象
-                        AliPay alipay = new AliPay(SettingActivity.this, mHandler);
-                        //调用pay方法，将订单信息传入
-                        String result = alipay.pay(orderInfo);
-                        //处理返回结果
-                        Log.e("pay", result);
-                    }
-                }.start();
+                    final String orderInfo = info;
+                    new Thread() {
+                        public void run() {
+                            AliPay alipay = new AliPay(SettingActivity.this, mHandler);
+
+                            //设置为沙箱模式，不设置默认为线上环境
+                            //alipay.setSandBox(true);
+
+                            String result = alipay.pay(orderInfo);
+
+                            Log.i(TAG, "result = " + result);
+                            Message msg = new Message();
+                            msg.what = 1;
+                            msg.obj = result;
+                            mHandler.sendMessage(msg);
+                        }
+                    }.start();
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Toast.makeText(SettingActivity.this, ex.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
 
                 return true;
             }
         });
+    }
+
+    private String getNewOrderInfo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("partner=\"");
+        sb.append(Data.DEFAULT_PARTNER);
+        sb.append("\"&out_trade_no=\"");
+        sb.append(getOutTradeNo());
+        sb.append("\"&subject=\"");
+        sb.append("丽图");
+        sb.append("\"&body=\"");
+        sb.append("丽图包月");
+        sb.append("\"&total_fee=\"");
+        sb.append("0.01");
+        sb.append("\"&notify_url=\"");
+
+        // 网址需要做URL编码
+        sb.append(URLEncoder.encode("http://notify.java.jpxx.org/index.jsp"));
+        sb.append("\"&service=\"mobile.securitypay.pay");
+        sb.append("\"&_input_charset=\"UTF-8");
+        sb.append("\"&return_url=\"");
+        sb.append(URLEncoder.encode("http://m.alipay.com"));
+        sb.append("\"&payment_type=\"1");
+        sb.append("\"&seller_id=\"");
+        sb.append(Data.DEFAULT_SELLER);
+
+        // 如果show_url值为空，可不传
+        // sb.append("\"&show_url=\"");
+        sb.append("\"&it_b_pay=\"1m");
+        sb.append("\"");
+
+        return new String(sb);
+    }
+
+    private String getOutTradeNo() {
+        SimpleDateFormat format = new SimpleDateFormat("MMddHHmmss");
+        Date date = new Date();
+        String key = format.format(date);
+
+        java.util.Random r = new java.util.Random();
+        key += r.nextInt();
+        key = key.substring(0, 15);
+        Log.d(TAG, "outTradeNo: " + key);
+        return key;
+    }
+
+    private String getSignType() {
+        return "sign_type=\"RSA\"";
     }
 
     public String getPackageVersion() {

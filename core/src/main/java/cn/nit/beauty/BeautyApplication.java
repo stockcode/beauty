@@ -3,6 +3,7 @@ package cn.nit.beauty;
 import android.app.Application;
 import android.graphics.Bitmap;
 
+import com.baidu.frontia.FrontiaApplication;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -26,7 +27,7 @@ import cn.nit.beauty.widget.RotateBitmapProcessor;
         formUri = "http://www.bugsense.com/api/acra?api_key=fcc709f3",
         formKey=""
 )
-public class BeautyApplication extends Application {
+public class BeautyApplication extends FrontiaApplication {
     @Override
     public void onCreate() {
         super.onCreate();
