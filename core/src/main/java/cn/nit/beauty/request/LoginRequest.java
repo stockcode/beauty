@@ -2,6 +2,7 @@ package cn.nit.beauty.request;
 
 import cn.nit.beauty.model.ImageInfos;
 import cn.nit.beauty.model.Person;
+import cn.nit.beauty.utils.Data;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +37,6 @@ public class LoginRequest extends SpringAndroidSpiceRequest<Person> {
         RestTemplate restTemplate = getRestTemplate();
         restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
 
-        return restTemplate.postForObject("http://192.168.1.101:8080/beauty-ajax/api/login", request, Person.class);
+        return restTemplate.postForObject(Data.AUTH_URL + "/login", request, Person.class);
     }
 }

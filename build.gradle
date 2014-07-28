@@ -1,29 +1,3 @@
-buildscript {
-  repositories {
-    mavenCentral()
-  }
-
-  dependencies {
-    classpath 'com.android.tools.build:gradle:0.12.+'
-  }
-}
-
-task assemble { }
-
 task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
 }
-
-allprojects {
-  group = 'cn.nit'
-  version = '1.0.1'
-
-  repositories {
-    mavenCentral()
-	mavenLocal()
-  }
-
-  
-}
-
-apply plugin: 'android-reporting'

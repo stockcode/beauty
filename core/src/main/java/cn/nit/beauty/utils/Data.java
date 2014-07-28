@@ -15,6 +15,7 @@ import cn.nit.beauty.R;
 public class Data {
 	public static int ItemCount = 8;
 
+    public final static String AUTH_URL = "http://192.168.1.103:8080/beauty-ajax/api";
     public final static String OSS_URL = "http://beauty-photo.oss.aliyuncs.com/";
 	public final static String UPDATE_URL = "http://beauty-app.oss.aliyuncs.com/beauty/update.json";
     public final static String mbApiKey = "6NxlGErC78G5tGB2aWPblquO";//请替换申请客户端应用时获取的Api Key串

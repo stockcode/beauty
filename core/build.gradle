@@ -1,5 +1,20 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.10.+'
+    }
+}
+
 apply plugin: 'android'
 
+repositories {
+    mavenLocal()
+    //mavenRepo urls: "file:///C:/Users/vicky/.m2/repository"
+    mavenCentral()
+}
 
 dependencies {
     compile 'com.google.android:support-v4:r13'
@@ -12,13 +27,11 @@ dependencies {
     //compile  'com.github.chrisbanes.photoview:library:1.2.1'
     compile  'de.greenrobot:eventbus:2.0.2'
     compile  'com.baidu.android:mobstat:3.1'
-    //compile  'com.baidu.android:mobads:3.2'
-    //compile  'com.baidu.android:mobads_wall:1.1'
     compile  'com.baidu.android:pushservice:4.0.0'
     compile 'ch.acra:acra:4.5.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.6'
     compile 'cn.nit:autoupdate:1.0.0@aar'
-    compile 'com.actionbarsherlock:actionbarsherlock:4.3.2-SNAPSHOT@aar'
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     //compile 'com.capricorn:arcmenu:1.0.0'
     //compile 'me.maxwin.view:OneXListview:1.0.0'
     //compile 'com.origamilabs.library:staggeredgridview:1.0.0'
@@ -46,6 +59,16 @@ task copyNativeLibs(type: Copy) {
 
 
 android {
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/notice.txt'
+    }
+
     defaultConfig {
 //        minSdkVersion 7
 //        targetSdkVersion 16

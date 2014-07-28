@@ -260,7 +260,7 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
 
                 if (launcher.getTITLE().equals("none")) return;
 
-                if (launcher.getURL().equals("vip")) {
+                if (launcher.getURL().equals("origin")) {
                     String accessToken = settings.getString("accessToken", null);
                     if (accessToken == null) {
                         new AlertDialog.Builder(MainActivity.this)

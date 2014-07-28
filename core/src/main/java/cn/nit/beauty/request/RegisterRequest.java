@@ -1,6 +1,7 @@
 package cn.nit.beauty.request;
 
 import cn.nit.beauty.model.Person;
+import cn.nit.beauty.utils.Data;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -42,6 +43,6 @@ public class RegisterRequest extends SpringAndroidSpiceRequest<Person> {
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
         restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
 
-        return restTemplate.postForObject("http://192.168.1.101:8080/beauty-ajax/api/register", request, Person.class);
+        return restTemplate.postForObject(Data.AUTH_URL + "/register", request, Person.class);
     }
 }
