@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style name="mycenter_txt_nickname">
+    <item name="android:textSize">@dimen/txt_myyouku_nickname_textsize</item>
+    <item name="android:textColor">#ffffffff</item>
+    <item name="android:gravity">left|center</item>
+</style>
+    <style name="mycenter_btn_reglog">
+        <item name="android:textSize">@dimen/btn_myyouku_register_textsize</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="txt_myyouku_renew_info">
+        <item name="android:textSize">@dimen/txt_myyouku_renew_info_textsize</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="txt_vip_product_info_tag">
+        <item name="android:textSize">@dimen/txt_vip_product_info_tag_textsize</item>
+        <item name="android:textColor">#ff606060</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+    <style name="txt_vip_product_layout_item_title">
+        <item name="android:textSize">@dimen/txt_vip_product_layout_item_title_textsize</item>
+        <item name="android:textColor">#ff3c3c3c</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+    <style name="txt_vip_product_layout_item_saleprice">
+        <item name="android:textSize">@dimen/txt_vip_product_layout_item_saleprice_textsize</item>
+        <item name="android:textColor">#ffff2a00</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+    <style name="txt_vip_product_layout_item_price">
+        <item name="android:textSize">@dimen/txt_vip_product_layout_item_price_textsize</item>
+        <item name="android:textColor">#ffb8b8b8</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+    <style name="btn_vip_product_layout_item_open">
+        <item name="android:textSize">@dimen/btn_vip_product_layout_item_open_textsize</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:gravity">center</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+</resources>

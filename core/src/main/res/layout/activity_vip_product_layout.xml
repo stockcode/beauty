@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@color/white" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:id="@id/vip_product_layout_item_first" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/activity_vip_product_layout_item" />
+    <View android:background="#ffe4e4e4" android:layout_width="fill_parent" android:layout_height="1.0px" android:layout_marginLeft="@dimen/vip_product_layout_paddingright" android:layout_marginRight="@dimen/vip_product_layout_paddingright" />
+    <include android:id="@id/vip_product_layout_item_second" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/activity_vip_product_layout_item" />
+    <View android:background="#ffe4e4e4" android:layout_width="fill_parent" android:layout_height="1.0px" android:layout_marginLeft="@dimen/vip_product_layout_paddingright" android:layout_marginRight="@dimen/vip_product_layout_paddingright" />
+    <include android:id="@id/vip_product_layout_item_third" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/activity_vip_product_layout_item" />
+</LinearLayout>

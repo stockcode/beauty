@@ -159,7 +159,7 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
         btnSettings.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                Intent intent = new Intent(MainActivity.this, UserCenterActivity.class);
                 startActivity(intent);
             }
         });

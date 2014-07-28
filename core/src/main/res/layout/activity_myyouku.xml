@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:background="#ffe2e2e2"
+                  android:orientation="vertical" android:paddingBottom="@dimen/activity_myyouku_paddingbottom" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <include android:id="@id/layout_myyouku_header_top" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/activity_myyouku_header_top" />
+    </LinearLayout>

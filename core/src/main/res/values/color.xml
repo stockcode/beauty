@@ -7,4 +7,16 @@
 
         <color name="button_unselected">#ff54acea</color>
         <color name="button_selected">#ff419de4</color>
+
+        <color name="btn_myyouku_vip_open_normal">#cdff6000</color>
+        <color name="btn_myyouku_vip_open_pressed">#cdc84c01</color>
+        <color name="btn_vipproduct_open_normal">#ffff5a00</color>
+        <color name="btn_vipproduct_open_pressed">#ffca4700</color>
+        <color name="btn_vip_dialog_cancel_normal">#fffafafa</color>
+        <color name="btn_vip_dialog_cancel_pressed">#ffe7e7e7</color>
+        <color name="btn_vip_dialog_gopay_normal">#fffaece6</color>
+        <color name="btn_vip_dialog_gopay_pressed">#fffbd6c6</color>
+        <color name="btn_vip_dialog_ok_normal">#1500baff</color>
+        <color name="btn_vip_dialog_ok_pressed">#33049dd5</color>
+        <color name="app_background">#ffe2e2e2</color>
     </resources>

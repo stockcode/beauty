@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@drawable/searchresult_item_bg" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_margin="1.0px">
+        <TextView android:id="@id/txt_vip_product_info_tag" android:background="#fff4f4f4" android:paddingLeft="@dimen/vip_product_layout_paddingright" android:layout_width="fill_parent" android:layout_height="@dimen/txt_vip_product_info_tag_height" android:text="@string/txt_vip_product_info_tag" style="@style/txt_vip_product_info_tag" />
+        <LinearLayout android:id="@id/layout_vip_product_info" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <include android:id="@id/activity_vip_product_layout" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/activity_vip_product_layout" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

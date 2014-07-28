@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:background="@color/app_background" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <ScrollView android:paddingLeft="@dimen/vip_product_spacing" android:paddingRight="@dimen/vip_product_spacing" android:scrollbars="none" android:fadingEdge="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:fillViewport="true">
+            <RelativeLayout android:id="@id/vip_product_body" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <LinearLayout android:orientation="vertical" android:id="@id/vip_product_layout" android:paddingTop="@dimen/vip_product_spacing" android:layout_width="fill_parent" android:layout_height="fill_parent">
+                    <include android:id="@id/activity_vip_product_info" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/activity_vip_product_info" />
+                    <com.youku.phone.vip.view.VipProductIntroLayout android:orientation="vertical" android:background="@drawable/searchresult_item_bg" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/vip_product_spacing">
+                        <ImageView android:id="@id/vip_product_intro_img" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_margin="1.0px" android:scaleType="fitXY" />
+                    </com.youku.phone.vip.view.VipProductIntroLayout>
+                </LinearLayout>
+                <com.youku.phone.vip.view.VipProductNoResultEmptyView android:id="@id/vip_product_noresult_emptyview" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+            </RelativeLayout>
+        </ScrollView>
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="horizontal" android:paddingLeft="@dimen/vip_product_layout_paddingleft" android:paddingRight="@dimen/vip_product_layout_paddingright" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:id="@id/btn_vip_product_layout_item_open" android:background="@drawable/btn_vipproduct_open" android:layout_width="@dimen/btn_vip_product_layout_item_open_width" android:layout_height="@dimen/btn_vip_product_layout_item_open_height" android:text="@string/btn_vip_product_layout_item_open" android:layout_alignParentRight="true" android:layout_centerVertical="true" style="@style/btn_vip_product_layout_item_open" />
+    <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="@dimen/vip_product_layout_item_height" android:layout_toLeftOf="@id/btn_vip_product_layout_item_open" android:layout_alignParentLeft="true">
+        <TextView android:ellipsize="end" android:id="@id/txt_vip_product_layout_item_title" android:layout_width="0.0dip" android:layout_height="fill_parent" android:singleLine="true" android:layout_weight="0.36" style="@style/txt_vip_product_layout_item_title" />
+        <TextView android:ellipsize="end" android:id="@id/txt_vip_product_layout_item_saleprice" android:layout_width="0.0dip" android:layout_height="fill_parent" android:singleLine="true" android:layout_weight="0.25" style="@style/txt_vip_product_layout_item_saleprice" />
+        <TextView android:ellipsize="end" android:id="@id/txt_vip_product_layout_item_price" android:layout_width="0.0dip" android:layout_height="fill_parent" android:singleLine="true" android:layout_weight="0.39" style="@style/txt_vip_product_layout_item_price" />
+    </LinearLayout>
+</RelativeLayout>
