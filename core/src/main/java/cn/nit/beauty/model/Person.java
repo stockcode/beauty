@@ -8,21 +8,22 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Person implements Serializable {
 
-    private Integer pkid;
+    private String pkid;
 	private String username;
 	private String passwd;
     private Date regDate;
     private Date expiredDate;
     private Integer score;
+    private Integer type;
     private String email;
     private String phone;
     private String err;
 
-    public Integer getPkid() {
+    public String getPkid() {
         return pkid;
     }
 
-    public void setPkid(Integer pkid) {
+    public void setPkid(String pkid) {
         this.pkid = pkid;
     }
 
@@ -88,6 +89,14 @@ public class Person implements Serializable {
 
     public void setErr(String err) {
         this.err = err;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     @Override

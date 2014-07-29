@@ -78,7 +78,8 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
         person.setPhone(phone.getText().toString());
 
         RegisterRequest registerRequest = new RegisterRequest(person);
-        spiceManager.execute(registerRequest, "register", DurationInMillis.ALWAYS_EXPIRED, new RegisterRequestListener());
+
+        spiceManager.execute(registerRequest, "register", DurationInMillis.ONE_SECOND, new RegisterRequestListener());
 
 		if (mDialog != null)
 		{

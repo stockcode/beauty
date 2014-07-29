@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<products>
+    <product subject="一年"  body="一年会员有效期" price="180元" saleprice="100元" />
+    <product subject="一个月"  body="一个月会员有效期" price="15元" saleprice="10元" />
+    <product subject="限时优惠"  body="一个月会员有效期(限时优惠)" price="15元" saleprice="0.1元" />
+</products>
