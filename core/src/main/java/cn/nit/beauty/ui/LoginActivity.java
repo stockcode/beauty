@@ -13,15 +13,21 @@ import android.widget.Toast;
 import cn.nit.beauty.R;
 import cn.nit.beauty.model.Person;
 import cn.nit.beauty.request.LoginRequest;
+import cn.nit.beauty.utils.Authenticator;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.DialogFactory;
+import com.google.inject.Inject;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import roboguice.activity.RoboActivity;
 
-public class LoginActivity extends Activity implements OnClickListener{
+public class LoginActivity extends RoboActivity implements OnClickListener{
+
+    @Inject
+    Authenticator authenticator;
 
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
@@ -109,12 +115,6 @@ public class LoginActivity extends Activity implements OnClickListener{
 		}
 		mDialog = DialogFactory.creatRequestDialog(this, "正在验证账号...");
 		mDialog.show();
-
-
-//        settings.edit().putString("accessToken", mbOauth)
-//                .putString("userName", response.getUserName())
-//                .apply();
-//        Configure.save(settings);
 	}
 
 
@@ -130,7 +130,19 @@ public class LoginActivity extends Activity implements OnClickListener{
         public void onRequestSuccess(Person person) {
             mDialog.dismiss();
             mDialog = null;
-            Toast.makeText(LoginActivity.this, person.toString(), Toast.LENGTH_LONG).show();
+            if (person == null) {
+                Toast.makeText(LoginActivity.this, "用户名密码错误，请重新输入", Toast.LENGTH_LONG).show();
+            } else {
+                authenticator.Save(person);
+
+                closeLoginUI(RESULT_OK);
+            }
+
         }
+    }
+
+    private void closeLoginUI(int result) {
+        setResult(result);
+        finish();
     }
 }

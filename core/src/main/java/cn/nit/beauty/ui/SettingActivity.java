@@ -41,13 +41,6 @@ public class SettingActivity extends PreferenceActivity {
     private float cacheSize= 0;
     DecimalFormat df   =   new   DecimalFormat("##0.00");
 
-    private Handler mHandler = new Handler(){
-
-        public void handleMessage(Message msg) {
-            Log.e("pay", msg.toString());
-        };
-    };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,96 +71,9 @@ public class SettingActivity extends PreferenceActivity {
         for (String key: PREFERENCE_KEYS) {
 	        setPreferenceSummary(key);
         }
-
-        prefPay.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                try {
-                    Log.i("SettingActivity", "Paying");
-                    String info = getNewOrderInfo();
-                    String sign = Rsa.sign(info, Data.PRIVATE);
-                    sign = URLEncoder.encode(sign);
-                    info += "&sign=\"" + sign + "\"&" + getSignType();
-                    Log.i("SettingActivity", "start pay");
-                    // start the pay.
-                    Log.i(TAG, "info = " + info);
-
-                    final String orderInfo = info;
-                    new Thread() {
-                        public void run() {
-                            AliPay alipay = new AliPay(SettingActivity.this, mHandler);
-
-                            //设置为沙箱模式，不设置默认为线上环境
-                            //alipay.setSandBox(true);
-
-                            String result = alipay.pay(orderInfo);
-
-                            Log.i(TAG, "result = " + result);
-                            Message msg = new Message();
-                            msg.what = 1;
-                            msg.obj = result;
-                            mHandler.sendMessage(msg);
-                        }
-                    }.start();
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Toast.makeText(SettingActivity.this, ex.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-
-                return true;
-            }
-        });
     }
 
-    private String getNewOrderInfo() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("partner=\"");
-        sb.append(Data.DEFAULT_PARTNER);
-        sb.append("\"&out_trade_no=\"");
-        sb.append(getOutTradeNo());
-        sb.append("\"&subject=\"");
-        sb.append("丽图");
-        sb.append("\"&body=\"");
-        sb.append("丽图包月");
-        sb.append("\"&total_fee=\"");
-        sb.append("0.01");
-        sb.append("\"&notify_url=\"");
 
-        // 网址需要做URL编码
-        sb.append(URLEncoder.encode("http://notify.java.jpxx.org/index.jsp"));
-        sb.append("\"&service=\"mobile.securitypay.pay");
-        sb.append("\"&_input_charset=\"UTF-8");
-        sb.append("\"&return_url=\"");
-        sb.append(URLEncoder.encode("http://m.alipay.com"));
-        sb.append("\"&payment_type=\"1");
-        sb.append("\"&seller_id=\"");
-        sb.append(Data.DEFAULT_SELLER);
-
-        // 如果show_url值为空，可不传
-        // sb.append("\"&show_url=\"");
-        sb.append("\"&it_b_pay=\"1m");
-        sb.append("\"");
-
-        return new String(sb);
-    }
-
-    private String getOutTradeNo() {
-        SimpleDateFormat format = new SimpleDateFormat("MMddHHmmss");
-        Date date = new Date();
-        String key = format.format(date);
-
-        java.util.Random r = new java.util.Random();
-        key += r.nextInt();
-        key = key.substring(0, 15);
-        Log.d(TAG, "outTradeNo: " + key);
-        return key;
-    }
-
-    private String getSignType() {
-        return "sign_type=\"RSA\"";
-    }
 
     public String getPackageVersion() {
         String version = "";

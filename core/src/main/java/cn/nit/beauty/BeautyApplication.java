@@ -33,7 +33,7 @@ public class BeautyApplication extends FrontiaApplication {
         super.onCreate();
 
         // The following line triggers the initialization of ACRA
-        ACRA.init(this);
+        //ACRA.init(this);
 
         // Create global configuration and initialize ImageLoader with this configuration
 

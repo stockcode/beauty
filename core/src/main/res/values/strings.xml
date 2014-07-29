@@ -30,6 +30,7 @@
     <string name="auto_save_password">记住密码</string>
     <string name="sending_request">正在发送请求</string>
 
+    <string name="txt_nickname">丽图会员</string>
     <string name="btn_myyouku_vipopen">开通会员</string>
     <string name="btn_myyouku_viprenew">续费</string>
     <string name="btn_myyouku_reglogin">登录/注册</string>

@@ -2,10 +2,11 @@ package cn.nit.beauty.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Person {
+public class Person implements Serializable {
 
     private Integer pkid;
 	private String username;

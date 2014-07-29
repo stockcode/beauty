@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import cn.nit.beauty.Helper;
+import cn.nit.beauty.utils.Authenticator;
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.mobstat.StatService;
@@ -74,7 +75,6 @@ public class LoadingActivity extends Activity {
         Configure.inits(LoadingActivity.this);
 
         settings = PreferenceManager.getDefaultSharedPreferences(this);
-        Configure.save(settings);
 
         if (!settings.getBoolean("shortcut", false)) {
             createShortCut(this);
