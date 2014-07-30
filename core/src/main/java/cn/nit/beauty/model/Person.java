@@ -103,10 +103,10 @@ public class Person implements Serializable {
     public String toString() {
         final StringBuilder sb = new StringBuilder("Person{");
         sb.append("pkid=").append(pkid);
-        sb.append(", username='").append(username).append('\'');
+        sb.append(", getUsername='").append(username).append('\'');
         sb.append(", passwd='").append(passwd).append('\'');
         sb.append(", regDate=").append(regDate);
-        sb.append(", expiredDate=").append(expiredDate);
+        sb.append(", getExpiredDate=").append(expiredDate);
         sb.append(", score=").append(score);
         sb.append(", email='").append(email).append('\'');
         sb.append(", phone='").append(phone).append('\'');

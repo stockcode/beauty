@@ -16,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.nit.beauty.R;
 import cn.nit.beauty.alipay.Rsa;
+import cn.nit.beauty.utils.Authenticator;
 import cn.nit.beauty.utils.Data;
 import com.alipay.android.app.sdk.AliPay;
+import com.google.inject.Inject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import roboguice.RoboGuice;
@@ -43,13 +45,22 @@ public class VipProductActivity extends RoboActivity {
     @InjectView(R.id.vip_product_layout_item_third)
     RelativeLayout vip_product_layout_item_third;
 
+    @Inject
+    Authenticator authenticator;
 
     private List<Product> products =new ArrayList<Product>();
 
     private Handler mHandler = new Handler(){
 
         public void handleMessage(Message msg) {
-            Toast.makeText(VipProductActivity.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+            String result = msg.obj.toString();
+            //Toast.makeText(VipProductActivity.this, result, Toast.LENGTH_SHORT).show();
+
+            if (result.contains("9000")) {
+                authenticator.Upgrade(products.get(msg.what).saleprice.replaceAll("元",""));
+                setResult(RESULT_OK);
+                finish();
+            }
         };
     };
 
@@ -58,7 +69,7 @@ public class VipProductActivity extends RoboActivity {
         @Override
         public void onClick(View v) {
             try {
-                int position = Integer.parseInt(v.getTag().toString());
+                final int position = Integer.parseInt(v.getTag().toString());
 
                 String info = getNewOrderInfo(position);
                 String sign = Rsa.sign(info, Data.PRIVATE);
@@ -76,7 +87,7 @@ public class VipProductActivity extends RoboActivity {
                         String result = alipay.pay(orderInfo);
 
                         Message msg = new Message();
-                        msg.what = 1;
+                        msg.what = position;
                         msg.obj = result;
                         mHandler.sendMessage(msg);
                     }
@@ -117,6 +128,8 @@ public class VipProductActivity extends RoboActivity {
         txt_vip_product_layout_item_price2.setText(products.get(1).price);
         txt_vip_product_layout_item_price2.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
+        if (!authenticator.hasDiscount()) vip_product_layout_item_third.setVisibility(View.GONE);
+
         TextView btn_vip_product_layout_item_open3 = (TextView) vip_product_layout_item_third.findViewById(R.id.btn_vip_product_layout_item_open);
         btn_vip_product_layout_item_open3.setTag(2);
         btn_vip_product_layout_item_open3.setOnClickListener(onPayClickListener);
@@ -130,21 +143,24 @@ public class VipProductActivity extends RoboActivity {
     }
 
     private String getNewOrderInfo(int position) {
+        String tradeNo = getOutTradeNo();
+        String totalFee =products.get(position).saleprice.replaceAll("元","");
+
         StringBuilder sb = new StringBuilder();
         sb.append("partner=\"");
         sb.append(Data.DEFAULT_PARTNER);
         sb.append("\"&out_trade_no=\"");
-        sb.append(getOutTradeNo());
+        sb.append(tradeNo);
         sb.append("\"&subject=\"");
         sb.append(products.get(position).body);
         sb.append("\"&body=\"");
         sb.append(products.get(position).body);
         sb.append("\"&total_fee=\"");
-        sb.append(products.get(position).saleprice.replaceAll("元",""));
+        sb.append(totalFee);
         sb.append("\"&notify_url=\"");
 
         // 网址需要做URL编码
-        sb.append(URLEncoder.encode("http://notify.java.jpxx.org/index.jsp"));
+        sb.append(getNotifyUrl(tradeNo, totalFee));
         sb.append("\"&service=\"mobile.securitypay.pay");
         sb.append("\"&_input_charset=\"UTF-8");
         sb.append("\"&return_url=\"");
@@ -158,7 +174,14 @@ public class VipProductActivity extends RoboActivity {
         sb.append("\"&it_b_pay=\"1m");
         sb.append("\"");
 
-        return new String(sb);
+        return sb.toString();
+    }
+
+    private String getNotifyUrl(String tradeNo, String totalFee) {
+        String url = String.format("http://www.matesapp.cn:8080/beauty-ajax/api/notify?sessionid=%s&type=%s&tradeno=%s",
+                authenticator.getId(), totalFee, tradeNo);
+
+        return URLEncoder.encode(url);
     }
 
     private String getOutTradeNo() {

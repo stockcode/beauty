@@ -21,12 +21,15 @@ import android.widget.Toast;
 
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.Utils;
+import cn.nit.beauty.utils.Authenticator;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.baidu.mobstat.StatService;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
+import com.google.inject.Inject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -51,10 +54,12 @@ import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.model.ImageInfos;
 import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Data;
+import roboguice.activity.RoboActivity;
+import roboguice.activity.RoboFragmentActivity;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class ImageGalleryActivity extends SherlockFragmentActivity {
+public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
 
     List<ImageInfo> imageInfoList;
     private GalleryAdapter mAdapter;
@@ -67,6 +72,9 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
             GsonSpringAndroidSpiceService.class);
 
     private MenuItem mnuSave;
+
+    @Inject
+    Authenticator authenticator;
 
     private SharedPreferences settings;
 
@@ -89,11 +97,16 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
-
             }
 
             @Override
             public void onPageSelected(int i) {
+                if (!authenticator.isLogin()&& i > (imageInfoList.size() - i)) {
+                    Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, UserCenterActivity.LOGIN);
+                    Toast.makeText(ImageGalleryActivity.this, "查看更多图片请先登录", Toast.LENGTH_SHORT).show();
+                }
+
                 if (actionProvider != null) {
                     createShareIntent(Data.OSS_URL + imageInfoList.get(i).getUrl());
                 }
@@ -104,7 +117,6 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
             @Override
             public void onPageScrollStateChanged(int i) {
-
             }
         });
         mAdapter = new GalleryAdapter(getSupportFragmentManager());
@@ -387,7 +399,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
     private class ImageListRequestListener implements RequestListener<ImageInfos> {
         @Override
         public void onRequestFailure(SpiceException e) {
-            Toast.makeText(ImageGalleryActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(ImageGalleryActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         @Override

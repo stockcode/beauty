@@ -1,8 +1,5 @@
 package cn.nit.beauty.ui;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,9 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.nit.beauty.R;
-import cn.nit.beauty.model.Person;
 import cn.nit.beauty.utils.Authenticator;
-import cn.nit.beauty.utils.Configure;
 import com.google.inject.Inject;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
@@ -25,8 +20,8 @@ import roboguice.inject.InjectView;
 @ContentView(R.layout.activity_myyouku)
 public class UserCenterActivity extends RoboActivity {
 
-    private static final int LOGIN = 0;
-    private static final int VIP = 1;
+    public static final int LOGIN = 0;
+    public static final int VIP = 1;
 
     @InjectView(R.id.btn_myyouku_login)
     Button btnLogin;
@@ -98,12 +93,12 @@ public class UserCenterActivity extends RoboActivity {
 
         ivLogout.setOnClickListener(logoutClickListener);
 
-        tvNickname.setText(authenticator.username());
+        tvNickname.setText(authenticator.getUsername());
         ivVip.setImageResource(R.drawable.vip_yes);
         //btnLogin.setWidth(getResources().getDimension(R.dimen.btn_myyouku_renew_width)));
 
         btnPay.setOnClickListener(null);
-        btnPay.setText(authenticator.expiredDate());
+        btnPay.setText(authenticator.getExpiredDate());
     }
 
     private void LogoutUI() {
@@ -125,6 +120,11 @@ public class UserCenterActivity extends RoboActivity {
 
         if (requestCode == LOGIN && resultCode == RESULT_OK) {
             LoginUI();
+        }
+        if (requestCode == VIP && resultCode == RESULT_OK) {
+            LoginUI();
+
+            Toast.makeText(UserCenterActivity.this, "支付成功，您的有效期至" + authenticator.getExpiredDate(), Toast.LENGTH_SHORT).show();
         }
     }
 }

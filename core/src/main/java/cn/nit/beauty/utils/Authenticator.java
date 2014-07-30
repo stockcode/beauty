@@ -7,6 +7,11 @@ import cn.nit.beauty.model.Person;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by vicky on 2014/7/29.
  */
@@ -32,15 +37,52 @@ public class Authenticator {
         return settings.contains("username");
     }
 
-    public String username(){
+    public String getUsername(){
         return settings.getString("username", "");
     }
 
-    public String expiredDate(){
+    public String getExpiredDate(){
         return settings.getString("expiredDate", "");
+    }
+
+    public String getId() {
+        return settings.getString("pkid", "");
+    }
+
+    public boolean hasDiscount() {
+        return settings.getInt("type", 0) == 0;
     }
 
     public void Logout() {
         settings.edit().remove("username").remove("expiredDate").apply();
+    }
+
+    public void Upgrade(String totalfee) {
+
+        try {
+            Date expiredDate = new SimpleDateFormat("yyyy-MM-dd").parse(settings.getString("expiredDate", ""));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(expiredDate);
+
+            if (totalfee.equals("0.1")) {
+                calendar.add(Calendar.MONTH, 1);
+                settings.edit().putInt("type", 1)
+                        .putString("expiredDate",android.text.format.DateFormat.format("yyyy-MM-dd",calendar.getTime()).toString())
+                        .apply();
+            } else if (totalfee.equals("10")) {
+                calendar.add(Calendar.MONTH, 1);
+                settings.edit()
+                        .putString("expiredDate",android.text.format.DateFormat.format("yyyy-MM-dd",calendar.getTime()).toString())
+                        .apply();
+            } else if (totalfee.equals("100")) {
+                calendar.add(Calendar.YEAR, 1);
+                settings.edit()
+                        .putString("expiredDate",android.text.format.DateFormat.format("yyyy-MM-dd",calendar.getTime()).toString())
+                        .apply();
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
