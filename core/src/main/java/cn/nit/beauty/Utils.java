@@ -24,7 +24,10 @@ public class Utils {
 	public static final String ACTION_SHOW_MESSAGE = "bccsclient.action.SHOW_MESSAGE";
 	protected static final String EXTRA_ACCESS_TOKEN = "access_token";
 	public static final String EXTRA_MESSAGE = "message";
-	
+
+    public static final int LOGIN = 0;
+    public static final int VIP = 1;
+    public static final int REGISTER = 2;
 	// 获取AppKey
     public static String getMetaValue(Context context, String metaKey) {
         Bundle metaData = null;

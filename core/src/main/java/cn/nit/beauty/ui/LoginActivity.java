@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import cn.nit.beauty.R;
+import cn.nit.beauty.Utils;
 import cn.nit.beauty.model.Person;
 import cn.nit.beauty.request.LoginRequest;
 import cn.nit.beauty.utils.Authenticator;
@@ -94,7 +95,8 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
     {
     	Intent intent = new Intent();
     	intent.setClass(this, RegisterActivity.class);
-    	startActivity(intent);
+
+        startActivityForResult(intent, Utils.REGISTER);
     }
 	   
 
@@ -144,5 +146,15 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
     private void closeLoginUI(int result) {
         setResult(result);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Utils.REGISTER && resultCode == RESULT_OK) {
+            closeLoginUI(RESULT_OK);
+            Toast.makeText(LoginActivity.this, "注册成功，您的有效期至" + authenticator.getExpiredDate(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

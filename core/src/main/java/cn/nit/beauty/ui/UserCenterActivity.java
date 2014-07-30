@@ -5,11 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import cn.nit.beauty.R;
+import cn.nit.beauty.Utils;
 import cn.nit.beauty.utils.Authenticator;
 import com.google.inject.Inject;
 import roboguice.activity.RoboActivity;
@@ -19,9 +17,6 @@ import roboguice.inject.InjectView;
 
 @ContentView(R.layout.activity_myyouku)
 public class UserCenterActivity extends RoboActivity {
-
-    public static final int LOGIN = 0;
-    public static final int VIP = 1;
 
     @InjectView(R.id.btn_myyouku_login)
     Button btnLogin;
@@ -33,6 +28,8 @@ public class UserCenterActivity extends RoboActivity {
     ImageView ivVip;
     @InjectView(R.id.portrait2)
     ImageView ivLogout;
+    @InjectView(R.id.setting)
+    ImageButton ibSetting;
 
     @Inject
     Authenticator authenticator;
@@ -41,7 +38,7 @@ public class UserCenterActivity extends RoboActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(UserCenterActivity.this, LoginActivity.class);
-            startActivityForResult(intent, LOGIN);
+            startActivityForResult(intent, Utils.LOGIN);
 
         }
     };
@@ -50,7 +47,7 @@ public class UserCenterActivity extends RoboActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(UserCenterActivity.this, VipProductActivity.class);
-            startActivityForResult(intent, VIP);
+            startActivityForResult(intent, Utils.VIP);
         }
     };
 
@@ -85,6 +82,14 @@ public class UserCenterActivity extends RoboActivity {
         } else {
             LogoutUI();
         }
+
+        ibSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserCenterActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void LoginUI() {
@@ -118,10 +123,10 @@ public class UserCenterActivity extends RoboActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == LOGIN && resultCode == RESULT_OK) {
+        if (requestCode == Utils.LOGIN && resultCode == RESULT_OK) {
             LoginUI();
         }
-        if (requestCode == VIP && resultCode == RESULT_OK) {
+        if (requestCode == Utils.VIP && resultCode == RESULT_OK) {
             LoginUI();
 
             Toast.makeText(UserCenterActivity.this, "支付成功，您的有效期至" + authenticator.getExpiredDate(), Toast.LENGTH_SHORT).show();

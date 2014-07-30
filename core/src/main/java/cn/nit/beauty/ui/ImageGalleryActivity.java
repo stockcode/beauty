@@ -103,7 +103,7 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
             public void onPageSelected(int i) {
                 if (!authenticator.isLogin()&& i > (imageInfoList.size() - i)) {
                     Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
-                    startActivityForResult(intent, UserCenterActivity.LOGIN);
+                    startActivityForResult(intent, Utils.LOGIN);
                     Toast.makeText(ImageGalleryActivity.this, "查看更多图片请先登录", Toast.LENGTH_SHORT).show();
                 }
 

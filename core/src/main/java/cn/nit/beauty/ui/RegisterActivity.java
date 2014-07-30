@@ -11,7 +11,9 @@ import android.widget.Toast;
 import cn.nit.beauty.R;
 import cn.nit.beauty.model.Person;
 import cn.nit.beauty.request.RegisterRequest;
+import cn.nit.beauty.utils.Authenticator;
 import cn.nit.beauty.utils.DialogFactory;
+import com.google.inject.Inject;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -23,6 +25,8 @@ import roboguice.inject.InjectView;
 
 @ContentView(R.layout.register)
 public class RegisterActivity extends RoboActivity implements OnClickListener{
+    @Inject
+    Authenticator authenticator;
 
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
@@ -116,7 +120,11 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
         public void onRequestSuccess(Person person) {
             mDialog.dismiss();
             mDialog = null;
-            Toast.makeText(RegisterActivity.this, person.toString(), Toast.LENGTH_LONG).show();
+
+            authenticator.Save(person);
+
+            setResult(RESULT_OK);
+            finish();
         }
     }
 }
