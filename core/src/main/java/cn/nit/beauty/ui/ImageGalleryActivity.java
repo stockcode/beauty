@@ -101,10 +101,18 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
 
             @Override
             public void onPageSelected(int i) {
-                if (!authenticator.isLogin()&& i > (imageInfoList.size() - i)) {
-                    Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
-                    startActivityForResult(intent, Utils.LOGIN);
-                    Toast.makeText(ImageGalleryActivity.this, "查看更多图片请先登录", Toast.LENGTH_SHORT).show();
+                if (objectKey.startsWith("origin") || i > (imageInfoList.size() - i)) {
+                    autoPlay = false;
+
+                    if (!authenticator.isLogin()) {
+                        Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
+                        startActivityForResult(intent, Utils.LOGIN);
+                        Toast.makeText(ImageGalleryActivity.this, "查看更多图片请先登录", Toast.LENGTH_SHORT).show();
+                    } else if (authenticator.hasExpired()) {
+                        Intent intent = new Intent(ImageGalleryActivity.this, VipProductActivity.class);
+                        startActivityForResult(intent, Utils.VIP);
+                        Toast.makeText(ImageGalleryActivity.this, "有效期为" + authenticator.getExpiredDate() + "，请续费", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 if (actionProvider != null) {
@@ -168,23 +176,12 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
                 changeWallpaper();
                 return true;
             case R.id.mnuOriginal:
-//                new AlertDialog.Builder(ImageGalleryActivity.this)
-//                        .setTitle("提示")
-//                        .setMessage("您需要登录才能浏览原图")
-//                        .setPositiveButton("登录", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                Intent intent = new Intent();
-//                                intent.setClass(ImageGalleryActivity.this, LoginActivity.class);
-//                                startActivity(intent);
-//                            }
-//                        })
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                dialog.cancel();
-//                            }
-//                        })
-//                        .show();
-//                return true;
+                if (!authenticator.isLogin()) {
+                    Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, Utils.LOGIN);
+                    Toast.makeText(ImageGalleryActivity.this, "查看原图请先登录", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
 
                 if (mi.getTitle().equals("原图")) {
                     if (Helper.isWifi(getApplicationContext()) || settings.getBoolean("notifyWIFI", false)) {
@@ -241,7 +238,7 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
 
         Utils.copyFile(cacheFile.getAbsolutePath(), dstFile);
 
-        Toast.makeText(ImageGalleryActivity.this, "图片以保存到" + dstFile, Toast.LENGTH_SHORT).show();
+        Toast.makeText(ImageGalleryActivity.this, "图片以保存到" + dstFile, Toast.LENGTH_LONG).show();
     }
 
     private void changeOriginal() {
@@ -423,6 +420,23 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
                 mViewPager.setCurrentItem(nextItem);// 换页，同时实现了循环播放
                 message = obtainMessage(0);// 重新给message赋值，因为前一个message“还在使用中”
                 sendMessageDelayed(message, 2000);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Utils.LOGIN) {
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(ImageGalleryActivity.this, "取消登录，已返回", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        } else if (requestCode == Utils.VIP) {
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(ImageGalleryActivity.this, "取消续费，已返回", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
     }

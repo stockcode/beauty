@@ -64,4 +64,9 @@ public class Helper {
 		HttpEntity entity = response.getEntity();
 		return EntityUtils.toString(entity, "UTF-8");
 	}
+
+    public static int dpToPixels(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
 }

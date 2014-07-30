@@ -54,7 +54,7 @@ public class Authenticator {
     }
 
     public void Logout() {
-        settings.edit().remove("username").remove("expiredDate").apply();
+        settings.edit().remove("pkid").remove("username").remove("type").remove("expiredDate").apply();
     }
 
     public void Upgrade(String totalfee) {
@@ -84,5 +84,16 @@ public class Authenticator {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean hasExpired() {
+        try {
+            Date expiredDate = new SimpleDateFormat("yyyy-MM-dd").parse(settings.getString("expiredDate", ""));
+            return expiredDate.before(new Date());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }

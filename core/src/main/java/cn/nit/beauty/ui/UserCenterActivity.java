@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.utils.Authenticator;
@@ -30,6 +31,12 @@ public class UserCenterActivity extends RoboActivity {
     ImageView ivLogout;
     @InjectView(R.id.setting)
     ImageButton ibSetting;
+    @InjectView(R.id.btn_myyouku_renew)
+    TextView tvRenew;
+    @InjectView(R.id.txt_myyouku_renew_info)
+    TextView tvRenew_info;
+    @InjectView(R.id.myyouku_viewflipper)
+    ViewFlipper my_viewflipper;
 
     @Inject
     Authenticator authenticator;
@@ -60,7 +67,7 @@ public class UserCenterActivity extends RoboActivity {
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             authenticator.Logout();
-                            LogoutUI();
+                            checkUserStatus();
                             Toast.makeText(UserCenterActivity.this, "已退出登录", Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -77,11 +84,7 @@ public class UserCenterActivity extends RoboActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (authenticator.isLogin()) {
-            LoginUI();
-        } else {
-            LogoutUI();
-        }
+
 
         ibSetting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,45 +93,38 @@ public class UserCenterActivity extends RoboActivity {
                 startActivity(intent);
             }
         });
-    }
 
-    private void LoginUI() {
-        btnLogin.setText(R.string.btn_myyouku_viprenew);
-        btnLogin.setOnClickListener(payClickListener);
-
-        ivLogout.setOnClickListener(logoutClickListener);
-
-        tvNickname.setText(authenticator.getUsername());
-        ivVip.setImageResource(R.drawable.vip_yes);
-        //btnLogin.setWidth(getResources().getDimension(R.dimen.btn_myyouku_renew_width)));
-
-        btnPay.setOnClickListener(null);
-        btnPay.setText(authenticator.getExpiredDate());
-    }
-
-    private void LogoutUI() {
-        btnLogin.setText(R.string.btn_myyouku_reglogin);
         btnLogin.setOnClickListener(loginClickListener);
-        ivLogout.setOnClickListener(loginClickListener);
-
         btnPay.setOnClickListener(payClickListener);
-        btnPay.setText(R.string.btn_myyouku_vipopen);
-
-        tvNickname.setText(R.string.txt_nickname);
+        tvRenew.setOnClickListener(payClickListener);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        checkUserStatus();
+    }
+
+    private void checkUserStatus() {
+        if (authenticator.isLogin()) {
+            tvNickname.setText(authenticator.getUsername());
+            tvRenew_info.setText("会员到期日:\r\n" + authenticator.getExpiredDate());
+            my_viewflipper.setDisplayedChild(1);
+            ivLogout.setOnClickListener(logoutClickListener);
+        } else {
+            tvNickname.setText(R.string.txt_nickname);
+            my_viewflipper.setDisplayedChild(0);
+            ivLogout.setOnClickListener(loginClickListener);
+        }
+    }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Utils.LOGIN && resultCode == RESULT_OK) {
-            LoginUI();
-        }
         if (requestCode == Utils.VIP && resultCode == RESULT_OK) {
-            LoginUI();
-
             Toast.makeText(UserCenterActivity.this, "支付成功，您的有效期至" + authenticator.getExpiredDate(), Toast.LENGTH_SHORT).show();
         }
     }

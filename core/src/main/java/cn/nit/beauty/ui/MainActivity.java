@@ -260,27 +260,6 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
 
                 if (launcher.getTITLE().equals("none")) return;
 
-                if (launcher.getURL().equals("origin")) {
-                    String accessToken = settings.getString("accessToken", null);
-                    if (accessToken == null) {
-                        new AlertDialog.Builder(MainActivity.this)
-                                .setTitle("提示")
-                                .setMessage("您需要登录才能浏览VIP专区")
-                                .setPositiveButton("登录", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        StartLogin();
-                                    }
-                                })
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                })
-                                .show();
-                        return;
-                    }
-                }
-
                 String text = launcher.getTITLE();
                 Intent intent = new Intent();
                 if (text != null && !text.equals("none")) {
@@ -391,18 +370,6 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
 
         sp_skin = getSharedPreferences("skin", MODE_PRIVATE);
 
-    }
-
-    private void StartLogin() {
-        String accessToken = Configure.accessToken;
-        if (accessToken != null) {
-            Toast.makeText(getApplicationContext(), "您已经登录过了", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Intent intent = new Intent();
-        intent.setClass(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
     }
 
     public void onEvent(LauncherChangeEvent event) {

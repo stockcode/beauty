@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.nit.beauty.R;
+import cn.nit.beauty.Utils;
 import cn.nit.beauty.alipay.Rsa;
 import cn.nit.beauty.utils.Authenticator;
 import cn.nit.beauty.utils.Data;
@@ -68,6 +69,13 @@ public class VipProductActivity extends RoboActivity {
 
         @Override
         public void onClick(View v) {
+            if (!authenticator.isLogin()) {
+                Intent intent = new Intent(VipProductActivity.this, LoginActivity.class);
+                startActivityForResult(intent, Utils.LOGIN);
+                Toast.makeText(VipProductActivity.this, "购买请先登录", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             try {
                 final int position = Integer.parseInt(v.getTag().toString());
 

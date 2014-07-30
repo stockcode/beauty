@@ -138,6 +138,8 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
                 authenticator.Save(person);
 
                 closeLoginUI(RESULT_OK);
+
+                Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
             }
 
         }
