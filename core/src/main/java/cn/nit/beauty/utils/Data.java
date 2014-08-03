@@ -34,7 +34,7 @@ public class Data {
     public final static int PAGE_COUNT = 10;
 	public final static String INDEX_KEY = "index.json";
 	
-	public static String[] Items_url = { "asian", "occident", "china", "favorite", "daily", "origin"};
+	public static String[] Items_url = { "asia", "occident", "china", "favorite", "daily", "origin"};
 	public static int[] Items_icon = { R.drawable.asia, R.drawable.occident,
 			R.drawable.china, R.drawable.favorite,
 			R.drawable.daily, R.drawable.origin, R.drawable.add_fun,
