@@ -46,7 +46,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private List<String> filters = new ArrayList<String>();
-    ;
+
     private String selectedFilter = "全部";
     private String category = "";
     private Category launcher;

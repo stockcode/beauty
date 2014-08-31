@@ -49,6 +49,7 @@ public class StaggeredAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.imageView = (ScaleImageView) convertView.findViewById(R.id.news_pic);
             holder.contentView = (TextView) convertView.findViewById(R.id.news_title);
+
             convertView.setTag(holder);
             convertView.setOnClickListener(mOnClickListener);
         }

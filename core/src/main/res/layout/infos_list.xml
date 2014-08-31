@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/news_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/news_item_bg"
     android:orientation="vertical" >
 
     <cn.nit.beauty.widget.ScaleImageView
@@ -16,8 +15,11 @@
         android:id="@+id/news_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="false"
-        android:textColor="#656565" />
+        android:gravity="center"
+        android:singleLine="true"
+        android:layout_centerInParent="@+id/news_pic"
+        android:textColor="#ffffff"
+        android:background="#ee1d6d"/>
     <!--
         <TextView
             android:id="@+id/news_time"
@@ -27,4 +29,4 @@
             android:gravity="right"
             android:textColor="#9f9f9f" />
     -->
-</LinearLayout>
+</RelativeLayout>
