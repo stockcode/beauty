@@ -1,5 +1,6 @@
 package cn.nit.beauty.adapter;
 
+import android.graphics.Color;
 import cn.nit.beauty.R;
 import android.content.Context;
 import android.content.Intent;
@@ -59,6 +60,9 @@ public class StaggeredAdapter extends BaseAdapter {
         String title = duitangInfo.getTitle();
         String[] strs = title.split("/");
         holder.contentView.setText(strs[strs.length-1]);
+        holder.contentView.setBackgroundColor(Color.argb(155, 0, 255, 0));
+        holder.contentView.setTextColor(Color.argb(155, 0, 255, 0));
+
         holder.objectKey = duitangInfo.getKey();
         //ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getUrl(), holder.imageView);
         return convertView;

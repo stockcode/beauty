@@ -3,23 +3,22 @@
     android:id="@+id/news_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical" android:gravity="bottom">
 
     <cn.nit.beauty.widget.ScaleImageView
         android:id="@+id/news_pic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@null" />
+        android:src="@drawable/c_user" />
 
     <TextView
         android:id="@+id/news_title"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_gravity="center_horizontal"
         android:singleLine="true"
-        android:layout_centerInParent="@+id/news_pic"
         android:textColor="#ffffff"
-        android:background="#ee1d6d"/>
+        android:background="#ee1d6d" android:gravity="center"/>
     <!--
         <TextView
             android:id="@+id/news_time"
