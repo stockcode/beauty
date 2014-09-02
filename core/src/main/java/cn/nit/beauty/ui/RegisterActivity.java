@@ -40,11 +40,6 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
     @InjectView(R.id.password)
     private TextView password;
 
-    @InjectView(R.id.email)
-    private TextView email;
-
-    @InjectView(R.id.phone)
-    private TextView phone;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +73,6 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
         Person person = new Person();
         person.setUsername(username.getText().toString());
         person.setPasswd(password.getText().toString());
-        person.setEmail(email.getText().toString());
-        person.setPhone(phone.getText().toString());
 
         RegisterRequest registerRequest = new RegisterRequest(person);
 
