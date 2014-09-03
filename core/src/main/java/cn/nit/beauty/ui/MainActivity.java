@@ -83,24 +83,12 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
 
     boolean isClean = false;
     Vibrator vibrator;
-    int rockCount = 0;
-    ImageButton btn_skin;
-    SharedPreferences sp_skin;
-    IntentFilter setPositionFilter;
+
     boolean finishCount = false;
-
-    ProgressDialog progressDialog;
-    //0227更新壁纸切换：
-    IntentFilter setbgFilter;
-
-    private SharedPreferences settings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        settings = PreferenceManager.getDefaultSharedPreferences(this);
-
 
         appUpdate = AppUpdateService.getAppUpdate(this);
 //        appUpdate.checkLatestVersionSilent(Data.UPDATE_URL,
@@ -117,7 +105,6 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
             Toast.makeText(MainActivity.this, "网络有点不给力哦", Toast.LENGTH_LONG).show();
         init();
         initData();
-        initPath();
 
         for (int i = 0; i < Configure.countPages; i++) {
             lst_views.addView(addGridView(i));
@@ -169,8 +156,6 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
         param = new LinearLayout.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.FILL_PARENT);
-        param.rightMargin = 100;
-        param.leftMargin = 20;
     }
 
     public void initData() {
@@ -228,6 +213,7 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
         // lists.get(i).add(null);
 
         LinearLayout linear = new LinearLayout(MainActivity.this);
+
         DragGridView gridView = new DragGridView(MainActivity.this);
         gridView.setAdapter(new DragGridAdapter(MainActivity.this, gridView, lists
                 .get(i)));
@@ -260,37 +246,9 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
         });
         gridView.setSelector(R.drawable.selector_null);
 
-
-        gridView.setOnItemChangeListener(new DragGridView.G_ItemChangeListener() {
-            @Override
-            public void change(int from, int to, int count) {
-                Category toString = (Category) lists.get(
-                        Configure.curentPage - count).get(from);
-
-                lists.get(Configure.curentPage - count).add(from,
-                        (Category) lists.get(Configure.curentPage).get(to));
-                lists.get(Configure.curentPage - count).remove(from + 1);
-                lists.get(Configure.curentPage).add(to, toString);
-                lists.get(Configure.curentPage).remove(to + 1);
-
-                ((DragGridAdapter) ((gridviews
-                        .get(Configure.curentPage - count)).getAdapter()))
-                        .notifyDataSetChanged();
-                ((DragGridAdapter) ((gridviews.get(Configure.curentPage))
-                        .getAdapter())).notifyDataSetChanged();
-            }
-        });
         gridviews.add(gridView);
         linear.addView(gridView, param);
         return linear;
-    }
-
-
-    public void initPath() {
-        MyAnimations.initOffset(MainActivity.this);
-
-        sp_skin = getSharedPreferences("skin", MODE_PRIVATE);
-
     }
 
     public void onEvent(LauncherChangeEvent event) {

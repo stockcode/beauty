@@ -137,8 +137,7 @@
         </activity>
 
         <activity
-            android:name=".ui.LoginActivity"
-            android:windowSoftInputMode="stateVisible">
+            android:name=".ui.LoginActivity">
         </activity>
 
         <activity

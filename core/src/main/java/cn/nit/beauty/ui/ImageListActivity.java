@@ -55,6 +55,8 @@ public class ImageListActivity extends SherlockActivity {
     private void AddItemToContainer() {
 
         for(int i = 0 ; i < imageInfoList.size(); i++) {
+            if (imageInfoList.get(i).getKey().toLowerCase().contains("cover")) continue;
+
             mAdapter.addItemTop(imageInfoList.get(i));
         }
         mAdapter.notifyDataSetChanged();

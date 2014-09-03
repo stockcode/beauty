@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:singleLine="false"
         android:textColor="#ffffff"
-        android:background="#ee1d6d"
+        android:background="#9bee1d6d"
         android:layout_alignParentBottom="true"
             />
     <!--

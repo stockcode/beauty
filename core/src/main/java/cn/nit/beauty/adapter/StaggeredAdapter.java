@@ -59,8 +59,11 @@ public class StaggeredAdapter extends BaseAdapter {
 
         String title = duitangInfo.getTitle();
         String[] strs = title.split("/");
-        holder.contentView.setText(strs[strs.length-1]);
-        holder.contentView.setBackgroundColor(Color.argb(155, 0, 255, 0));
+        title = strs[strs.length-1];
+
+        if (title.equals("")) holder.contentView.setVisibility(View.GONE);
+
+        holder.contentView.setText(title);
 
         holder.objectKey = duitangInfo.getKey();
         //ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getUrl(), holder.imageView);

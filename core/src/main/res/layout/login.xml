@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     android:orientation="vertical"
-    android:id="@+id/loginpage"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="用户登录"
+            android:layout_gravity="center" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -37,29 +43,39 @@
         android:layout_below="@id/input" />
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30.0dip"
         android:layout_marginTop="8.0dip"
         android:layout_marginRight="30.0dip"
         android:layout_below="@id/login"
-        android:layout_weight="1" android:id="@+id/relativeLayout">
+        android:layout_weight="1">
         <Button  android:textSize="12.0sp" android:textColor="#ffffffff" android:layout_alignParentRight="true" android:gravity="left|center"  android:id="@+id/regist" android:background="@drawable/login_regist_bg" android:paddingLeft="8.0dip" android:paddingRight="18.0dip" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/register2" />
-    </RelativeLayout>
+    </LinearLayout>
+
+    <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="?android:attr/listDivider"
+            />
+
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
         <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageButton" android:layout_gravity="center_vertical" android:src="@drawable/qq"/>
+                android:id="@+id/imageButton" android:layout_gravity="center_vertical" android:src="@drawable/qq"
+                android:scaleType="fitCenter"/>
         <ImageButton
                 android:layout_width="118dp"
                 android:layout_height="114dp"
-                android:id="@+id/imageButton2" android:layout_gravity="center_vertical" android:src="@drawable/weixin"/>
+                android:id="@+id/imageButton2" android:layout_gravity="center_vertical" android:src="@drawable/weixin"
+                android:scaleType="fitCenter"/>
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
