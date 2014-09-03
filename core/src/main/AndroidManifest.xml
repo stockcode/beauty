@@ -138,7 +138,6 @@
 
         <activity
             android:name=".ui.LoginActivity"
-            android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateVisible">
         </activity>
 

@@ -2,12 +2,9 @@
 <RelativeLayout
     android:orientation="vertical"
     android:id="@+id/loginpage"
-    android:background="@drawable/login_bg"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
-
 
     <LinearLayout
         android:orientation="vertical"
@@ -47,19 +44,22 @@
         android:layout_marginTop="8.0dip"
         android:layout_marginRight="30.0dip"
         android:layout_below="@id/login"
-        android:layout_weight="1" >
-        <CheckBox android:textSize="12.0sp" android:textColor="#ffffffff" android:layout_alignParentLeft="true"  android:id="@+id/auto_save_password" android:background="@null" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:button="@null" android:text="@string/auto_save_password" android:drawableLeft="@drawable/checkbox_bg1" android:drawablePadding="4.0dip"/>
+        android:layout_weight="1" android:id="@+id/relativeLayout">
         <Button  android:textSize="12.0sp" android:textColor="#ffffffff" android:layout_alignParentRight="true" android:gravity="left|center"  android:id="@+id/regist" android:background="@drawable/login_regist_bg" android:paddingLeft="8.0dip" android:paddingRight="18.0dip" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/register2" />
     </RelativeLayout>
-
     <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/menu"
-        android:background="@drawable/login_moremenu_back"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton" android:layout_gravity="center_vertical" android:src="@drawable/qq"/>
+        <ImageButton
+                android:layout_width="118dp"
+                android:layout_height="114dp"
+                android:id="@+id/imageButton2" android:layout_gravity="center_vertical" android:src="@drawable/weixin"/>
     </LinearLayout>
 
 </RelativeLayout>
