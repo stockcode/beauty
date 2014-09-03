@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,7 +21,9 @@ import android.view.animation.TranslateAnimation;
 import android.widget.*;
 
 import cn.nit.beauty.ui.listener.ShakeListener;
+import com.actionbarsherlock.app.ActionBar;
 import com.baidu.mobstat.StatService;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
 import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
@@ -44,7 +47,7 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 @ContentView(R.layout.layout_milaucher)
-public class MainActivity extends RoboActivity implements ShakeListener.OnShakeListener {
+public class MainActivity extends RoboSherlockActivity implements ShakeListener.OnShakeListener, ActionBar.TabListener {
 
     private ShakeListener mShaker;
     Vibrator vibe;
@@ -63,28 +66,17 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
 
     @InjectView(R.id.views)
     ScrollLayout lst_views;
-    @InjectView(R.id.tv_page)
-    TextView tv_page;
-    @InjectView(R.id.run_image)
-    ImageView runImage;
-    @InjectView(R.id.dels)
-    ImageView delImage;
-    @InjectView(R.id.btnAdd)
-    Button btnAdd;
+
+    @InjectView(R.id.btnUser)
+    ImageButton btnUser;
+
     @InjectView(R.id.btnSettings)
-    Button btnSettings;
+    ImageButton btnSettings;
 
-    @InjectView(R.id.btnDownload)
-    Button btnDownload;
     @InjectView(R.id.btnSearch)
-    Button btnSearch;
+    ImageButton btnSearch;
 
-
-
-    float bitmap_width, bitmap_height;
     LinearLayout.LayoutParams param;
-    TranslateAnimation left, right;
-    Animation up, down;
     ArrayList<DragGridView> gridviews = new ArrayList<DragGridView>();
     ArrayList<List<Category>> lists = new ArrayList<List<Category>>();// 全部数据的集合集lists.size()==countpage;
     List<Category> lstDate = new ArrayList<Category>();// 每一页的数据
@@ -122,7 +114,7 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
         map_none.setTITLE("none");
 
         if (lstDate.size() == 0)
-            Toast.makeText(MainActivity.this, "网络有点不给力哦", 2200).show();
+            Toast.makeText(MainActivity.this, "网络有点不给力哦", Toast.LENGTH_LONG).show();
         init();
         initData();
         initPath();
@@ -130,13 +122,6 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
         for (int i = 0; i < Configure.countPages; i++) {
             lst_views.addView(addGridView(i));
         }
-
-        lst_views.setPageListener(new ScrollLayout.PageListener() {
-            @Override
-            public void page(int page) {
-                setCurPage(page);
-            }
-        });
 
         vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -148,15 +133,8 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
 
     private void initButtons() {
 
-        btnAdd.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
-                startActivity(intent);
-            }
-        });
 
-        btnSettings.setOnClickListener(new OnClickListener() {
+        btnUser.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, UserCenterActivity.class);
@@ -174,12 +152,19 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
                     Log.e("search", "false");
             }
         });
+
+        btnSettings.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
     public void init() {
 
-        tv_page.setText("1");
         Configure.inits(MainActivity.this);
         param = new LinearLayout.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
@@ -274,52 +259,8 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
             }
         });
         gridView.setSelector(R.drawable.selector_null);
-        gridView.setPageListener(new DragGridView.G_PageListener() {
-            @Override
-            public void page(int cases, int page) {
-                switch (cases) {
-                    case 0:// 滑动页面
-                        lst_views.snapToScreen(page);
-                        setCurPage(page);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Configure.isChangingPage = false;
-                            }
-                        }, 800);
-                        break;
-                    case 1:// 删除按钮上来
-                        delImage.setBackgroundResource(R.drawable.del);
-                        delImage.setVisibility(0);
-                        delImage.startAnimation(up);
-                        break;
-                    case 2:// 删除按钮变深
-                        delImage.setBackgroundResource(R.drawable.del_check);
-                        Configure.isDelDark = true;
-                        break;
-                    case 3:// 删除按钮变淡
-                        delImage.setBackgroundResource(R.drawable.del);
-                        Configure.isDelDark = false;
-                        break;
-                    case 4:// 删除按钮下去
-                        delImage.startAnimation(down);
-                        break;
-                    case 5:// 松手动作
-                        delImage.startAnimation(down);
-                        Category delLauncher = lists.get(Configure.curentPage).remove(
-                                Configure.removeItem);
-                        lists.get(Configure.curentPage).add(map_none);
 
-                        ((DragGridAdapter) ((gridviews.get(Configure.curentPage))
-                                .getAdapter())).notifyDataSetChanged();
 
-                        delLauncher.setCHOICE(false);
-                        database.updateChoice(delLauncher);
-
-                        break;
-                }
-            }
-        });
         gridView.setOnItemChangeListener(new DragGridView.G_ItemChangeListener() {
             @Override
             public void change(int from, int to, int count) {
@@ -344,26 +285,6 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
         return linear;
     }
 
-    public void setCurPage(final int page) {
-        Animation a = MyAnimations.getScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, 300);
-        a.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                tv_page.setText((page + 1) + "");
-                tv_page.startAnimation(MyAnimations.getScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 300));
-            }
-        });
-        tv_page.startAnimation(a);
-
-    }
 
     public void initPath() {
         MyAnimations.initOffset(MainActivity.this);
@@ -419,7 +340,7 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
 
                 } else {
                     finishCount = true;
-                    Toast.makeText(MainActivity.this, "再按一次返回键退出", 2000).show();
+                    Toast.makeText(MainActivity.this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -484,5 +405,20 @@ public class MainActivity extends RoboActivity implements ShakeListener.OnShakeL
             intent.putExtra("objectKey", objectkey.split(":")[0] + "smallthumb/");
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
     }
 }
