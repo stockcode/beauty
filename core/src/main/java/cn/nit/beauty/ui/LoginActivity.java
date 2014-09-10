@@ -21,6 +21,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.tencent.connect.UserInfo;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -48,7 +49,9 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
     private EditText username, passwd;
 
 	private boolean mShowMenu = false;
-	
+
+    private Tencent mTencent;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
@@ -94,7 +97,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
 	}
 
     private void showQQDialog() {
-        Tencent mTencent = Tencent.createInstance(Data.QQ_APP_ID, getApplicationContext());
+        mTencent = Tencent.createInstance(Data.QQ_APP_ID, getApplicationContext());
         if (!mTencent.isSessionValid())
         {
             mTencent.login(this, "", new BaseUiListener());
@@ -189,7 +192,11 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
 
         @Override
         public void onComplete(Object o) {
-
+            JSONObject json = (JSONObject) o;
+            if (json.has("nickname")
+            UserInfo info = new UserInfo(getApplicationContext(), mTencent.getQQToken());
+            info.getUserInfo(this);
+            Toast.makeText(LoginActivity.this, o.toString(), Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -199,7 +206,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
         }
         @Override
         public void onCancel() {
-            //showResult("onCancel", "");
+            Toast.makeText(LoginActivity.this, "登录已取消", Toast.LENGTH_SHORT).show();
         }
     }
 }
