@@ -20,6 +20,8 @@ public class Data {
 	public final static String UPDATE_URL = "http://beauty-app.oss.aliyuncs.com/beauty/update.json";
     public final static String mbApiKey = "6NxlGErC78G5tGB2aWPblquO";//请替换申请客户端应用时获取的Api Key串
 
+    public final static String QQ_APP_ID = "1102386164";
+
     //合作身份者id，以2088开头的16位纯数字
     public static final String DEFAULT_PARTNER = "2088511310355822";
 

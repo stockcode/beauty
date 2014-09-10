@@ -41,6 +41,9 @@ dependencies {
 
     compile 'com.alipay:alipay:1.2'
     compile 'com.alipay:alipay_lib:1.2@aar'
+    compile 'com.tencent:opensdk:2.6'
+    compile 'com.tencent:mtasdk:2.0.0'
+    compile 'com.tencent:midsdk:2.1.0'
 }
 
 
