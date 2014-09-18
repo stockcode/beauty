@@ -135,6 +135,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
         Person person = new Person();
         person.setUsername(username.getText().toString());
         person.setPasswd(passwd.getText().toString());
+        person.setLogintype("beauty");
 
         LoginRequest loginRequest = new LoginRequest(person);
         spiceManager.execute(loginRequest, "login", DurationInMillis.ALWAYS_EXPIRED, new LoginRequestListener());
@@ -205,9 +206,10 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
                     person.setUsername(json.get("openid").toString());
                     person.setPasswd(json.get("openid").toString());
                 }
+
                 if (json.has("nickname")) {
                     person.setNickname(json.get("nickname").toString());
-                    person.setErr("QQ");
+                    person.setLogintype("QQ");
 
                     LoginRequest loginRequest = new LoginRequest(person);
                     spiceManager.execute(loginRequest, "login", DurationInMillis.ALWAYS_EXPIRED, new LoginRequestListener());

@@ -66,7 +66,7 @@ public class UserCenterActivity extends RoboActivity {
                     .setMessage("确认登出吗")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            authenticator.Logout();
+                            authenticator.Logout(getApplicationContext());
                             checkUserStatus();
                             Toast.makeText(UserCenterActivity.this, "已退出登录", Toast.LENGTH_SHORT).show();
                         }
@@ -108,7 +108,7 @@ public class UserCenterActivity extends RoboActivity {
 
     private void checkUserStatus() {
         if (authenticator.isLogin()) {
-            tvNickname.setText(authenticator.getUsername());
+            tvNickname.setText(authenticator.getNickname());
             tvRenew_info.setText("会员到期日:\r\n" + authenticator.getExpiredDate());
             my_viewflipper.setDisplayedChild(1);
             ivLogout.setOnClickListener(logoutClickListener);

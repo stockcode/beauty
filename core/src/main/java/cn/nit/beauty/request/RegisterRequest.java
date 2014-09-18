@@ -34,6 +34,7 @@ public class RegisterRequest extends SpringAndroidSpiceRequest<Person> {
         parameters.set("passwd", person.getPasswd());
         parameters.set("email", person.getEmail());
         parameters.set("phone", person.getPhone());
+        parameters.set("logintype", person.getLogintype());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

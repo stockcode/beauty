@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import cn.nit.beauty.model.Person;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.tencent.tauth.Tencent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,6 +30,7 @@ public class Authenticator {
         settings.edit().putString("pkid", person.getPkid())
                 .putString("username", person.getUsername())
                 .putString("nickname", person.getNickname())
+                .putString("logintype", person.getLogintype())
                 .putInt("type", person.getType())
                 .putString("expiredDate",android.text.format.DateFormat.format("yyyy-MM-dd",person.getExpiredDate()).toString())
                 .apply();
@@ -46,6 +48,10 @@ public class Authenticator {
         return settings.getString("nickname", "");
     }
 
+    public String getLogintype(){
+        return settings.getString("logintype", "beauty");
+    }
+
     public String getExpiredDate(){
         return settings.getString("expiredDate", "");
     }
@@ -58,8 +64,13 @@ public class Authenticator {
         return settings.getInt("type", 0) == 0;
     }
 
-    public void Logout() {
+    public void Logout(Context context) {
         settings.edit().remove("pkid").remove("username").remove("type").remove("expiredDate").apply();
+
+        if (getLogintype().equals("QQ")) {
+            Tencent mTencent = Tencent.createInstance(Data.QQ_APP_ID, context);
+            mTencent.logout(context);
+        }
     }
 
     public void Upgrade(String totalfee) {

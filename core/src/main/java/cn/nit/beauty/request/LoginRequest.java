@@ -29,6 +29,8 @@ public class LoginRequest extends SpringAndroidSpiceRequest<Person> {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<String, String>();
         parameters.set("username", person.getUsername());
         parameters.set("passwd", person.getPasswd());
+        parameters.set("nickname", person.getNickname());
+        parameters.set("logintype", person.getLogintype());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

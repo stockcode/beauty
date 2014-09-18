@@ -73,6 +73,7 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
         Person person = new Person();
         person.setUsername(username.getText().toString());
         person.setPasswd(password.getText().toString());
+        person.setLogintype("beauty");
 
         RegisterRequest registerRequest = new RegisterRequest(person);
 

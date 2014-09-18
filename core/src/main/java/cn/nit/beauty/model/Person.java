@@ -19,6 +19,7 @@ public class Person implements Serializable {
     private String email;
     private String phone;
     private String err;
+    private String logintype;
 
     public String getPkid() {
         return pkid;
@@ -106,6 +107,14 @@ public class Person implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getLogintype() {
+        return logintype;
+    }
+
+    public void setLogintype(String logintype) {
+        this.logintype = logintype;
     }
 
     @Override
