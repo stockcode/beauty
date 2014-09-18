@@ -25,6 +25,7 @@ import com.tencent.connect.UserInfo;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import org.json.JSONException;
 import org.json.JSONObject;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
@@ -51,6 +52,8 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
 	private boolean mShowMenu = false;
 
     private Tencent mTencent;
+
+    private Person person;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +103,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
         mTencent = Tencent.createInstance(Data.QQ_APP_ID, getApplicationContext());
         if (!mTencent.isSessionValid())
         {
+            person = new Person();
             mTencent.login(this, "", new BaseUiListener());
         }
     }
@@ -135,14 +139,18 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
         LoginRequest loginRequest = new LoginRequest(person);
         spiceManager.execute(loginRequest, "login", DurationInMillis.ALWAYS_EXPIRED, new LoginRequestListener());
 
-		if (mDialog != null)
-		{
-			mDialog.dismiss();
-			mDialog = null;
-		}
-		mDialog = DialogFactory.creatRequestDialog(this, "正在验证账号...");
-		mDialog.show();
+        showProcessDialog("正在验证账号...");
 	}
+
+    private void showProcessDialog(String message) {
+        if (mDialog != null)
+        {
+            mDialog.dismiss();
+            mDialog = null;
+        }
+        mDialog = DialogFactory.creatRequestDialog(this, message);
+        mDialog.show();
+    }
 
 
     private class LoginRequestListener implements RequestListener<Person> {
@@ -187,17 +195,34 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
 
     private class BaseUiListener implements IUiListener {
 
-        protected void doComplete(JSONObject values) {
-        }
-
         @Override
         public void onComplete(Object o) {
             JSONObject json = (JSONObject) o;
-            if (json.has("nickname")
-            UserInfo info = new UserInfo(getApplicationContext(), mTencent.getQQToken());
-            info.getUserInfo(this);
-            Toast.makeText(LoginActivity.this, o.toString(), Toast.LENGTH_SHORT).show();
+
+            try {
+
+                if (json.has("openid")) {
+                    person.setUsername(json.get("openid").toString());
+                    person.setPasswd(json.get("openid").toString());
+                }
+                if (json.has("nickname")) {
+                    person.setNickname(json.get("nickname").toString());
+                    person.setErr("QQ");
+
+                    LoginRequest loginRequest = new LoginRequest(person);
+                    spiceManager.execute(loginRequest, "login", DurationInMillis.ALWAYS_EXPIRED, new LoginRequestListener());
+
+                    showProcessDialog("正在验证账号...");
+
+                } else {
+                    UserInfo info = new UserInfo(getApplicationContext(), mTencent.getQQToken());
+                    info.getUserInfo(this);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
 
         @Override
         public void onError(UiError e) {

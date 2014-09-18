@@ -28,6 +28,7 @@ public class Authenticator {
     public void Save(Person person) {
         settings.edit().putString("pkid", person.getPkid())
                 .putString("username", person.getUsername())
+                .putString("nickname", person.getNickname())
                 .putInt("type", person.getType())
                 .putString("expiredDate",android.text.format.DateFormat.format("yyyy-MM-dd",person.getExpiredDate()).toString())
                 .apply();
@@ -39,6 +40,10 @@ public class Authenticator {
 
     public String getUsername(){
         return settings.getString("username", "");
+    }
+
+    public String getNickname(){
+        return settings.getString("nickname", "");
     }
 
     public String getExpiredDate(){

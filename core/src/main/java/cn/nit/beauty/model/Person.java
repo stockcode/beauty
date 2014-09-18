@@ -9,6 +9,7 @@ import java.util.Date;
 public class Person implements Serializable {
 
     private String pkid;
+    private String nickname;
 	private String username;
 	private String passwd;
     private Date regDate;
@@ -97,6 +98,14 @@ public class Person implements Serializable {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     @Override
