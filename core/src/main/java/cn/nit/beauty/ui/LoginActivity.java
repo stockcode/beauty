@@ -3,6 +3,7 @@ package cn.nit.beauty.ui;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,7 +45,10 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
 
-	private Button mBtnRegister;
+    @InjectView(R.id.regist)
+	private TextView mBtnRegister;
+
+    @InjectView(R.id.login)
 	private Button mBtnLogin;
 
     private EditText username, passwd;
@@ -68,10 +72,11 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
         username = (EditText) findViewById(R.id.accounts);
         passwd = (EditText)findViewById(R.id.password);
 
-        mBtnRegister = (Button) findViewById(R.id.regist);
+        mBtnRegister.setPaintFlags(mBtnRegister.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
     	mBtnRegister.setOnClickListener(this);
-    	
-    	mBtnLogin = (Button) findViewById(R.id.login);
+
+
+
     	mBtnLogin.setOnClickListener(this);
 
         btnQQ.setOnClickListener(this);

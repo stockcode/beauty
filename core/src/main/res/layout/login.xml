@@ -3,14 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="用户登录"
-            android:layout_gravity="center" />
+    xmlns:android="http://schemas.android.com/apk/res/android" android:background="#FFFFFF">
 
     <LinearLayout
         android:orientation="vertical"
@@ -20,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="28.0dip"
         android:layout_marginRight="28.0dip"
-        android:layout_below="@id/image">
+        android:layout_below="@id/image" android:layout_marginTop="60dip">
         <EditText android:textSize="16.0sp" android:textColor="#ff1d1d1d" android:textColorHint="#ff666666" android:id="@+id/accounts" android:background="#00ffffff" android:paddingLeft="12.0dip" android:layout_width="fill_parent" android:layout_height="44.0dip" android:hint="@string/account" android:maxLines="1" android:maxLength="50"/>
         <View android:background="#ffc0c3c4" android:layout_width="fill_parent" android:layout_height="1.0px" android:layout_marginLeft="1.0px" android:layout_marginRight="1.0px" />
         <EditText android:textSize="16.0sp" android:textColor="#ff1d1d1d" android:textColorHint="#ff666666" android:gravity="center_vertical" android:id="@+id/password" android:background="#00ffffff" android:paddingLeft="12.0dip" android:layout_width="fill_parent" android:layout_height="44.0dip" android:hint="@string/password" android:maxLines="1" android:maxLength="50" android:inputType="textPassword" />
@@ -29,15 +22,15 @@
 
     <Button
         android:textSize="18.0sp"
-        android:textColor="#ff333333"
+        android:textColor="#FFFFFF"
         android:gravity="center"
         android:id="@+id/login"
-        android:background="@drawable/chat_send_button_bg"
+        android:background="#ee1d6d"
         android:paddingTop="5.0dip"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="28.0dip"
-        android:layout_marginTop="12.0dip"
+        android:layout_marginTop="30.0dip"
         android:layout_marginRight="28.0dip"
         android:text="@string/login"
         android:layout_below="@id/input" />
@@ -47,13 +40,33 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30.0dip"
-        android:layout_marginTop="8.0dip"
+        android:layout_marginTop="30.0dip"
         android:layout_marginRight="30.0dip"
         android:layout_below="@id/login"
-        android:layout_weight="1">
-        <Button  android:textSize="12.0sp" android:textColor="#ffffffff" android:layout_alignParentRight="true" android:gravity="left|center"  android:id="@+id/regist" android:background="@drawable/login_regist_bg" android:paddingLeft="8.0dip" android:paddingRight="18.0dip" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/register2" />
+        android:gravity="center_horizontal">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="还没有账号，立即"
+                android:id="@+id/textView" android:textColor="#ee1d6d"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="注册"
+                android:id="@+id/regist" android:singleLine="true" android:textColor="#c9cacc"/>
     </LinearLayout>
 
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="20dip">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView" android:layout_gravity="center_horizontal" android:src="@drawable/or"/>
+    </LinearLayout>
     <View
             android:layout_width="fill_parent"
             android:layout_height="1px"
@@ -63,19 +76,62 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:gravity="center_horizontal" android:layout_marginTop="10dip">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceMedium" android:text="或者选择您的社交账户快速登录丽图"
+                  android:id="@+id/textView2" android:textColor="#ee1d6d" android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true" android:layout_marginTop="60dip"
+            android:gravity="center_horizontal">
 
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnQQ" android:layout_gravity="center_vertical" android:src="@drawable/qq"
-                android:scaleType="fitCenter"/>
-        <ImageButton
-                android:layout_width="118dp"
-                android:layout_height="114dp"
-                android:id="@+id/btnWeiXin" android:layout_gravity="center_vertical" android:src="@drawable/weixin"
-                android:scaleType="fitCenter"/>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="120dip"
+                android:layout_height="fill_parent" android:gravity="center_horizontal">
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="100dip"
+                    android:layout_height="100dip" android:background="@drawable/border"
+                    android:gravity="center_vertical|center_horizontal" android:layout_marginRight="10dip">
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btnQQ" android:layout_gravity="center_vertical" android:src="@drawable/qq"
+                        android:scaleType="fitCenter" android:background="#00000000"/>
+            </LinearLayout>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="QQ"
+                    android:id="@+id/textView3" android:textColor="#bcbcbc" android:layout_marginRight="10dip"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="120dip"
+                android:layout_height="fill_parent" android:gravity="center_horizontal">
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="100dip"
+                    android:layout_height="100dip" android:gravity="center_horizontal"
+                    android:layout_marginLeft="10dip" android:background="@drawable/border">
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btnWeiXin" android:layout_gravity="center_vertical" android:src="@drawable/weixin"
+                        android:scaleType="fitCenter" android:background="#00000000"/>
+            </LinearLayout>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="微信"
+                    android:id="@+id/textView4" android:textColor="#bcbcbc" android:layout_marginLeft="10dip"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
