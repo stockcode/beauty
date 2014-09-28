@@ -37,10 +37,10 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
     Authenticator authenticator;
 
     @InjectView(R.id.btnQQ)
-    ImageButton btnQQ;
+    LinearLayout btnQQ;
 
     @InjectView(R.id.btnWeiXin)
-    ImageButton btnWeiXin;
+    LinearLayout btnWeiXin;
 
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
