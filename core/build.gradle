@@ -25,7 +25,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
     //compile  'com.github.chrisbanes.photoview:library:1.2.1'
-    compile  'de.greenrobot:eventbus:2.0.2'
     compile  'com.baidu.android:mobstat:3.1'
     compile  'com.baidu.android:pushservice:4.0.0'
     compile 'ch.acra:acra:4.5.0'

@@ -31,9 +31,6 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
 
-    @InjectView(R.id.register_btn)
-	private Button mBtnRegister;
-
     @InjectView(R.id.username)
     private TextView username;
 
@@ -44,16 +41,9 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		initView();
-		
+
 	}
-	
-	
-	public void initView()
-	{
-		mBtnRegister.setOnClickListener(this);
-	}
+
 
     @Override
     protected void onStart() {
@@ -68,38 +58,31 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
     }
 
 	private Dialog mDialog = null;
-	private void showRequestDialog()
-	{
+
+
+	@Override
+	public void onClick(View v) {
         Person person = new Person();
         person.setUsername(username.getText().toString());
         person.setPasswd(password.getText().toString());
         person.setLogintype("beauty");
 
+        if (person.getUsername().equals("")) {
+            Toast.makeText(RegisterActivity.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         RegisterRequest registerRequest = new RegisterRequest(person);
 
         spiceManager.execute(registerRequest, "register", DurationInMillis.ONE_SECOND, new RegisterRequestListener());
 
-		if (mDialog != null)
-		{
-			mDialog.dismiss();
-			mDialog = null;
-		}
-		mDialog = DialogFactory.creatRequestDialog(this, "正在注册中...");
-		mDialog.show();
-	}
-
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		switch(v.getId())
-		{
-		case R.id.register_btn:
-			showRequestDialog();
-			break;
-			default:
-				break;
-		}
+        if (mDialog != null)
+        {
+            mDialog.dismiss();
+            mDialog = null;
+        }
+        mDialog = DialogFactory.creatRequestDialog(this, "正在注册中...");
+        mDialog.show();
 	}
 
     private class RegisterRequestListener implements RequestListener<Person> {
