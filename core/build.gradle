@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.10.+'
+        classpath 'com.android.tools.build:gradle:0.13.+'
     }
 }
 
@@ -48,7 +48,7 @@ dependencies {
 }
 
 
-tasks.withType(Compile) { compileTask -> compileTask.dependsOn copyNativeLibs }
+tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn copyNativeLibs }
 tasks.withType(com.android.build.gradle.tasks.PackageApplication) { pkgTask ->
     pkgTask.jniFolders = new HashSet<File>()
     pkgTask.jniFolders.add(new File(projectDir, 'native-libs'))
@@ -98,7 +98,7 @@ android {
 
     buildTypes {
         debug {
-            packageNameSuffix = ".debug"
+            applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
             //signingConfig signingConfigs.debug
         }
@@ -112,7 +112,7 @@ android {
 
     productFlavors {
         mm {
-            packageName "cn.nit.beauty"
+            applicationId "cn.nit.beauty"
 
         }
     }

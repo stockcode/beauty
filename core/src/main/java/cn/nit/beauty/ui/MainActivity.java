@@ -1,23 +1,15 @@
 package cn.nit.beauty.ui;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.*;
 
 import cn.nit.beauty.ui.listener.ShakeListener;
@@ -26,7 +18,6 @@ import com.baidu.mobstat.StatService;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.lurencun.service.autoupdate.AppUpdate;
 import com.lurencun.service.autoupdate.AppUpdateService;
-import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +30,12 @@ import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.DragGridView;
-import cn.nit.beauty.widget.MyAnimations;
 import cn.nit.beauty.widget.ScrollLayout;
 import de.greenrobot.event.EventBus;
-import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
-@ContentView(R.layout.layout_milaucher)
+@ContentView(R.layout.main)
 public class MainActivity extends RoboSherlockActivity implements ShakeListener.OnShakeListener, ActionBar.TabListener {
 
     private ShakeListener mShaker;
