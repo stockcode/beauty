@@ -54,7 +54,7 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
      */
 
     @InjectView(R.id.views)
-    ScrollLayout lst_views;
+    LinearLayout lst_views;
 
     @InjectView(R.id.btnUser)
     ImageButton btnUser;
@@ -66,7 +66,7 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
     ImageButton btnSearch;
 
     LinearLayout.LayoutParams param;
-    ArrayList<DragGridView> gridviews = new ArrayList<DragGridView>();
+    ArrayList<GridView> gridviews = new ArrayList<GridView>();
     ArrayList<List<Category>> lists = new ArrayList<List<Category>>();// 全部数据的集合集lists.size()==countpage;
     List<Category> lstDate = new ArrayList<Category>();// 每一页的数据
 
@@ -165,27 +165,6 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
         }
     }
 
-    public void CleanItems() {
-        lstDate = new ArrayList<Category>();
-        for (int i = 0; i < lists.size(); i++) {
-            for (int j = 0; j < lists.get(i).size(); j++) {
-                if (lists.get(i).get(j).getTITLE() != null
-                        && !lists.get(i).get(j).getTITLE().equals("none")) {
-                    lstDate.add(lists.get(i).get(j));
-                }
-            }
-        }
-        initData();
-        lst_views.removeAllViews();
-        gridviews = new ArrayList<DragGridView>();
-        for (int i = 0; i < Configure.countPages; i++) {
-            lst_views.addView(addGridView(i));
-        }
-        isClean = false;
-        lst_views.snapToScreen(0);
-    }
-
-
 
     public int getFristNonePosition(List<Category> array) {
         for (int i = 0; i < array.size(); i++) {
@@ -203,7 +182,8 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
 
         LinearLayout linear = new LinearLayout(MainActivity.this);
 
-        DragGridView gridView = new DragGridView(MainActivity.this);
+        GridView gridView = new GridView(MainActivity.this);
+
         gridView.setAdapter(new DragGridAdapter(MainActivity.this, gridView, lists
                 .get(i)));
         gridView.setNumColumns(2);
