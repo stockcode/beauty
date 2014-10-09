@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -23,6 +24,12 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.tencent.connect.UserInfo;
+import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.modelbase.BaseResp;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -31,16 +38,13 @@ import org.json.JSONObject;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
-public class LoginActivity extends RoboActivity implements OnClickListener{
+public class LoginActivity extends RoboActivity implements OnClickListener {
 
     @Inject
     Authenticator authenticator;
 
     @InjectView(R.id.btnQQ)
     LinearLayout btnQQ;
-
-    @InjectView(R.id.btnWeiXin)
-    LinearLayout btnWeiXin;
 
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
@@ -58,11 +62,16 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
     private Tencent mTencent;
 
     private Person person;
+    IWXAPI api;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         initView();
+
+        api = WXAPIFactory.createWXAPI(this, Data.WEIXIN_APP_ID, false);
+
+        api.registerApp(Data.WEIXIN_APP_ID);
 
     }
     
@@ -81,9 +90,14 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
 
         btnQQ.setOnClickListener(this);
     }
-    
 
 
+    public void onWeiXinClick(View v) {
+        final SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        req.state = "beauty";
+        api.sendReq(req);
+    }
 
 	@Override
 	public void onClick(View v) {
@@ -157,6 +171,8 @@ public class LoginActivity extends RoboActivity implements OnClickListener{
         mDialog = DialogFactory.creatRequestDialog(this, message);
         mDialog.show();
     }
+
+
 
 
     private class LoginRequestListener implements RequestListener<Person> {

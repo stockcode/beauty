@@ -12,21 +12,20 @@ apply plugin: 'android'
 
 repositories {
     mavenLocal()
-    //mavenRepo urls: "file:///C:/Users/vicky/.m2/repository"
     mavenCentral()
 }
 
 dependencies {
     compile 'com.google.android:support-v4:r13'
-    compile  'de.greenrobot:greendao:1.3.1'
-    compile  'com.github.rtyley:roboguice-sherlock:1.5'
+    compile 'de.greenrobot:greendao:1.3.1'
+    compile 'com.github.rtyley:roboguice-sherlock:1.5'
     compile 'com.octo.android.robospice:robospice:1.4.11'
     compile 'com.octo.android.robospice:robospice-spring-android:1.4.11'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
     //compile  'com.github.chrisbanes.photoview:library:1.2.1'
-    compile  'com.baidu.android:mobstat:3.1'
-    compile  'com.baidu.android:pushservice:4.0.0'
+    compile 'com.baidu.android:mobstat:3.1'
+    compile 'com.baidu.android:pushservice:4.0.0'
     compile 'ch.acra:acra:4.5.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.6'
     compile 'cn.nit:autoupdate:1.0.0@aar'
@@ -35,15 +34,13 @@ dependencies {
     //compile 'me.maxwin.view:OneXListview:1.0.0'
     //compile 'com.origamilabs.library:staggeredgridview:1.0.0'
     //compile 'org.lucasr.smoothie:library:0.1'
-
     compile 'org.apache.httpcomponents:httpmime:4.2.5'
-
     compile 'com.alipay:alipay:1.2'
     compile 'com.alipay:alipay_lib:1.2@aar'
-
     compile 'com.tencent:opensdk:2.6'
     compile 'com.tencent:mtasdk:2.0.0'
     compile 'com.tencent:midsdk:2.1.0'
+    compile 'com.tencent:mmsdk:1.0.0'
 }
 
 
@@ -76,11 +73,11 @@ android {
 //        minSdkVersion 7
 //        targetSdkVersion 16
         versionCode 15
-        versionName "1.1.15"
+        versionName '1.1.15'
     }
 
     compileSdkVersion 17
-    buildToolsVersion "19.1.0"
+    buildToolsVersion '19.1.0'
 
     project.archivesBaseName = "beauty";
 
@@ -97,22 +94,16 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-DEBUG"
-            //signingConfig signingConfigs.debug
         }
-
         release {
             signingConfig signingConfigs.release
         }
-
     }
 
 
     productFlavors {
         mm {
-            applicationId "cn.nit.beauty"
-
+            applicationId 'cn.nit.beauty'
         }
     }
 

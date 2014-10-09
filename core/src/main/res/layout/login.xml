@@ -132,7 +132,7 @@
                 android:layout_width="120dip"
                 android:layout_height="fill_parent" android:gravity="center_horizontal">
             <LinearLayout
-                    android:id="@+id/btnWeiXin"
+                    android:onClick="onWeiXinClick"
                     android:orientation="horizontal"
                     android:layout_width="100dip"
                     android:layout_height="100dip" android:gravity="center_horizontal"
