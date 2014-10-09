@@ -21,6 +21,7 @@ dependencies {
     compile 'com.github.rtyley:roboguice-sherlock:1.5'
     compile 'com.octo.android.robospice:robospice:1.4.11'
     compile 'com.octo.android.robospice:robospice-spring-android:1.4.11'
+    compile 'com.loopj.android:android-async-http:1.4.5'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
     //compile  'com.github.chrisbanes.photoview:library:1.2.1'

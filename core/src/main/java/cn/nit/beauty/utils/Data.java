@@ -23,6 +23,7 @@ public class Data {
     public final static String QQ_APP_ID = "1102386164";
 
     public final static String WEIXIN_APP_ID = "wx337be4a60c68e521";
+    public final static String WEIXIN_APP_SECRET = "a912aeab7224fcbcbdbd5b71b60434a5";
 
     //合作身份者id，以2088开头的16位纯数字
     public static final String DEFAULT_PARTNER = "2088511310355822";

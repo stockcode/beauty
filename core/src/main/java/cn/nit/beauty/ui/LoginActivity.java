@@ -97,6 +97,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
         req.scope = "snsapi_userinfo";
         req.state = "beauty";
         api.sendReq(req);
+        finish();
     }
 
 	@Override
@@ -148,7 +149,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
     }
 	   
 
-	private Dialog mDialog = null;
+
 	private void showRequestDialog()
 	{
         Person person = new Person();
@@ -162,6 +163,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
         showProcessDialog("正在验证账号...");
 	}
 
+    private Dialog mDialog = null;
     private void showProcessDialog(String message) {
         if (mDialog != null)
         {
