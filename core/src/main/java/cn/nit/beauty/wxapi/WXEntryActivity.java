@@ -91,14 +91,11 @@ public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler 
                         params.put("openid", response.getString("openid"));
                         client.get("https://api.weixin.qq.com/sns/userinfo", params, new JsonHttpResponseHandler(){
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                Log.e("weixin", response.toString());
                                 try {
                                     Person person = new Person();
 
                                     person.setUsername(response.getString("openid"));
                                     person.setPasswd(response.getString("openid"));
-
-
                                     person.setNickname(response.getString("nickname"));
                                     person.setLogintype("WEIXIN");
 

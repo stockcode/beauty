@@ -43,9 +43,6 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
     @Inject
     Authenticator authenticator;
 
-    @InjectView(R.id.btnQQ)
-    LinearLayout btnQQ;
-
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
 
@@ -88,7 +85,6 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
 
     	mBtnLogin.setOnClickListener(this);
 
-        btnQQ.setOnClickListener(this);
     }
 
 
@@ -112,14 +108,11 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
 		case R.id.login:
 			showRequestDialog();
 			break;
-        case R.id.btnQQ:
-            showQQDialog();
-            break;
 			default:
 		}
 	}
 
-    private void showQQDialog() {
+    public void onQQClick(View v) {
         mTencent = Tencent.createInstance(Data.QQ_APP_ID, getApplicationContext());
         if (!mTencent.isSessionValid())
         {
@@ -231,6 +224,9 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
                 }
 
                 if (json.has("nickname")) {
+
+                    mTencent.logout(getApplicationContext());
+
                     person.setNickname(json.get("nickname").toString());
                     person.setLogintype("QQ");
 

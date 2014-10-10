@@ -66,7 +66,7 @@ public class UserCenterActivity extends RoboActivity {
                     .setMessage("确认登出吗")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            authenticator.Logout(getApplicationContext());
+                            authenticator.Logout();
                             checkUserStatus();
                             Toast.makeText(UserCenterActivity.this, "已退出登录", Toast.LENGTH_SHORT).show();
                         }

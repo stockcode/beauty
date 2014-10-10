@@ -64,13 +64,8 @@ public class Authenticator {
         return settings.getInt("type", 0) == 0;
     }
 
-    public void Logout(Context context) {
+    public void Logout() {
         settings.edit().remove("pkid").remove("username").remove("type").remove("expiredDate").apply();
-
-        if (getLogintype().equals("QQ")) {
-            Tencent mTencent = Tencent.createInstance(Data.QQ_APP_ID, context);
-            mTencent.logout(context);
-        }
     }
 
     public void Upgrade(String totalfee) {

@@ -113,8 +113,9 @@
                     android:layout_width="100dip"
                     android:layout_height="100dip" android:background="@drawable/border"
                     android:gravity="center_vertical|center_horizontal" android:layout_marginRight="10dip"
-                    android:id="@+id/btnQQ">
+                    android:onClick="onQQClick" >
                 <ImageButton
+                        android:onClick="onQQClick"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical" android:src="@drawable/qq"
@@ -140,6 +141,7 @@
                 <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:onClick="onWeiXinClick"
                         android:layout_gravity="center_vertical" android:src="@drawable/weixin"
                         android:scaleType="fitCenter" android:background="#00000000"/>
             </LinearLayout>
