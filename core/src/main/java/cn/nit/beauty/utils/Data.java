@@ -15,6 +15,8 @@ import cn.nit.beauty.R;
 public class Data {
 	public static int ItemCount = 8;
 
+    public static final String TAG = Data.class.getSimpleName();
+
     public final static String AUTH_URL = "http://www.matesapp.cn:8080/beauty-ajax/api";
     public final static String OSS_URL = "http://beauty-photo.oss.aliyuncs.com/";
 	public final static String UPDATE_URL = "http://beauty-app.oss.aliyuncs.com/beauty/update.json";

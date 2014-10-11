@@ -5,9 +5,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
+import cn.nit.beauty.utils.L;
 
 import java.io.*;
 
@@ -56,6 +58,23 @@ public class Utils {
                 DeleteRecursive(child);
 
         fileOrDirectory.delete();
+    }
+
+    public static File getRootDirectory() {
+        File dataDir = new File(new File(Environment.getExternalStorageDirectory(), "beauty"), "saved");
+        if (!dataDir.exists()) {
+            if (!dataDir.mkdirs()) {
+                L.w("Unable to create external cache directory");
+
+                dataDir = new File(new File(Environment.getRootDirectory(), "beauty"), "saved");
+                if (!dataDir.exists()) {
+                    if (dataDir.mkdirs()) {
+                        return dataDir;
+                    }
+                }
+            }
+        }
+        return dataDir;
     }
 
     public static long getFolderSize(File dir) {

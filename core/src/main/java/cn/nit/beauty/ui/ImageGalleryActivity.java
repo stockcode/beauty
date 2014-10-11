@@ -230,15 +230,17 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
 
         File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + imageSrc, ImageLoader.getInstance().getDiscCache());
 
-        String dir = StorageUtils.getCacheDirectory(this).getPath().replaceAll("cache", "image");
-        File imageDir = new File(dir);
-        if (!imageDir.exists()) imageDir.mkdir();
+        String dir = Utils.getRootDirectory().getPath();
 
         String dstFile = dir + imageSrc.substring(imageSrc.lastIndexOf("/"));
 
         Utils.copyFile(cacheFile.getAbsolutePath(), dstFile);
 
-        Toast.makeText(ImageGalleryActivity.this, "图片以保存到" + dstFile, Toast.LENGTH_LONG).show();
+        Toast.makeText(ImageGalleryActivity.this, "图片已保存至" + dir + "文件夹", Toast.LENGTH_LONG).show();
+
+        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        scanIntent.setData(Uri.fromFile(new File(dstFile)));
+        getApplicationContext().sendBroadcast(scanIntent);
     }
 
     private void changeOriginal() {
