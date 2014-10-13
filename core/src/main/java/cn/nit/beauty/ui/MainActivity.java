@@ -30,6 +30,7 @@ import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.DragGridView;
 import cn.nit.beauty.widget.ScrollLayout;
+import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
@@ -39,15 +40,8 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
     private ShakeListener mShaker;
     Vibrator vibe;
 
-    public static final int PAGE_SIZE = 8;
-    public int PAGE_COUNT = 2, PAGE_CURRENT = 0;
     LaucherDataBase database;
     private AppUpdate appUpdate;
-
-    Category map_none = new Category();
-    /**
-     * GridView.
-     */
 
     @InjectView(R.id.views)
     LinearLayout lst_views;
@@ -62,11 +56,7 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
     ImageButton btnSearch;
 
     LinearLayout.LayoutParams param;
-    ArrayList<List<Category>> lists = new ArrayList<List<Category>>();// 全部数据的集合集lists.size()==countpage;
     List<Category> lstDate = new ArrayList<Category>();// 每一页的数据
-
-    boolean isClean = false;
-    Vibrator vibrator;
 
     boolean finishCount = false;
 
@@ -75,17 +65,16 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
         super.onCreate(savedInstanceState);
 
         appUpdate = AppUpdateService.getAppUpdate(this);
-//        appUpdate.checkLatestVersionSilent(Data.UPDATE_URL,
-//                new SimpleJSONParser());
+        appUpdate.checkLatestVersionSilent(Data.UPDATE_URL,
+                new SimpleJSONParser());
 
         database = new LaucherDataBase(getApplicationContext());
 
         lstDate = database.getLauncher();
 
-        map_none.setTITLE("none");
-
         if (lstDate.size() == 0)
             Toast.makeText(MainActivity.this, "网络有点不给力哦", Toast.LENGTH_LONG).show();
+
         init();
 
             lst_views.addView(addGridView());
@@ -114,10 +103,7 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
         btnSearch.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onSearchRequested())
-                    Log.e("search", "true");
-                else
-                    Log.e("search", "false");
+                onSearchRequested();
             }
         });
 
@@ -207,18 +193,9 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
     protected void onPause() {
         super.onPause();
 
-        PAGE_COUNT = Configure.countPages;
-        PAGE_CURRENT = Configure.curentPage;
         StatService.onPause(this);
         appUpdate.callOnPause();
         mShaker.pause();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Configure.countPages = PAGE_COUNT;
-        Configure.curentPage = PAGE_CURRENT;
     }
 
     @Override

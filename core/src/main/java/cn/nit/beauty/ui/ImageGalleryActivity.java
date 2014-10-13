@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -91,7 +92,7 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
 
         setTitle(intent.getStringExtra("title"));
 
-        mViewPager = new HackyViewPager(this);
+        mViewPager = new ViewPager(this);
         setContentView(mViewPager);
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -164,8 +165,11 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
 
     public boolean onOptionsItemSelected(MenuItem mi) {
         switch (mi.getItemId()) {
-            case R.id.mnuPlay:
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
 
+            case R.id.mnuPlay:
                 autoPlay = true;
                 AutoPlayHandler autoPlayHandler = new AutoPlayHandler();
                 message = new Message();

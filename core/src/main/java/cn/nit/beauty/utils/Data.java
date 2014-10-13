@@ -47,7 +47,7 @@ public class Data {
 			R.drawable.daily, R.drawable.origin, R.drawable.add_fun,
 			R.drawable.add_weibo };
 
-	public static String[] Item0 = { "亚洲馆", "欧美馆", "中国馆","收藏馆","每日更新馆","原创馆"};
+	public static String[] Item0 = { "岛国风情", "欧美情调", "中国气质","艳门天下","每日更新","原创自拍"};
 	public static Map<String, List<String>> categoryMap = new HashMap<String, List<String>>();
 	public static int[] Item0_icon = { R.drawable.c_love_channel,R.drawable.c_net_new, R.drawable.c_user
 		,R.drawable.c_entertainment,R.drawable.c_financial,R.drawable.c_technoledge};
