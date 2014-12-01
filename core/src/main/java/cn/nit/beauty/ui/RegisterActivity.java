@@ -2,10 +2,12 @@ package cn.nit.beauty.ui;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.nit.beauty.R;
@@ -31,16 +33,23 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
 
-    @InjectView(R.id.username)
-    private TextView username;
+    @InjectView(R.id.nickname)
+    private EditText nickname;
+
+    @InjectView(R.id.phone)
+    private TextView phone;
 
     @InjectView(R.id.password)
-    private TextView password;
+    private EditText password;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+
+        phone.setText(intent.getStringExtra("phone"));
 
 	}
 
@@ -63,12 +72,14 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
         Person person = new Person();
-        person.setUsername(username.getText().toString());
+        person.setUsername(phone.getText().toString());
+        person.setPhone(phone.getText().toString());
+        person.setNickname(nickname.getText().toString());
         person.setPasswd(password.getText().toString());
         person.setLogintype("beauty");
 
-        if (person.getUsername().equals("")) {
-            Toast.makeText(RegisterActivity.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
+        if (person.getNickname().equals("")) {
+            Toast.makeText(RegisterActivity.this, "昵称不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -90,13 +101,18 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
         public void onRequestFailure(SpiceException e) {
             mDialog.dismiss();
             mDialog = null;
-            Toast.makeText(RegisterActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onRequestSuccess(Person person) {
             mDialog.dismiss();
             mDialog = null;
+
+            if (!person.getErr().equals("success")) {
+                Toast.makeText(RegisterActivity.this,person.getErr(), Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             authenticator.Save(person);
 

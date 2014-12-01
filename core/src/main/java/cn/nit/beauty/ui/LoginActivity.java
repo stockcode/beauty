@@ -17,6 +17,9 @@ import cn.nit.beauty.utils.Authenticator;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.utils.DialogFactory;
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
+import cn.smssdk.gui.RegisterPage;
 import com.google.inject.Inject;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -37,6 +40,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+
+import java.util.HashMap;
 
 public class LoginActivity extends RoboActivity implements OnClickListener {
 
@@ -135,10 +140,24 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
 
     public void goRegisterActivity()
     {
-    	Intent intent = new Intent();
-    	intent.setClass(this, RegisterActivity.class);
+        RegisterPage registerPage = new RegisterPage();
 
-        startActivityForResult(intent, Utils.REGISTER);
+        registerPage.setRegisterCallback(new EventHandler() {
+            public void afterEvent(int event, int result, Object data) {
+                // 解析注册结果
+                if (result == SMSSDK.RESULT_COMPLETE) {
+                    @SuppressWarnings("unchecked")
+                    HashMap<String,Object> phoneMap = (HashMap<String, Object>) data;
+                    String country = (String) phoneMap.get("country");
+                    String phone = (String) phoneMap.get("phone");
+
+                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                    intent.putExtra("phone", phone);
+                    startActivityForResult(intent, Utils.REGISTER);
+                }
+            }
+        });
+        registerPage.show(this);
     }
 	   
 

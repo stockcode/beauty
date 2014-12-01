@@ -41,19 +41,21 @@ dependencies {
     compile 'com.tencent:mtasdk:2.0.0'
     compile 'com.tencent:midsdk:2.1.0'
     compile 'com.tencent:mmsdk:1.0.0'
+
+    compile 'cn.nit:SMSSDK:1.0.0@aar'
 }
 
 
 tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn copyNativeLibs }
 tasks.withType(com.android.build.gradle.tasks.PackageApplication) { pkgTask ->
     pkgTask.jniFolders = new HashSet<File>()
-    pkgTask.jniFolders.add(new File(projectDir, 'native-libs'))
+    pkgTask.jniFolders.add(new File(buildDir, 'native-libs'))
 }
 
 
 task copyNativeLibs(type: Copy) {
         println 'call copyNativeLibs'
-        from fileTree(dir: 'libs', include: '**/*.so' )
+        from fileTree(dir: 'libs', exclude: '**/*.jar' )
         into 'build/native-libs'
     }
 
@@ -111,6 +113,10 @@ android {
         mm {
             applicationId 'cn.nit.beauty'
         }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 

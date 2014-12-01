@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.utils.Authenticator;
+import cn.smssdk.SMSSDK;
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.mobstat.StatService;
@@ -85,6 +86,8 @@ public class LoadingActivity extends Activity {
 
         IndexRequest indexRequest = new IndexRequest(Data.OSS_URL + Data.INDEX_KEY);
         spiceManager.execute(indexRequest, "beauty.index", DurationInMillis.ALWAYS_EXPIRED, new IndexRequestListener());
+
+        SMSSDK.initSDK(this, Data.SMS_APP_ID, Data.SMS_APP_SECRET);
     }
 
     @Override

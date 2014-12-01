@@ -31,6 +31,7 @@ public class RegisterRequest extends SpringAndroidSpiceRequest<Person> {
     public Person loadDataFromNetwork() throws Exception {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<String, String>();
         parameters.set("username", person.getUsername());
+        parameters.set("nickname", person.getNickname());
         parameters.set("passwd", person.getPasswd());
         parameters.set("email", person.getEmail());
         parameters.set("phone", person.getPhone());
