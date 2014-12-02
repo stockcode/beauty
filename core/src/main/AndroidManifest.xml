@@ -173,6 +173,11 @@
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"
                 android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <activity
+                android:name="cn.bmob.v3.update.UpdateDialogActivity"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
         <receiver android:name="cn.nit.beauty.PushMessageReceiver">
             <intent-filter>
                 <!-- 接收push消息 -->

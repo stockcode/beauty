@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import cn.bmob.v3.Bmob;
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.utils.Authenticator;
 import cn.smssdk.SMSSDK;
@@ -88,6 +89,8 @@ public class LoadingActivity extends Activity {
         spiceManager.execute(indexRequest, "beauty.index", DurationInMillis.ALWAYS_EXPIRED, new IndexRequestListener());
 
         SMSSDK.initSDK(this, Data.SMS_APP_ID, Data.SMS_APP_SECRET);
+
+        Bmob.initialize(this, "19fee4b5da44fc283e4c58e9f860ea96");
     }
 
     @Override

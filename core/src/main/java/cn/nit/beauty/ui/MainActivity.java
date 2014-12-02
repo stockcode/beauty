@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.nit.beauty.ui.listener.ShakeListener;
 import com.actionbarsherlock.app.ActionBar;
 import com.baidu.mobstat.StatService;
@@ -41,7 +43,6 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
     Vibrator vibe;
 
     LaucherDataBase database;
-    private AppUpdate appUpdate;
 
     @InjectView(R.id.views)
     LinearLayout lst_views;
@@ -64,9 +65,7 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        appUpdate = AppUpdateService.getAppUpdate(this);
-        appUpdate.checkLatestVersionSilent(Data.UPDATE_URL,
-                new SimpleJSONParser());
+        BmobUpdateAgent.initAppVersion(this);
 
         database = new LaucherDataBase(getApplicationContext());
 
@@ -194,7 +193,6 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
         super.onPause();
 
         StatService.onPause(this);
-        appUpdate.callOnPause();
         mShaker.pause();
     }
 
@@ -210,7 +208,6 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
 
         StatService.onResume(this);
 
-        appUpdate.callOnResume();
         mShaker.resume();
     }
 
