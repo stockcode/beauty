@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.bmob.v3.listener.SaveListener;
 import cn.nit.beauty.R;
 import cn.nit.beauty.model.Person;
 import cn.nit.beauty.request.RegisterRequest;
@@ -71,11 +72,11 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-        Person person = new Person();
+        final Person person = new Person();
         person.setUsername(phone.getText().toString());
         person.setPhone(phone.getText().toString());
         person.setNickname(nickname.getText().toString());
-        person.setPasswd(password.getText().toString());
+        person.setPassword(password.getText().toString());
         person.setLogintype("beauty");
 
         if (person.getNickname().equals("")) {
@@ -83,17 +84,31 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
             return;
         }
 
+        person.signUp(this, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                if (!person.getErr().equals("success")) {
+                    Toast.makeText(RegisterActivity.this,person.getErr(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                authenticator.Save(person);
+
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+
+            }
+        });
+
         RegisterRequest registerRequest = new RegisterRequest(person);
 
         spiceManager.execute(registerRequest, "register", DurationInMillis.ONE_SECOND, new RegisterRequestListener());
 
-        if (mDialog != null)
-        {
-            mDialog.dismiss();
-            mDialog = null;
-        }
-        mDialog = DialogFactory.creatRequestDialog(this, "正在注册中...");
-        mDialog.show();
+        DialogFactory.showDialog(this, "正在注册中...");
 	}
 
     private class RegisterRequestListener implements RequestListener<Person> {
@@ -106,8 +121,7 @@ public class RegisterActivity extends RoboActivity implements OnClickListener{
 
         @Override
         public void onRequestSuccess(Person person) {
-            mDialog.dismiss();
-            mDialog = null;
+            DialogFactory.dismiss();
 
             if (!person.getErr().equals("success")) {
                 Toast.makeText(RegisterActivity.this,person.getErr(), Toast.LENGTH_SHORT).show();

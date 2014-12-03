@@ -11,9 +11,11 @@ import cn.nit.beauty.Utils;
 
 public class DialogFactory {
 
-	public static Dialog creatRequestDialog(final Context context, String tip){
+    private static Dialog dialog;
+
+	public static void showDialog(final Context context, String tip){
 		
-		final Dialog dialog = new Dialog(context, R.style.dialog);	
+		dialog = new Dialog(context, R.style.dialog);
 		dialog.setContentView(R.layout.dialog_layout);
 		Window window = dialog.getWindow();
 		WindowManager.LayoutParams lp = window.getAttributes();	
@@ -28,7 +30,12 @@ public class DialogFactory {
 			titleTxtv.setText(tip);	
 		}
 		
-		return dialog;
+		dialog.show();
 	}
+
+    public static void dismiss() {
+        dialog.dismiss();
+        dialog = null;
+    }
 	
 }

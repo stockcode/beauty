@@ -27,7 +27,7 @@ public class Authenticator {
     }
 
     public void Save(Person person) {
-        settings.edit().putString("pkid", person.getPkid())
+        settings.edit()
                 .putString("username", person.getUsername())
                 .putString("nickname", person.getNickname())
                 .putString("logintype", person.getLogintype())

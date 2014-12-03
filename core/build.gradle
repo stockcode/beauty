@@ -13,6 +13,9 @@ apply plugin: 'android'
 repositories {
     mavenLocal()
     mavenCentral()
+    flatDir {
+        dirs 'aars'
+    }
 }
 
 dependencies {
@@ -42,9 +45,8 @@ dependencies {
     compile 'com.tencent:midsdk:2.1.0'
     compile 'com.tencent:mmsdk:1.0.0'
 
-    compile 'cn.nit:SMSSDK:1.0.0@aar'
-
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile(name:'SMSSDK-1.0.0', ext:'aar')
 }
 
 

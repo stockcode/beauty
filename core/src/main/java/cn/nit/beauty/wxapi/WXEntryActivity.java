@@ -95,14 +95,14 @@ public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler 
                                     Person person = new Person();
 
                                     person.setUsername(response.getString("openid"));
-                                    person.setPasswd(response.getString("openid"));
+                                    person.setPassword(response.getString("openid"));
                                     person.setNickname(response.getString("nickname"));
                                     person.setLogintype("WEIXIN");
 
                                     LoginRequest loginRequest = new LoginRequest(person);
                                     spiceManager.execute(loginRequest, "login", DurationInMillis.ALWAYS_EXPIRED, new LoginRequestListener());
 
-                                    showProcessDialog("正在验证账号...");
+                                    DialogFactory.showDialog(WXEntryActivity.this, "正在验证账号...");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -117,29 +117,19 @@ public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler 
         }
     }
 
-    private Dialog mDialog = null;
-    private void showProcessDialog(String message) {
-        if (mDialog != null)
-        {
-            mDialog.dismiss();
-            mDialog = null;
-        }
-        mDialog = DialogFactory.creatRequestDialog(this, message);
-        mDialog.show();
-    }
 
     private class LoginRequestListener implements RequestListener<Person> {
         @Override
         public void onRequestFailure(SpiceException e) {
-            mDialog.dismiss();
-            mDialog = null;
+            DialogFactory.dismiss();
+
             Toast.makeText(WXEntryActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void onRequestSuccess(Person person) {
-            mDialog.dismiss();
-            mDialog = null;
+            DialogFactory.dismiss();
+
             if (person == null) {
                 Toast.makeText(WXEntryActivity.this, "用户名密码错误，请重新输入", Toast.LENGTH_LONG).show();
             } else {

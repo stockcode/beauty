@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
+import cn.bmob.v3.listener.SaveListener;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.model.Person;
@@ -159,60 +160,34 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
         });
         registerPage.show(this);
     }
-	   
 
+    SaveListener saveListener = new SaveListener() {
+        @Override
+        public void onSuccess() {
+            DialogFactory.dismiss();
+
+            closeLoginUI(RESULT_OK);
+            Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onFailure(int i, String s) {
+            DialogFactory.dismiss();
+
+            Toast.makeText(LoginActivity.this, "用户名密码错误，请重新输入", Toast.LENGTH_LONG).show();
+        }
+    };
 
 	private void showRequestDialog()
 	{
         Person person = new Person();
         person.setUsername(username.getText().toString());
-        person.setPasswd(passwd.getText().toString());
+        person.setPassword(passwd.getText().toString());
         person.setLogintype("beauty");
+        person.login(this, saveListener);
 
-        LoginRequest loginRequest = new LoginRequest(person);
-        spiceManager.execute(loginRequest, "login", DurationInMillis.ALWAYS_EXPIRED, new LoginRequestListener());
-
-        showProcessDialog("正在验证账号...");
+        DialogFactory.showDialog(this, "正在验证账号...");
 	}
-
-    private Dialog mDialog = null;
-    private void showProcessDialog(String message) {
-        if (mDialog != null)
-        {
-            mDialog.dismiss();
-            mDialog = null;
-        }
-        mDialog = DialogFactory.creatRequestDialog(this, message);
-        mDialog.show();
-    }
-
-
-
-
-    private class LoginRequestListener implements RequestListener<Person> {
-        @Override
-        public void onRequestFailure(SpiceException e) {
-            mDialog.dismiss();
-            mDialog = null;
-            Toast.makeText(LoginActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onRequestSuccess(Person person) {
-            mDialog.dismiss();
-            mDialog = null;
-            if (person == null) {
-                Toast.makeText(LoginActivity.this, "用户名密码错误，请重新输入", Toast.LENGTH_LONG).show();
-            } else {
-                authenticator.Save(person);
-
-                closeLoginUI(RESULT_OK);
-
-                Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
-            }
-
-        }
-    }
 
     private void closeLoginUI(int result) {
         setResult(result);
@@ -239,7 +214,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
 
                 if (json.has("openid")) {
                     person.setUsername(json.get("openid").toString());
-                    person.setPasswd(json.get("openid").toString());
+                    person.setPassword(json.get("openid").toString());
                 }
 
                 if (json.has("nickname")) {
@@ -249,10 +224,9 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
                     person.setNickname(json.get("nickname").toString());
                     person.setLogintype("QQ");
 
-                    LoginRequest loginRequest = new LoginRequest(person);
-                    spiceManager.execute(loginRequest, "login", DurationInMillis.ALWAYS_EXPIRED, new LoginRequestListener());
+                    person.login(LoginActivity.this, saveListener);
 
-                    showProcessDialog("正在验证账号...");
+                    DialogFactory.showDialog(LoginActivity.this, "正在验证账号...");
 
                 } else {
                     UserInfo info = new UserInfo(getApplicationContext(), mTencent.getQQToken());

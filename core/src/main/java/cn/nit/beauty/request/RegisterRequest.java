@@ -32,7 +32,7 @@ public class RegisterRequest extends SpringAndroidSpiceRequest<Person> {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<String, String>();
         parameters.set("username", person.getUsername());
         parameters.set("nickname", person.getNickname());
-        parameters.set("passwd", person.getPasswd());
+        parameters.set("passwd", person.getPassword());
         parameters.set("email", person.getEmail());
         parameters.set("phone", person.getPhone());
         parameters.set("logintype", person.getLogintype());
