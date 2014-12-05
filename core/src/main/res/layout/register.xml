@@ -79,4 +79,14 @@
             android:layout_marginRight="28.0dip"
             android:text="注册" />
 
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+            android:id="@+id/sm_progressbar"
+            style="@style/GPlusProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-9dp"
+            android:indeterminate="true"
+            android:paddingLeft="1dip"
+            android:paddingRight="1dip"
+            android:visibility="gone" />
 </LinearLayout>

@@ -53,7 +53,7 @@
         <meta-data android:name="android.app.default_searchable" android:value="cn.nit.beauty.ui.BeautyActivity" />
 
         <activity
-            android:name=".ui.LoadingActivity"
+            android:name=".ui.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>

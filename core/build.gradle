@@ -44,6 +44,7 @@ dependencies {
     compile 'com.tencent:mtasdk:2.0.0'
     compile 'com.tencent:midsdk:2.1.0'
     compile 'com.tencent:mmsdk:1.0.0'
+    compile 'com.github.castorflex.smoothprogressbar:library:1.0.0'
 
     compile fileTree(dir: 'libs', include: '*.jar')
     compile(name:'SMSSDK-1.0.0', ext:'aar')

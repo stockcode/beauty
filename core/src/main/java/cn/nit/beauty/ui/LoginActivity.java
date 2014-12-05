@@ -13,11 +13,9 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.model.Person;
+import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.request.LoginRequest;
-import cn.nit.beauty.utils.Authenticator;
-import cn.nit.beauty.utils.Configure;
-import cn.nit.beauty.utils.Data;
-import cn.nit.beauty.utils.DialogFactory;
+import cn.nit.beauty.utils.*;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import cn.smssdk.gui.RegisterPage;
@@ -37,6 +35,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import org.json.JSONException;
 import org.json.JSONObject;
 import roboguice.activity.RoboActivity;
@@ -44,7 +43,7 @@ import roboguice.inject.InjectView;
 
 import java.util.HashMap;
 
-public class LoginActivity extends RoboActivity implements OnClickListener {
+public class LoginActivity extends RoboActivity implements OnClickListener, UserProxy.ILoginListener {
 
     @Inject
     Authenticator authenticator;
@@ -57,6 +56,11 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
 
     @InjectView(R.id.login)
 	private Button mBtnLogin;
+
+    @InjectView(R.id.sm_progressbar)
+    SmoothProgressBar progressbar;
+
+    UserProxy userProxy;
 
     private EditText username, passwd;
 
@@ -180,13 +184,10 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
 
 	private void showRequestDialog()
 	{
-        Person person = new Person();
-        person.setUsername(username.getText().toString());
-        person.setPassword(passwd.getText().toString());
-        person.setLogintype("beauty");
-        person.login(this, saveListener);
-
-        DialogFactory.showDialog(this, "正在验证账号...");
+        userProxy.setOnLoginListener(this);
+        L.i("login begin....");
+        progressbar.setVisibility(View.VISIBLE);
+        userProxy.login(username.getText().toString().trim(), passwd.getText().toString().trim());
 	}
 
     private void closeLoginUI(int result) {
@@ -202,6 +203,27 @@ public class LoginActivity extends RoboActivity implements OnClickListener {
             closeLoginUI(RESULT_OK);
             Toast.makeText(LoginActivity.this, "注册成功，您的有效期至" + authenticator.getExpiredDate(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void dimissProgressbar(){
+        if(progressbar!=null&&progressbar.isShown()){
+            progressbar.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        dimissProgressbar();
+        ActivityUtil.show(this, "登录成功。");
+        L.i("login sucessed!");
+        closeLoginUI(RESULT_OK);
+    }
+
+    @Override
+    public void onLoginFailure(String msg) {
+        dimissProgressbar();
+        ActivityUtil.show(this, "用户名密码错误，请重新输入");
+        L.i("login failed!"+msg);
     }
 
     private class BaseUiListener implements IUiListener {

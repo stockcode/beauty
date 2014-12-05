@@ -1,8 +1,12 @@
 package cn.nit.beauty;
 
+import android.app.Activity;
 import android.app.Application;
 import android.graphics.Bitmap;
 
+import cn.bmob.v3.BmobUser;
+import cn.nit.beauty.entity.User;
+import cn.nit.beauty.utils.ActivityManagerUtils;
 import com.baidu.frontia.FrontiaApplication;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
@@ -28,6 +32,33 @@ import cn.nit.beauty.widget.RotateBitmapProcessor;
         formKey=""
 )
 public class BeautyApplication extends FrontiaApplication {
+
+    private static BeautyApplication myApplication = null;
+
+    public static BeautyApplication getInstance(){
+        return myApplication;
+    }
+
+    public void addActivity(Activity ac){
+        ActivityManagerUtils.getInstance().addActivity(ac);
+    }
+
+    public void exit(){
+        ActivityManagerUtils.getInstance().removeAllActivity();
+    }
+
+    public Activity getTopActivity(){
+        return ActivityManagerUtils.getInstance().getTopActivity();
+    }
+
+    public User getCurrentUser() {
+        User user = BmobUser.getCurrentUser(myApplication, User.class);
+        if(user!=null){
+            return user;
+        }
+        return null;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,15 +66,22 @@ public class BeautyApplication extends FrontiaApplication {
         // The following line triggers the initialization of ACRA
         //ACRA.init(this);
 
-        // Create global configuration and initialize ImageLoader with this configuration
+        //由于Application类本身已经单例，所以直接按以下处理即可。
+        myApplication = this;
 
+        // Create global configuration and initialize ImageLoader with this configuration
+        initImageLoader();
+
+    }
+
+    private void initImageLoader() {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-            .showStubImage(R.drawable.xlistview_arrow)
-            .cacheInMemory(true)
-            .cacheOnDisc(true)
-            .bitmapConfig(Bitmap.Config.RGB_565)
-            .preProcessor(new RotateBitmapProcessor())
-            .build();
+                .showStubImage(R.drawable.xlistview_arrow)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .preProcessor(new RotateBitmapProcessor())
+                .build();
 
         File cacheDir = StorageUtils.getCacheDirectory(this.getApplicationContext());
 

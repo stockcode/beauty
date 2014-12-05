@@ -1,12 +1,9 @@
 package cn.nit.beauty.ui;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -15,29 +12,17 @@ import android.widget.Toast;
 
 import cn.bmob.v3.Bmob;
 import cn.nit.beauty.Helper;
-import cn.nit.beauty.utils.Authenticator;
 import cn.smssdk.SMSSDK;
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.mobstat.StatService;
-import com.lurencun.service.autoupdate.AppUpdate;
-import com.lurencun.service.autoupdate.AppUpdateService;
-import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
-import com.octo.android.robospice.JacksonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.UncachedSpiceService;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import cn.nit.beauty.R;
@@ -49,7 +34,7 @@ import cn.nit.beauty.request.IndexRequest;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 
-public class LoadingActivity extends Activity {
+public class SplashActivity extends Activity {
 
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
@@ -72,9 +57,9 @@ public class LoadingActivity extends Activity {
         database = new LaucherDataBase(getApplicationContext());
 
         PushManager.startWork(getApplicationContext(),
-                PushConstants.LOGIN_TYPE_API_KEY, Utils.getMetaValue(LoadingActivity.this, "api_key"));
+                PushConstants.LOGIN_TYPE_API_KEY, Utils.getMetaValue(SplashActivity.this, "api_key"));
 
-        Configure.inits(LoadingActivity.this);
+        Configure.inits(SplashActivity.this);
 
         settings = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -83,7 +68,7 @@ public class LoadingActivity extends Activity {
             settings.edit().putBoolean("shortcut", true).apply();
         }
 
-        Toast.makeText( LoadingActivity.this, "检测到网络:" + Helper.getNetworkName(this), Toast.LENGTH_SHORT ).show();
+        Toast.makeText( SplashActivity.this, "检测到网络:" + Helper.getNetworkName(this), Toast.LENGTH_SHORT ).show();
 
         IndexRequest indexRequest = new IndexRequest(Data.OSS_URL + Data.INDEX_KEY);
         spiceManager.execute(indexRequest, "beauty.index", DurationInMillis.ALWAYS_EXPIRED, new IndexRequestListener());
@@ -157,7 +142,7 @@ public class LoadingActivity extends Activity {
     }
 
     public static void createShortCut(Context context) {
-        final Intent myIntent = new Intent(context,LoadingActivity.class);
+        final Intent myIntent = new Intent(context,SplashActivity.class);
         myIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         myIntent.setAction(Intent.ACTION_MAIN);
         myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -182,7 +167,7 @@ public class LoadingActivity extends Activity {
     private class IndexRequestListener implements RequestListener<Index> {
         @Override
         public void onRequestFailure(SpiceException e) {
-            Toast.makeText( LoadingActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_LONG ).show();
+            Toast.makeText( SplashActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_LONG ).show();
             startMain();
         }
 
@@ -207,9 +192,9 @@ public class LoadingActivity extends Activity {
                 launcher.setURL("daily");
                 launcher.setCATEGORY("daily");
                 intent.putExtra("launcher", launcher);
-                intent.setClass(LoadingActivity.this, BeautyActivity.class);
+                intent.setClass(SplashActivity.this, BeautyActivity.class);
             } else {
-                intent.setClass(LoadingActivity.this, MainActivity.class);
+                intent.setClass(SplashActivity.this, MainActivity.class);
             }
             startActivity(intent);
             finish();
