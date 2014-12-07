@@ -1,6 +1,8 @@
 package cn.nit.beauty.proxy;
 
+import cn.bmob.v3.AsyncCustomEndpoints;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.CloudCodeListener;
 import cn.bmob.v3.listener.ResetPasswordListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
@@ -9,28 +11,58 @@ import android.content.Context;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.utils.Constant;
 import cn.nit.beauty.utils.L;
+import com.google.inject.Inject;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class UserProxy {
 
 	public static final String TAG = "UserProxy";
 	
 	private Context mContext;
-	
+
+    @Inject
 	public UserProxy(Context context){
 		this.mContext = context;
 	}
 	
-	public void signUp(User user){
+	public void signUp(final User user){
 		user.setSignature("这个家伙很懒，什么也不说。。。");
 		user.signUp(mContext, new SaveListener() {
 			
 			@Override
 			public void onSuccess() {
-				if(signUpLister != null){
-					signUpLister.onSignUpSuccess();
-				}else{
-					L.i("signup listener is null,you must set one!");
-				}
+
+                try {
+                    String cloudCodeName = "firstRegister";
+                    JSONObject params = new JSONObject();
+                    params.put("username", user.getUsername());
+                    params.put("password", user.getPassword());
+                    AsyncCustomEndpoints cloudCode = new AsyncCustomEndpoints();
+
+                    cloudCode.callEndpoint(mContext, cloudCodeName, params, new CloudCodeListener() {
+
+                        //执行成功时调用，返回result对象
+                        @Override
+                        public void onSuccess(Object result) {
+                            if(signUpLister != null){
+                                signUpLister.onSignUpSuccess();
+                            }else{
+                                L.i("signup listener is null,you must set one!");
+                            }
+                            L.i("result = "+result.toString());
+                        }
+
+                        //执行失败时调用
+                        @Override
+                        public void onFailure(int arg0, String err) {
+                            L.i("BmobException = "+err);
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
 			}
 
 			@Override

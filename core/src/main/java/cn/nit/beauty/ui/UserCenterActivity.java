@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+import cn.bmob.v3.BmobUser;
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
+import cn.nit.beauty.entity.User;
+import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.Authenticator;
 import com.google.inject.Inject;
 import roboguice.activity.RoboActivity;
@@ -39,7 +42,7 @@ public class UserCenterActivity extends RoboActivity {
     ViewFlipper my_viewflipper;
 
     @Inject
-    Authenticator authenticator;
+    UserProxy userProxy;
 
     private View.OnClickListener loginClickListener = new View.OnClickListener() {
         @Override
@@ -66,7 +69,7 @@ public class UserCenterActivity extends RoboActivity {
                     .setMessage("确认登出吗")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            authenticator.Logout();
+                            userProxy.logout();
                             checkUserStatus();
                             Toast.makeText(UserCenterActivity.this, "已退出登录", Toast.LENGTH_SHORT).show();
                         }
@@ -107,9 +110,11 @@ public class UserCenterActivity extends RoboActivity {
     }
 
     private void checkUserStatus() {
-        if (authenticator.isLogin()) {
-            tvNickname.setText(authenticator.getNickname());
-            tvRenew_info.setText("会员到期日:\r\n" + authenticator.getExpiredDate());
+        User currentUser = userProxy.getCurrentUser();
+
+        if (currentUser != null) {
+            tvNickname.setText(currentUser.getNickname());
+            tvRenew_info.setText("会员到期日:\r\n" + currentUser.getExpiredDate());
             my_viewflipper.setDisplayedChild(1);
             ivLogout.setOnClickListener(logoutClickListener);
         } else {
@@ -125,7 +130,7 @@ public class UserCenterActivity extends RoboActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Utils.VIP && resultCode == RESULT_OK) {
-            Toast.makeText(UserCenterActivity.this, "支付成功，您的有效期至" + authenticator.getExpiredDate(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserCenterActivity.this, "支付成功，您的有效期至" + userProxy.getCurrentUser().getExpiredDate(), Toast.LENGTH_SHORT).show();
         }
     }
 }

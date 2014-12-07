@@ -39,17 +39,13 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import org.json.JSONException;
 import org.json.JSONObject;
 import roboguice.activity.RoboActivity;
+import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 import java.util.HashMap;
 
+@ContentView(R.layout.login)
 public class LoginActivity extends RoboActivity implements OnClickListener, UserProxy.ILoginListener {
-
-    @Inject
-    Authenticator authenticator;
-
-    private SpiceManager spiceManager = new SpiceManager(
-            GsonSpringAndroidSpiceService.class);
 
     @InjectView(R.id.regist)
 	private TextView mBtnRegister;
@@ -60,9 +56,14 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
     @InjectView(R.id.sm_progressbar)
     SmoothProgressBar progressbar;
 
+    @Inject
     UserProxy userProxy;
 
-    private EditText username, passwd;
+    @InjectView(R.id.accounts)
+    private EditText username;
+
+    @InjectView(R.id.password)
+    private EditText passwd;
 
 	private boolean mShowMenu = false;
 
@@ -73,7 +74,6 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
         initView();
 
         api = WXAPIFactory.createWXAPI(this, Data.WEIXIN_APP_ID, false);
@@ -129,18 +129,6 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
             person = new Person();
             mTencent.login(this, "", new BaseUiListener());
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        spiceManager.start( this );
-    }
-
-    @Override
-    protected void onStop() {
-        spiceManager.shouldStop();
-        super.onStop();
     }
 
     public void goRegisterActivity()
@@ -201,7 +189,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
 
         if (requestCode == Utils.REGISTER && resultCode == RESULT_OK) {
             closeLoginUI(RESULT_OK);
-            Toast.makeText(LoginActivity.this, "注册成功，您的有效期至" + authenticator.getExpiredDate(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "注册成功，您的有效期至" + userProxy.getCurrentUser().getExpiredDate(), Toast.LENGTH_SHORT).show();
         }
     }
 

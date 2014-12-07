@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
+          android:installLocation="preferExternal"
     package="cn.nit.beauty">
 
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="17" />
@@ -144,6 +145,11 @@
             android:name=".ui.RegisterActivity"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateVisible">
+        </activity>
+
+        <activity
+                android:name=".ui.CommentActivity"
+                android:label="用户登录">
         </activity>
 
         <activity

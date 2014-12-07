@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.Utils;
+import cn.nit.beauty.entity.User;
+import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.Authenticator;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -75,9 +77,11 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
     private MenuItem mnuSave;
 
     @Inject
-    Authenticator authenticator;
+    UserProxy userProxy;
 
     private SharedPreferences settings;
+
+    private User currentUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,8 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
 
         setTitle(intent.getStringExtra("title"));
 
+        currentUser = userProxy.getCurrentUser();
+
         mViewPager = new ViewPager(this);
         setContentView(mViewPager);
 
@@ -105,14 +111,14 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
                 if (objectKey.startsWith("origin") || i > (imageInfoList.size() - i)) {
                     autoPlay = false;
 
-                    if (!authenticator.isLogin()) {
+                    if (currentUser != null) {
                         Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
                         startActivityForResult(intent, Utils.LOGIN);
                         Toast.makeText(ImageGalleryActivity.this, "查看更多图片请先登录", Toast.LENGTH_SHORT).show();
-                    } else if (authenticator.hasExpired()) {
+                    } else if (currentUser.hasExpired()) {
                         Intent intent = new Intent(ImageGalleryActivity.this, VipProductActivity.class);
                         startActivityForResult(intent, Utils.VIP);
-                        Toast.makeText(ImageGalleryActivity.this, "有效期为" + authenticator.getExpiredDate() + "，请续费", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ImageGalleryActivity.this, "有效期为" + currentUser.getExpiredDate() + "，请续费", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -180,7 +186,7 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
                 changeWallpaper();
                 return true;
             case R.id.mnuOriginal:
-                if (!authenticator.isLogin()) {
+                if (currentUser != null) {
                     Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
                     startActivityForResult(intent, Utils.LOGIN);
                     Toast.makeText(ImageGalleryActivity.this, "查看原图请先登录", Toast.LENGTH_SHORT).show();

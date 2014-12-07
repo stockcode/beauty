@@ -6,10 +6,14 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.*;
 import android.preference.PreferenceManager;
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.GetListener;
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.StaggeredAdapter;
 import cn.nit.beauty.database.LaucherDataBase;
+import cn.nit.beauty.entity.PhotoGallery;
 import cn.nit.beauty.model.ImageInfos;
 import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Configure;
@@ -23,6 +27,7 @@ import android.widget.Toast;
 
 import cn.nit.beauty.model.ImageInfo;
 
+import cn.nit.beauty.utils.L;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -40,12 +45,12 @@ public class ImageListActivity extends SherlockActivity {
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
-    private String objectKey, title;
+    private String objectId, objectKey, title;
     private LaucherDataBase database;
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
 
-
+    private PhotoGallery photoGallery;
 
     /**
      * 添加内容
@@ -71,6 +76,8 @@ public class ImageListActivity extends SherlockActivity {
         setContentView(R.layout.act_pull_to_refresh_sample);
 
         Intent intent = getIntent();
+
+        objectId = intent.getStringExtra("objectId");
         objectKey = intent.getStringExtra("objectKey");
 
         String[] strs = objectKey.split("/");
@@ -108,6 +115,20 @@ public class ImageListActivity extends SherlockActivity {
 
         ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey + Data.INDEX_KEY);
         spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
+
+        BmobQuery<PhotoGallery> query = new BmobQuery<PhotoGallery>();
+
+        query.getObject(this, objectId, new GetListener<PhotoGallery>() {
+            @Override
+            public void onSuccess(PhotoGallery gallery) {
+                photoGallery = gallery;
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                L.i("get photoGallery failure !" + s);
+            }
+        });
     }
 
     @Override
@@ -119,6 +140,12 @@ public class ImageListActivity extends SherlockActivity {
 
     public boolean onOptionsItemSelected(MenuItem mi) {
         switch (mi.getItemId()) {
+            case R.id.mnuComment:
+                Intent intent = new Intent();
+                intent.putExtra("photoGallery", photoGallery);
+                intent.setClass(ImageListActivity.this, CommentActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.mnuFavoriate:
                 database.updateFavorite(objectKey.replaceAll("/smallthumb", ""));
                 Data.categoryMap.put("favorite", database.getFavoriteList());

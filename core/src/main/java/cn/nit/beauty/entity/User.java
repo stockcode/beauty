@@ -15,8 +15,8 @@ public class User extends BmobUser{
     private String phone;
     private String nickname;
     private String logintype;
-    private Date regDate;
-    private Date expiredDate;
+    private String regDate;
+    private String expiredDate;
     private Integer score;
     private Integer type;
 
@@ -77,19 +77,19 @@ public class User extends BmobUser{
         this.logintype = logintype;
     }
 
-    public Date getRegDate() {
+    public String getRegDate() {
         return regDate;
     }
 
-    public void setRegDate(Date regDate) {
+    public void setRegDate(String regDate) {
         this.regDate = regDate;
     }
 
-    public Date getExpiredDate() {
+    public String getExpiredDate() {
         return expiredDate;
     }
 
-    public void setExpiredDate(Date expiredDate) {
+    public void setExpiredDate(String expiredDate) {
         this.expiredDate = expiredDate;
     }
 
@@ -107,5 +107,9 @@ public class User extends BmobUser{
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public boolean hasExpired() {
+        return false;
     }
 }

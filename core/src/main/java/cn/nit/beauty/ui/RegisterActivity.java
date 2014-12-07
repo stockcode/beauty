@@ -31,9 +31,10 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import cn.nit.beauty.proxy.UserProxy.ISignUpListener;
+import cn.nit.beauty.proxy.UserProxy.ILoginListener;
 
 @ContentView(R.layout.register)
-public class RegisterActivity extends RoboActivity implements OnClickListener, ISignUpListener {
+public class RegisterActivity extends RoboActivity implements OnClickListener, ISignUpListener, ILoginListener {
 
     @InjectView(R.id.nickname)
     private EditText nickname;
@@ -83,10 +84,8 @@ public class RegisterActivity extends RoboActivity implements OnClickListener, I
 
     @Override
     public void onSignUpSuccess() {
-        dimissProgressbar();
+        userProxy.login(phone.getText().toString(), password.getText().toString());
         ActivityUtil.show(this, "注册成功");
-        setResult(RESULT_OK);
-        finish();
     }
 
     @Override
@@ -100,5 +99,19 @@ public class RegisterActivity extends RoboActivity implements OnClickListener, I
         if(progressbar!=null&&progressbar.isShown()){
             progressbar.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        dimissProgressbar();
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public void onLoginFailure(String msg) {
+        dimissProgressbar();
+        ActivityUtil.show(this, "登录失败。请确认网络连接后再重试。");
+        L.i("login failed！");
     }
 }

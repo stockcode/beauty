@@ -33,8 +33,8 @@ public class CommentAdapter extends BaseContentAdapter<Comment>{
 		
 		final Comment comment = dataList.get(position);
 		if(comment.getUser()!=null){
-			viewHolder.userName.setText(comment.getUser().getUsername());
-			L.i("NAME:" + comment.getUser().getUsername());
+			viewHolder.userName.setText(comment.getUser().getNickname());
+			L.i("NICKNAME:" + comment.getUser().getNickname());
 		}else{
 			viewHolder.userName.setText("丽友");
 		}

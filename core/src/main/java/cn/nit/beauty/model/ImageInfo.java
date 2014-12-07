@@ -2,6 +2,7 @@ package cn.nit.beauty.model;
 
 public class ImageInfo {
 
+    private String objectId;
 	private String key = "";
 	private String title = "";
 	private String url = "";
@@ -37,5 +38,13 @@ public class ImageInfo {
 
     public void setOriginal(boolean original) {
         this.original = original;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 }

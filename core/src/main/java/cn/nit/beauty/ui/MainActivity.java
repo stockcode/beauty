@@ -65,8 +65,7 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        BmobUpdateAgent.initAppVersion(this);
-        BmobUpdateAgent.forceUpdate(this);
+        BmobUpdateAgent.update(this);
 
         database = new LaucherDataBase(getApplicationContext());
 

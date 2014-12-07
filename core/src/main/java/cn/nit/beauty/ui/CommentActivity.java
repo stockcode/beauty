@@ -98,7 +98,7 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 		// TODO Auto-generated method stub
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-		photoGallery = (PhotoGallery)getIntent().getSerializableExtra("data");//MyApplication.getInstance().getCurrentQiangYu();
+		photoGallery = (PhotoGallery)getIntent().getSerializableExtra("photoGallery");
 		pageNum = 0;
 		
 		mAdapter = new CommentAdapter(CommentActivity.this, comments);
@@ -157,7 +157,7 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 
 			@Override
 			public void onError(int arg0, String arg1) {
-				// TODO Auto-generated method stub
+                L.i("get comment err!" + arg1);
 				ActivityUtil.show(CommentActivity.this, "获取评论失败。请检查网络~");
 				pageNum--;
 			}
@@ -289,29 +289,29 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 		}
 		
 	}
-	
-	
-	/*** 
-     * 动态设置listview的高度 
+
+
+	/***
+     * 动态设置listview的高度
      *  item 总布局必须是linearLayout
-     * @param listView 
-     */  
-    public void setListViewHeightBasedOnChildren(ListView listView) {  
-        ListAdapter listAdapter = listView.getAdapter();  
-        if (listAdapter == null) {  
-            return;  
-        }  
-        int totalHeight = 0;  
-        for (int i = 0; i < listAdapter.getCount(); i++) {  
-            View listItem = listAdapter.getView(i, null, listView);  
-            listItem.measure(0, 0);  
-            totalHeight += listItem.getMeasuredHeight();  
-        }  
-        ViewGroup.LayoutParams params = listView.getLayoutParams();  
-        params.height = totalHeight  
-                + (listView.getDividerHeight() * (listAdapter.getCount()-1))  
-                +15;  
-        listView.setLayoutParams(params);  
+     * @param listView
+     */
+    public void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getCount()-1))
+                +15;
+        listView.setLayoutParams(params);
     }
 
 

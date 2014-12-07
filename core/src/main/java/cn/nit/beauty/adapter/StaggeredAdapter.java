@@ -66,6 +66,7 @@ public class StaggeredAdapter extends BaseAdapter {
         holder.contentView.setText(title);
 
         holder.objectKey = duitangInfo.getKey();
+        holder.objectId = duitangInfo.getObjectId();
         //ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getUrl(), holder.imageView);
         return convertView;
     }
@@ -79,6 +80,7 @@ public class StaggeredAdapter extends BaseAdapter {
         TextView contentView;
         TextView timeView;
         public String objectKey;
+        public String objectId;
     }
 
     @Override

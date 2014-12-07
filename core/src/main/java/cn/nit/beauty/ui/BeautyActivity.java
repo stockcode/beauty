@@ -61,8 +61,12 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
 
         for(int i = 0; i < selectedFolders.size(); i++) {
-            String url = selectedFolders.get(i).split(":")[0];
+            String[] strs = selectedFolders.get(i).split(":");
+            String url = strs[0];
+            String objectId = strs[2];
+
             ImageInfo newsInfo1 = new ImageInfo();
+            newsInfo1.setObjectId(objectId);
             newsInfo1.setKey(url);
             newsInfo1.setUrl(url + "smallthumb/cover.jpg");
             newsInfo1.setTitle(url);
@@ -94,6 +98,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
                 Intent intent = new Intent(BeautyActivity.this,
                         ImageListActivity.class);
                 intent.putExtra("objectKey", holder.objectKey + "smallthumb/");
+                intent.putExtra("objectId", holder.objectId);
                 startActivity(intent);
             }
         });

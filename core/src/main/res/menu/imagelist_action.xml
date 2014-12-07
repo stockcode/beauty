@@ -17,5 +17,6 @@
 
     <item android:id="@+id/mnuFavoriate" android:title="收藏" android:showAsAction="ifRoom" />
     <item android:id="@+id/mnuDownload" android:title="下载" android:showAsAction="ifRoom" android:visible="false"/>
+    <item android:id="@+id/mnuComment" android:title="评论" android:showAsAction="ifRoom" />
 
 </menu>
