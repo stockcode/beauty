@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.nit.beauty.alipay.Rsa;
 import com.alipay.android.app.sdk.AliPay;
 import com.lurencun.service.autoupdate.AppUpdate;
@@ -60,10 +61,7 @@ public class SettingActivity extends PreferenceActivity {
         prefVersion.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                AppUpdate appUpdate = AppUpdateService.getAppUpdate(SettingActivity.this);
-
-                appUpdate.checkLatestVersion(Data.UPDATE_URL,
-                        new SimpleJSONParser());
+                BmobUpdateAgent.update(SettingActivity.this);
                 return true;
             }
         });

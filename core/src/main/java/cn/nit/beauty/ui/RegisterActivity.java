@@ -17,7 +17,6 @@ import cn.nit.beauty.model.Person;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.request.RegisterRequest;
 import cn.nit.beauty.utils.ActivityUtil;
-import cn.nit.beauty.utils.Authenticator;
 import cn.nit.beauty.utils.DialogFactory;
 import cn.nit.beauty.utils.L;
 import com.google.inject.Inject;
@@ -76,6 +75,8 @@ public class RegisterActivity extends RoboActivity implements OnClickListener, I
         }
 
         userProxy.setOnSignUpListener(this);
+        userProxy.setOnLoginListener(this);
+
         L.i("register begin....");
         progressbar.setVisibility(View.VISIBLE);
 
@@ -85,7 +86,6 @@ public class RegisterActivity extends RoboActivity implements OnClickListener, I
     @Override
     public void onSignUpSuccess() {
         userProxy.login(phone.getText().toString(), password.getText().toString());
-        ActivityUtil.show(this, "注册成功");
     }
 
     @Override

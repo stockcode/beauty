@@ -12,6 +12,7 @@ import android.widget.*;
 import cn.bmob.v3.listener.SaveListener;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
+import cn.nit.beauty.entity.User;
 import cn.nit.beauty.model.Person;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.request.LoginRequest;
@@ -45,7 +46,7 @@ import roboguice.inject.InjectView;
 import java.util.HashMap;
 
 @ContentView(R.layout.login)
-public class LoginActivity extends RoboActivity implements OnClickListener, UserProxy.ILoginListener {
+public class LoginActivity extends RoboActivity implements OnClickListener, UserProxy.ILoginListener, UserProxy.ISignUpListener {
 
     @InjectView(R.id.regist)
 	private TextView mBtnRegister;
@@ -69,7 +70,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
 
     private Tencent mTencent;
 
-    private Person person;
+    private User user;
     IWXAPI api;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -94,7 +95,8 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
 
 
     	mBtnLogin.setOnClickListener(this);
-
+        userProxy.setOnLoginListener(this);
+        userProxy.setOnSignUpListener(this);
     }
 
 
@@ -126,7 +128,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
         mTencent = Tencent.createInstance(Data.QQ_APP_ID, getApplicationContext());
         if (!mTencent.isSessionValid())
         {
-            person = new Person();
+            user = new User();
             mTencent.login(this, "", new BaseUiListener());
         }
     }
@@ -144,35 +146,23 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
                     String country = (String) phoneMap.get("country");
                     String phone = (String) phoneMap.get("phone");
 
-                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                    intent.putExtra("phone", phone);
-                    startActivityForResult(intent, Utils.REGISTER);
+                    StartRegister(phone);
                 }
             }
         });
         registerPage.show(this);
+
+        //StartRegister("13613803575");
     }
 
-    SaveListener saveListener = new SaveListener() {
-        @Override
-        public void onSuccess() {
-            DialogFactory.dismiss();
-
-            closeLoginUI(RESULT_OK);
-            Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onFailure(int i, String s) {
-            DialogFactory.dismiss();
-
-            Toast.makeText(LoginActivity.this, "用户名密码错误，请重新输入", Toast.LENGTH_LONG).show();
-        }
-    };
+    private void StartRegister(String phone) {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        intent.putExtra("phone", phone);
+        startActivityForResult(intent, Utils.REGISTER);
+    }
 
 	private void showRequestDialog()
 	{
-        userProxy.setOnLoginListener(this);
         L.i("login begin....");
         progressbar.setVisibility(View.VISIBLE);
         userProxy.login(username.getText().toString().trim(), passwd.getText().toString().trim());
@@ -214,6 +204,16 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
         L.i("login failed!"+msg);
     }
 
+    @Override
+    public void onSignUpSuccess() {
+        userProxy.login(user.getUsername(), user.getPassword());
+    }
+
+    @Override
+    public void onSignUpFailure(String msg) {
+        userProxy.login(user.getUsername(), user.getPassword());
+    }
+
     private class BaseUiListener implements IUiListener {
 
         @Override
@@ -223,20 +223,20 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
             try {
 
                 if (json.has("openid")) {
-                    person.setUsername(json.get("openid").toString());
-                    person.setPassword(json.get("openid").toString());
+                    user.setUsername(json.get("openid").toString());
+                    user.setPassword(json.get("openid").toString());
                 }
 
                 if (json.has("nickname")) {
 
                     mTencent.logout(getApplicationContext());
 
-                    person.setNickname(json.get("nickname").toString());
-                    person.setLogintype("QQ");
+                    user.setNickname(json.get("nickname").toString());
+                    user.setLogintype("QQ");
 
-                    person.login(LoginActivity.this, saveListener);
+                    userProxy.signUp(user);
 
-                    DialogFactory.showDialog(LoginActivity.this, "正在验证账号...");
+                    progressbar.setVisibility(View.VISIBLE);
 
                 } else {
                     UserInfo info = new UserInfo(getApplicationContext(), mTencent.getQQToken());

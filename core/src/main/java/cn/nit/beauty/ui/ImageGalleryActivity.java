@@ -24,7 +24,6 @@ import cn.nit.beauty.Helper;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
-import cn.nit.beauty.utils.Authenticator;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -96,8 +95,6 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
 
         setTitle(intent.getStringExtra("title"));
 
-        currentUser = userProxy.getCurrentUser();
-
         mViewPager = new ViewPager(this);
         setContentView(mViewPager);
 
@@ -111,7 +108,7 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
                 if (objectKey.startsWith("origin") || i > (imageInfoList.size() - i)) {
                     autoPlay = false;
 
-                    if (currentUser != null) {
+                    if (currentUser == null) {
                         Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
                         startActivityForResult(intent, Utils.LOGIN);
                         Toast.makeText(ImageGalleryActivity.this, "查看更多图片请先登录", Toast.LENGTH_SHORT).show();
@@ -140,6 +137,7 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate your menu.
@@ -167,6 +165,14 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
         }
 
         return true;
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+
+        currentUser = userProxy.getCurrentUser();
+
     }
 
     public boolean onOptionsItemSelected(MenuItem mi) {

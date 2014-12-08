@@ -17,7 +17,8 @@ import android.widget.Toast;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.alipay.Rsa;
-import cn.nit.beauty.utils.Authenticator;
+import cn.nit.beauty.entity.User;
+import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.Data;
 import com.alipay.android.app.sdk.AliPay;
 import com.google.inject.Inject;
@@ -47,7 +48,7 @@ public class VipProductActivity extends RoboActivity {
     RelativeLayout vip_product_layout_item_third;
 
     @Inject
-    Authenticator authenticator;
+    UserProxy userProxy;
 
     private List<Product> products =new ArrayList<Product>();
 
@@ -58,7 +59,7 @@ public class VipProductActivity extends RoboActivity {
             //Toast.makeText(VipProductActivity.this, result, Toast.LENGTH_SHORT).show();
 
             if (result.contains("9000")) {
-                authenticator.Upgrade(products.get(msg.what).saleprice.replaceAll("元",""));
+                userProxy.getCurrentUser().Upgrade(products.get(msg.what).saleprice.replaceAll("元", ""));
                 setResult(RESULT_OK);
                 finish();
             }
@@ -69,7 +70,8 @@ public class VipProductActivity extends RoboActivity {
 
         @Override
         public void onClick(View v) {
-            if (!authenticator.isLogin()) {
+
+            if (currentUser != null) {
                 Intent intent = new Intent(VipProductActivity.this, LoginActivity.class);
                 startActivityForResult(intent, Utils.LOGIN);
                 Toast.makeText(VipProductActivity.this, "购买请先登录", Toast.LENGTH_SHORT).show();
@@ -108,10 +110,12 @@ public class VipProductActivity extends RoboActivity {
             }
         }
     };
+    private User currentUser;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        currentUser = userProxy.getCurrentUser();
         initProducts();
 
 
@@ -136,7 +140,7 @@ public class VipProductActivity extends RoboActivity {
         txt_vip_product_layout_item_price2.setText(products.get(1).price);
         txt_vip_product_layout_item_price2.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
-        if (!authenticator.hasDiscount()) vip_product_layout_item_third.setVisibility(View.GONE);
+        if (!currentUser.hasDiscount()) vip_product_layout_item_third.setVisibility(View.GONE);
 
         TextView btn_vip_product_layout_item_open3 = (TextView) vip_product_layout_item_third.findViewById(R.id.btn_vip_product_layout_item_open);
         btn_vip_product_layout_item_open3.setTag(2);
@@ -187,7 +191,7 @@ public class VipProductActivity extends RoboActivity {
 
     private String getNotifyUrl(String tradeNo, String totalFee) {
         String url = String.format("http://www.matesapp.cn:8080/beauty-ajax/api/notify?sessionid=%s&type=%s&tradeno=%s",
-                authenticator.getId(), totalFee, tradeNo);
+                currentUser.getObjectId(), totalFee, tradeNo);
 
         return URLEncoder.encode(url);
     }

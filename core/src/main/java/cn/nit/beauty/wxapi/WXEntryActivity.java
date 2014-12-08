@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import cn.nit.beauty.entity.User;
 import cn.nit.beauty.model.Person;
+import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.request.LoginRequest;
-import cn.nit.beauty.utils.Authenticator;
-import cn.nit.beauty.utils.Data;
-import cn.nit.beauty.utils.DialogFactory;
+import cn.nit.beauty.utils.*;
 import com.google.inject.Inject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -36,15 +36,14 @@ import java.util.Date;
 /**
  * Created by vicky on 2014/10/9.
  */
-public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler {
+public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler, UserProxy.ISignUpListener, UserProxy.ILoginListener {
 
     @Inject
-    Authenticator authenticator;
+    UserProxy userProxy;
+
+    User user;
 
     private IWXAPI api;
-
-    private SpiceManager spiceManager = new SpiceManager(
-            GsonSpringAndroidSpiceService.class);
 
     AsyncHttpClient client = new AsyncHttpClient();
 
@@ -55,6 +54,9 @@ public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler 
         api = WXAPIFactory.createWXAPI(this, Data.WEIXIN_APP_ID, false);
 
         api.handleIntent(getIntent(), this);
+
+        userProxy.setOnSignUpListener(this);
+        userProxy.setOnLoginListener(this);
     }
 
     @Override
@@ -74,7 +76,7 @@ public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler 
 
         SendAuth.Resp resp = (SendAuth.Resp) baseResp;
 
-        Log.e("weixin", resp.errCode + ":resp");
+        L.e("weixin:" + resp.errCode + ":resp");
 
         if (resp.errCode == 0) {
             final RequestParams params = new RequestParams();
@@ -92,15 +94,14 @@ public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler 
                         client.get("https://api.weixin.qq.com/sns/userinfo", params, new JsonHttpResponseHandler(){
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 try {
-                                    Person person = new Person();
+                                    user = new User();
 
-                                    person.setUsername(response.getString("openid"));
-                                    person.setPassword(response.getString("openid"));
-                                    person.setNickname(response.getString("nickname"));
-                                    person.setLogintype("WEIXIN");
+                                    user.setUsername(response.getString("openid"));
+                                    user.setPassword(response.getString("openid"));
+                                    user.setNickname(response.getString("nickname"));
+                                    user.setLogintype("WEIXIN");
 
-                                    LoginRequest loginRequest = new LoginRequest(person);
-                                    spiceManager.execute(loginRequest, "login", DurationInMillis.ALWAYS_EXPIRED, new LoginRequestListener());
+                                    userProxy.signUp(user);
 
                                     DialogFactory.showDialog(WXEntryActivity.this, "正在验证账号...");
                                 } catch (JSONException e) {
@@ -117,41 +118,27 @@ public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler 
         }
     }
 
-
-    private class LoginRequestListener implements RequestListener<Person> {
-        @Override
-        public void onRequestFailure(SpiceException e) {
-            DialogFactory.dismiss();
-
-            Toast.makeText(WXEntryActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onRequestSuccess(Person person) {
-            DialogFactory.dismiss();
-
-            if (person == null) {
-                Toast.makeText(WXEntryActivity.this, "用户名密码错误，请重新输入", Toast.LENGTH_LONG).show();
-            } else {
-                authenticator.Save(person);
-
-                finish();
-
-                Toast.makeText(WXEntryActivity.this, "登录成功", Toast.LENGTH_LONG).show();
-            }
-
-        }
+    @Override
+    public void onSignUpSuccess() {
+        DialogFactory.dismiss();
+        userProxy.login(user.getUsername(), user.getPassword());
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        spiceManager.start( this );
+    public void onSignUpFailure(String msg) {
+        DialogFactory.dismiss();
+        userProxy.login(user.getUsername(), user.getPassword());
     }
 
     @Override
-    protected void onStop() {
-        spiceManager.shouldStop();
-        super.onStop();
+    public void onLoginSuccess() {
+        ActivityUtil.show(this, "登录成功。");
+        finish();
+    }
+
+    @Override
+    public void onLoginFailure(String msg) {
+        ActivityUtil.show(this, "登录失败。"+msg);
+        finish();
     }
 }

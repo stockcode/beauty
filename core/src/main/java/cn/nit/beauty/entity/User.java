@@ -1,9 +1,13 @@
 package cn.nit.beauty.entity;
 
+import android.text.format.DateFormat;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobRelation;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class User extends BmobUser{
@@ -109,7 +113,39 @@ public class User extends BmobUser{
         this.type = type;
     }
 
+    public void Upgrade(String totalfee) {
+
+        try {
+            Date expired = new SimpleDateFormat("yyyy-MM-dd").parse(this.expiredDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(expired);
+
+            if (totalfee.equals("0.1")) {
+                calendar.add(Calendar.MONTH, 1);
+            } else if (totalfee.equals("10")) {
+                calendar.add(Calendar.MONTH, 1);
+            } else if (totalfee.equals("100")) {
+                calendar.add(Calendar.YEAR, 1);
+            }
+            setExpiredDate(DateFormat.format("yyyy-MM-dd", calendar.getTime()).toString());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean hasExpired() {
-        return false;
+        try {
+            Date expired = new SimpleDateFormat("yyyy-MM-dd").parse(expiredDate);
+            return expired.before(new Date());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public boolean hasDiscount() {
+        return type == 0;
     }
 }

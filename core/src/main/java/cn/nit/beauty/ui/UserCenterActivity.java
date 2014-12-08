@@ -12,7 +12,6 @@ import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
-import cn.nit.beauty.utils.Authenticator;
 import com.google.inject.Inject;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
