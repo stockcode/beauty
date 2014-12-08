@@ -366,7 +366,7 @@ public final class ActivityUtil {
         Intent shortcut=new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
         // 设置属性
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getString(R.string.app_name));
-        ShortcutIconResource resource= ShortcutIconResource.fromContext(context, R.drawable.ic_launcher);
+        ShortcutIconResource resource= ShortcutIconResource.fromContext(context, R.drawable.icon);
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, resource);
         // 是否允许重复创建
         shortcut.putExtra("duplicate", false);

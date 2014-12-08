@@ -14,6 +14,7 @@ import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import org.acra.ACRA;
@@ -97,5 +98,18 @@ public class BeautyApplication extends FrontiaApplication {
                 .discCacheFileNameGenerator(new HashCodeFileNameGenerator())
                 .build();
         ImageLoader.getInstance().init(config);
+    }
+
+    public DisplayImageOptions getOptions(int drawableId){
+        return new DisplayImageOptions.Builder()
+                .showImageOnLoading(drawableId)
+                .showImageForEmptyUri(drawableId)
+                .showImageOnFail(drawableId)
+                .resetViewBeforeLoading(true)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .imageScaleType(ImageScaleType.EXACTLY)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 }

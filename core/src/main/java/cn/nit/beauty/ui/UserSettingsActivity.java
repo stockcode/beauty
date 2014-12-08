@@ -55,21 +55,27 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 
     @InjectView(R.id.user_logout)
 	TextView logout;
-	RelativeLayout update ;
-	RelativeLayout cleanCache;
-	CheckBox pushSwitch;
+
+    @InjectView(R.id.sex_choice_switch)
 	CheckBox sexSwitch;
-	
+
+    @InjectView(R.id.user_icon)
 	RelativeLayout iconLayout;
+
+    @InjectView(R.id.user_icon_image)
 	ImageView userIcon;
-	
+
+    @InjectView(R.id.user_nick)
 	RelativeLayout nickLayout;
+
+    @InjectView(R.id.user_nick_text)
 	TextView nickName;
-	
+
+    @InjectView(R.id.user_sign)
 	RelativeLayout signLayout;
+
+    @InjectView(R.id.user_sign_text)
 	TextView signature;
-	
-	IProgressControllor mIProgressControllor;
 	
 	static final int UPDATE_SEX = 11;
 	static final int UPDATE_ICON = 12;
@@ -77,34 +83,19 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 	static final int UPDATE_SIGN = 14;
 	static final int EDIT_SIGN = 15;
 
-	@Override
-	protected void findViews(View view) {
-		// TODO Auto-generated method stub
-		logout = (TextView)view.findViewById(R.id.user_logout);
-		update = (RelativeLayout)view.findViewById(R.id.settings_update);
-		cleanCache = (RelativeLayout)view.findViewById(R.id.settings_cache);
-		sexSwitch = (CheckBox)view.findViewById(R.id.sex_choice_switch);
-		
-		iconLayout = (RelativeLayout)view.findViewById(R.id.user_icon);
-		userIcon = (ImageView)view.findViewById(R.id.user_icon_image);
-		
-		nickLayout = (RelativeLayout)view.findViewById(R.id.user_nick);
-		nickName = (TextView)view.findViewById(R.id.user_nick_text);
-		
-		signLayout = (RelativeLayout)view.findViewById(R.id.user_sign);
-		signature = (TextView)view.findViewById(R.id.user_sign_text);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-	@Override
-	protected void setupViews(Bundle bundle) {
-		// TODO Auto-generated method stub
-		initPersonalInfo();
-	}
+        initPersonalInfo();
+
+        setListener();
+    }
 
 	private void initPersonalInfo(){
 		User user = userProxy.getCurrentUser();
 		if(user != null){
-			nickName.setText(user.getUsername());
+			nickName.setText(user.getNickname());
 			signature.setText(user.getSignature());
 			if(user.getSex().equals(SEX_FEMALE)){
 				sexSwitch.setChecked(true);
@@ -115,18 +106,19 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 			}
 			BmobFile avatarFile = user.getAvatar();
 			if(null != avatarFile){
-				ImageLoader.getInstance()
-				.displayImage(avatarFile.getFileUrl(), userIcon, 
-						BeautyApplication.getInstance().getOptions(R.drawable.user_icon_default_main),
-						new SimpleImageLoadingListener(){
+                ImageLoader.getInstance()
+                        .displayImage(avatarFile.getFileUrl(), userIcon,
+                                BeautyApplication.getInstance().getOptions(R.drawable.icon),
+                                new SimpleImageLoadingListener(){
 
-							@Override
-							public void onLoadingComplete(String imageUri, View view,
-									Bitmap loadedImage) {
-								super.onLoadingComplete(imageUri, view, loadedImage);
-							}
-					
-				});
+                                    @Override
+                                    public void onLoadingComplete(String imageUri, View view,
+                                                                  Bitmap loadedImage) {
+                                        // TODO Auto-generated method stub
+                                        super.onLoadingComplete(imageUri, view, loadedImage);
+                                    }
+
+                                });
 			}
 			logout.setText("退出登录");
 		}else{
@@ -147,24 +139,15 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 		return false;
 	}
 	
-	@Override
 	protected void setListener() {
 		// TODO Auto-generated method stub
 		logout.setOnClickListener(this);
-		update.setOnClickListener(this);
-		cleanCache.setOnClickListener(this);
-		pushSwitch.setOnCheckedChangeListener(this);
+
 		sexSwitch.setOnCheckedChangeListener(this);
 		
 		iconLayout.setOnClickListener(this);
 		nickLayout.setOnClickListener(this);
 		signLayout.setOnClickListener(this);
-	}
-
-	@Override
-	protected void fetchData() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -175,6 +158,7 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 			if(isLogined()){
 				userProxy.logout();
 				ActivityUtil.show(this, "登出成功。");
+                finish();
 			}else{
 				redictToLogin(GO_LOGIN);
 			}
@@ -192,9 +176,9 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 			break;
 		case R.id.user_sign:
 			if(isLogined()){
-				Intent intent = new Intent();
-				intent.setClass(this, EditSignActivity.class);
-				startActivityForResult(intent, EDIT_SIGN);
+//				Intent intent = new Intent();
+//				intent.setClass(this, EditSignActivity.class);
+//				startActivityForResult(intent, EDIT_SIGN);
 			}else{
 				redictToLogin(UPDATE_SIGN);
 			}
@@ -390,7 +374,7 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 				public void onSuccess() {
 
 					L.i("上传文件成功。" + file.getFileUrl());
-					User currentUser = userProxy.getCurrentUser()
+					User currentUser = userProxy.getCurrentUser();
 					currentUser.setAvatar(file);
 
 					currentUser.update(UserSettingsActivity.this, new UpdateListener() {
@@ -462,7 +446,7 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        LogUtils.i(TAG, file.getAbsolutePath());
+        L.i(file.getAbsolutePath());
         return file.getAbsolutePath();
 	}
 }

@@ -18,9 +18,6 @@ import android.widget.Toast;
 import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.nit.beauty.alipay.Rsa;
 import com.alipay.android.app.sdk.AliPay;
-import com.lurencun.service.autoupdate.AppUpdate;
-import com.lurencun.service.autoupdate.AppUpdateService;
-import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 

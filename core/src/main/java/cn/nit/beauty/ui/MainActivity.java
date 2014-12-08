@@ -18,8 +18,6 @@ import cn.nit.beauty.ui.listener.ShakeListener;
 import com.actionbarsherlock.app.ActionBar;
 import com.baidu.mobstat.StatService;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
-import com.lurencun.service.autoupdate.AppUpdate;
-import com.lurencun.service.autoupdate.AppUpdateService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +30,6 @@ import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.DragGridView;
 import cn.nit.beauty.widget.ScrollLayout;
-import com.lurencun.service.autoupdate.internal.SimpleJSONParser;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 

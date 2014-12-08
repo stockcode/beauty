@@ -27,6 +27,7 @@ public class UserProxy {
 	}
 	
 	public void signUp(final User user){
+        user.setSex(Constant.SEX_MALE);
 		user.setSignature("这个家伙很懒，什么也不说。。。");
 		user.signUp(mContext, new SaveListener() {
 			

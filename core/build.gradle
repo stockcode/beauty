@@ -31,8 +31,8 @@ dependencies {
     compile 'com.baidu.android:mobstat:3.1'
     compile 'com.baidu.android:pushservice:4.0.0'
     compile 'ch.acra:acra:4.5.0'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.6'
-    compile 'cn.nit:autoupdate:1.0.0@aar'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
+
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     //compile 'me.maxwin.view:OneXListview:1.0.0'
     //compile 'com.origamilabs.library:staggeredgridview:1.0.0'

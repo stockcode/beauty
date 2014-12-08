@@ -15,7 +15,7 @@ public class DialogFactory {
 
 	public static void showDialog(final Context context, String tip){
 		
-		dialog = new Dialog(context, R.style.dialog);
+		dialog = new Dialog(context, R.style.AppTheme);
 		dialog.setContentView(R.layout.dialog_layout);
 		Window window = dialog.getWindow();
 		WindowManager.LayoutParams lp = window.getAttributes();	

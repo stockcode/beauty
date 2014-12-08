@@ -153,6 +153,15 @@
         </activity>
 
         <activity
+                android:name=".ui.UserSettingsActivity"
+                android:label="用户设置"
+                android:parentActivityName=".ui.UserCenterActivity" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.UserCenterActivity" />>
+        </activity>
+
+        <activity
                 android:name="com.tencent.tauth.AuthActivity"
                 android:noHistory="true"
                 android:launchMode="singleTask" >

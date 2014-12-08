@@ -63,22 +63,8 @@ public class UserCenterActivity extends RoboActivity {
     private View.OnClickListener logoutClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            new AlertDialog.Builder(UserCenterActivity.this)
-                    .setTitle("提示")
-                    .setMessage("确认登出吗")
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            userProxy.logout();
-                            checkUserStatus();
-                            Toast.makeText(UserCenterActivity.this, "已退出登录", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    })
-                    .show();
+            Intent intent = new Intent(UserCenterActivity.this, UserSettingsActivity.class);
+            startActivity(intent);
 
         }
     };
