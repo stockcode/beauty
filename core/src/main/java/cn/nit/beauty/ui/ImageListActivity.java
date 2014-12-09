@@ -11,10 +11,13 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.GetListener;
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
+import cn.nit.beauty.Utils;
 import cn.nit.beauty.adapter.StaggeredAdapter;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.entity.PhotoGallery;
+import cn.nit.beauty.entity.User;
 import cn.nit.beauty.model.ImageInfos;
+import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
@@ -32,6 +35,8 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.baidu.mobstat.StatService;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
+import com.google.inject.Inject;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -40,8 +45,9 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.lucasr.smoothie.AsyncGridView;
 import org.lucasr.smoothie.ItemManager;
+import roboguice.activity.RoboActivity;
 
-public class ImageListActivity extends SherlockActivity {
+public class ImageListActivity extends RoboSherlockActivity {
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
@@ -52,17 +58,34 @@ public class ImageListActivity extends SherlockActivity {
 
     private PhotoGallery photoGallery;
 
+    @Inject
+    UserProxy userProxy;
+
+    private User currentUser;
     /**
      * 添加内容
      * 
      *            1为下拉刷新 2为加载更多
      */
     private void AddItemToContainer() {
+        mAdapter.clear();
 
         for(int i = 0 ; i < imageInfoList.size(); i++) {
-            if (imageInfoList.get(i).getKey().toLowerCase().contains("cover")) continue;
+            ImageInfo imageInfo = imageInfoList.get(i);
 
-            mAdapter.addItemTop(imageInfoList.get(i));
+            if (imageInfo.getKey().toLowerCase().contains("cover")) continue;
+
+            if ((imageInfo.getKey().contains("origin") && i > 3)
+                    || ( i > (imageInfoList.size() - i))) {
+
+                if (userProxy.hasExpired()) {
+                    imageInfo.setUrl(imageInfo.getUrl().replaceAll("small", "filter"));
+                }else if (imageInfo.getUrl().contains("filter")) {
+                    imageInfo.setUrl(imageInfo.getUrl().replaceAll("filter", "small"));
+                }
+            }
+
+            mAdapter.addItemTop(imageInfo);
         }
         mAdapter.notifyDataSetChanged();
     }
@@ -94,8 +117,22 @@ public class ImageListActivity extends SherlockActivity {
             public void onClick(View v) {
                 StaggeredAdapter.ViewHolder holder = (StaggeredAdapter.ViewHolder) v.getTag();
 
+                if (holder.imageInfo.getUrl().contains("filterthumb")) {
+                    if (currentUser == null) {
+                        Intent intent = new Intent(ImageListActivity.this, LoginActivity.class);
+                        startActivityForResult(intent, Utils.LOGIN);
+                        Toast.makeText(ImageListActivity.this, "查看更多图片请先登录", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (currentUser.hasExpired()) {
+                        Intent intent = new Intent(ImageListActivity.this, VipProductActivity.class);
+                        startActivityForResult(intent, Utils.VIP);
+                        Toast.makeText(ImageListActivity.this, "有效期为" + currentUser.getExpiredDate() + "，请续费", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
                 final Intent intent = new Intent(ImageListActivity.this, ImageGalleryActivity.class);
-                intent.putExtra("objectKey", holder.objectKey);
+                intent.putExtra("objectKey", holder.imageInfo.getKey());
                 intent.putExtra("folder", objectKey);
                 intent.putExtra("title", title);
                 startActivity(intent);
@@ -184,6 +221,8 @@ public class ImageListActivity extends SherlockActivity {
         setProgressBarIndeterminateVisibility(true);
 
         StatService.onResume(this);
+
+        currentUser = userProxy.getCurrentUser();
     }
 
     @Override
@@ -228,6 +267,25 @@ public class ImageListActivity extends SherlockActivity {
             imageInfoList = imageInfos.getResults();
             AddItemToContainer();
             setProgressBarIndeterminateVisibility(false);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Utils.LOGIN) {
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(ImageListActivity.this, "取消登录，已返回", Toast.LENGTH_SHORT).show();
+            } else {
+                AddItemToContainer();
+            }
+        } else if (requestCode == Utils.VIP) {
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(ImageListActivity.this, "取消续费，已返回", Toast.LENGTH_SHORT).show();
+            } else {
+                AddItemToContainer();
+            }
         }
     }
 }// end of class

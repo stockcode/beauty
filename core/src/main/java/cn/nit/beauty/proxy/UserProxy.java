@@ -76,8 +76,12 @@ public class UserProxy {
 			}
 		});
 	}
-	
-	public interface ISignUpListener{
+
+    public boolean hasExpired() {
+        return getCurrentUser() == null || getCurrentUser().hasExpired();
+    }
+
+    public interface ISignUpListener{
 		void onSignUpSuccess();
 		void onSignUpFailure(String msg);
 	}

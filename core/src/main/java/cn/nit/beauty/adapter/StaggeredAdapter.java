@@ -42,7 +42,7 @@ public class StaggeredAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder;
-        ImageInfo duitangInfo = mInfos.get(position);
+        ImageInfo imageInfo = mInfos.get(position);
 
         if (convertView == null) {
             LayoutInflater layoutInflator = LayoutInflater.from(parent.getContext());
@@ -57,16 +57,14 @@ public class StaggeredAdapter extends BaseAdapter {
 
         holder = (ViewHolder) convertView.getTag();
 
-        String title = duitangInfo.getTitle();
+        String title = imageInfo.getTitle();
         String[] strs = title.split("/");
         title = strs[strs.length-1];
 
         if (title.equals("")) holder.contentView.setVisibility(View.GONE);
 
         holder.contentView.setText(title);
-
-        holder.objectKey = duitangInfo.getKey();
-        holder.objectId = duitangInfo.getObjectId();
+        holder.imageInfo = imageInfo;
         //ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getUrl(), holder.imageView);
         return convertView;
     }
@@ -79,8 +77,7 @@ public class StaggeredAdapter extends BaseAdapter {
         public ScaleImageView imageView;
         TextView contentView;
         TextView timeView;
-        public String objectKey;
-        public String objectId;
+        public ImageInfo imageInfo;
     }
 
     @Override

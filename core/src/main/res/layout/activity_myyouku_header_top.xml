@@ -10,7 +10,7 @@
             <ImageView android:id="@id/portrait1" android:background="@android:color/transparent" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_margin="@dimen/layout_myyouku_avatar_padding" android:src="@drawable/ic_home_circle" android:scaleType="centerCrop" />
         </RelativeLayout>
         <RelativeLayout android:id="@id/layout_portrait2" android:layout_width="fill_parent" android:layout_height="fill_parent">
-            <ImageView android:id="@id/portrait2" android:background="@drawable/ic_home_circle" android:padding="2.0dip" android:layout_width="@dimen/layout_myyouku_avatar_height" android:layout_height="@dimen/layout_myyouku_avatar_height" />
+            <de.hdodenhof.circleimageview.CircleImageView android:id="@id/portrait2" android:background="@drawable/ic_home_circle" android:padding="2.0dip" android:layout_width="@dimen/layout_myyouku_avatar_height" android:layout_height="@dimen/layout_myyouku_avatar_height" />
         </RelativeLayout>
         <ImageView android:id="@id/img_myyouku_vip" android:layout_width="@dimen/img_myyouku_avatar_width" android:layout_height="@dimen/img_myyouku_avatar_width" android:src="@drawable/vip_no" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" />
     </RelativeLayout>

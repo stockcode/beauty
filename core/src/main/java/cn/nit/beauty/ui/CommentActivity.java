@@ -99,6 +99,9 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		photoGallery = (PhotoGallery)getIntent().getSerializableExtra("photoGallery");
+
+        setTitle(photoGallery.getTitle());
+
 		pageNum = 0;
 		
 		mAdapter = new CommentAdapter(CommentActivity.this, comments);

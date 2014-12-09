@@ -62,6 +62,8 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        BmobUpdateAgent.setUpdateOnlyWifi(false);
+
         BmobUpdateAgent.update(this);
 
         database = new LaucherDataBase(getApplicationContext());
@@ -215,9 +217,12 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
         String objectkey = Data.getRandomKey();
 
         if (!objectkey.equals("")) {
+            String[] strs = objectkey.split(":");
+
             Intent intent = new Intent(MainActivity.this,
                     ImageListActivity.class);
-            intent.putExtra("objectKey", objectkey.split(":")[0] + "smallthumb/");
+            intent.putExtra("objectKey", strs[0] + "smallthumb/");
+            intent.putExtra("objectId", strs[2]);
             startActivity(intent);
         }
     }

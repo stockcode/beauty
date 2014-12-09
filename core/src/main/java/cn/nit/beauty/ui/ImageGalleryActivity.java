@@ -105,7 +105,9 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
 
             @Override
             public void onPageSelected(int i) {
-                if (objectKey.startsWith("origin") || i > (imageInfoList.size() - i)) {
+                if ((objectKey.startsWith("origin") && i > 3)
+                        || i > (imageInfoList.size() - i)) {
+
                     autoPlay = false;
 
                     if (currentUser == null) {

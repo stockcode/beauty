@@ -27,12 +27,11 @@
             android:text="头像"
             android:layout_centerVertical="true"
             />
-        <ImageView 
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/user_icon_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:background="#eeeeee"
-            android:scaleType="centerInside"
             android:src="@drawable/user_icon_default_main"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"

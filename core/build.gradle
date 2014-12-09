@@ -33,6 +33,7 @@ dependencies {
     compile 'ch.acra:acra:4.5.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
 
+    compile 'de.hdodenhof:circleimageview:1.2.1'
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     //compile 'me.maxwin.view:OneXListview:1.0.0'
     //compile 'com.origamilabs.library:staggeredgridview:1.0.0'
