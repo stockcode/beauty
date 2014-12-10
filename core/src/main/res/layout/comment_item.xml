@@ -18,6 +18,15 @@
             android:text = "userName"
             />
         <TextView
+                android:id="@+id/comment_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:layout_below="@+id/userName_comment"
+                android:textColor="#DCDCDC"
+                android:text = "刚刚"
+                />
+        <TextView
             android:id="@+id/index_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,6 +44,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dip"
             android:text = "评论"
+            android:textSize="16sp"
+            android:textColor="#666666"
+            />
+    <TextView
+            android:id="@+id/reply_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:padding="5dip"
+            android:visibility="gone"
+            android:background="#DCDCDC"
             android:textSize="16sp"
             android:textColor="#666666"
             />

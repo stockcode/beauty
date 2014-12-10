@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -83,6 +84,7 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 	
 	private int pageNum;
 
+	private Comment replyComment = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +114,9 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				ActivityUtil.show(CommentActivity.this, "po" + position);
+				replyComment = comments.get(position);
+				commentContent.setHint("回复：" + replyComment.getUser().getNickname());
+				onClickComment();
 			}
 		});
 		commentList.setCacheColorHint(0);
@@ -211,6 +215,12 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 		final Comment comment = new Comment();
 		comment.setUser(user);
 		comment.setCommentContent(content);
+
+		if (replyComment != null) {
+			comment.setReplyContent(replyComment.getUser().getNickname() + ":" + replyComment.getCommentContent());
+		}
+
+
 		comment.save(this, new SaveListener() {
 			
 			@Override
@@ -262,9 +272,26 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 	}
 	
 	private void hideSoftInput(){
+
+		commentContent.setHint("来评论一句吧");
+		replyComment = null;
+
 		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);  
 
 		imm.hideSoftInputFromWindow(commentContent.getWindowToken(), 0);
+
+
+	}
+
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		int keyCode = event.getKeyCode();
+		switch (keyCode) {
+			case KeyEvent.KEYCODE_BACK:
+				hideSoftInput();
+				break;
+		}
+		super.dispatchKeyEvent(event);
+		return true;
 	}
 
 	@Override

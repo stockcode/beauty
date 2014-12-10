@@ -148,8 +148,7 @@
         </activity>
 
         <activity
-                android:name=".ui.CommentActivity"
-                android:label="用户登录">
+                android:name=".ui.CommentActivity">
         </activity>
 
         <activity

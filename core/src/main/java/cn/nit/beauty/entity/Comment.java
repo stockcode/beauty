@@ -4,10 +4,10 @@ import cn.bmob.v3.BmobObject;
 
 public class Comment extends BmobObject{
 	
-	public static final String TAG = "Comment";
-
 	private User user;
 	private String commentContent;
+	private String replyContent;
+
 	public User getUser() {
 		return user;
 	}
@@ -20,7 +20,12 @@ public class Comment extends BmobObject{
 	public void setCommentContent(String commentContent) {
 		this.commentContent = commentContent;
 	}
-	
-	
 
+	public String getReplyContent() {
+		return replyContent;
+	}
+
+	public void setReplyContent(String replyContent) {
+		this.replyContent = replyContent;
+	}
 }

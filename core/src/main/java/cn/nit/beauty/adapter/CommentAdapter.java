@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import cn.nit.beauty.R;
 import cn.nit.beauty.entity.Comment;
+import cn.nit.beauty.utils.DateUtil;
 import cn.nit.beauty.utils.L;
 
 public class CommentAdapter extends BaseContentAdapter<Comment>{
@@ -24,7 +25,9 @@ public class CommentAdapter extends BaseContentAdapter<Comment>{
 			viewHolder = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.comment_item, null);
 			viewHolder.userName = (TextView)convertView.findViewById(R.id.userName_comment);
+			viewHolder.commentDate = (TextView)convertView.findViewById(R.id.comment_date);
 			viewHolder.commentContent = (TextView)convertView.findViewById(R.id.content_comment);
+			viewHolder.replycomment = (TextView)convertView.findViewById(R.id.reply_comment);
 			viewHolder.index = (TextView)convertView.findViewById(R.id.index_comment);
 			convertView.setTag(viewHolder);
 		}else{
@@ -40,13 +43,21 @@ public class CommentAdapter extends BaseContentAdapter<Comment>{
 		}
 		viewHolder.index.setText((position+1)+"楼");
 		viewHolder.commentContent.setText(comment.getCommentContent());
-		
+		viewHolder.commentDate.setText(DateUtil.getStandardDate(comment.getCreatedAt()));
+
+		if (comment.getReplyContent() != null) {
+			viewHolder.replycomment.setText(comment.getReplyContent());
+			viewHolder.replycomment.setVisibility(View.VISIBLE);
+		}
+
 		return convertView;
 	}
 
 	public static class ViewHolder{
 		public TextView userName;
 		public TextView commentContent;
+		public TextView replycomment;
+		public TextView commentDate;
 		public TextView index;
 	}
 }
