@@ -6,10 +6,13 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.R;
 import cn.nit.beauty.entity.Comment;
 import cn.nit.beauty.utils.DateUtil;
 import cn.nit.beauty.utils.L;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CommentAdapter extends BaseContentAdapter<Comment>{
 
@@ -28,6 +31,7 @@ public class CommentAdapter extends BaseContentAdapter<Comment>{
 			viewHolder.commentDate = (TextView)convertView.findViewById(R.id.comment_date);
 			viewHolder.commentContent = (TextView)convertView.findViewById(R.id.content_comment);
 			viewHolder.replycomment = (TextView)convertView.findViewById(R.id.reply_comment);
+			viewHolder.userIcon = (CircleImageView) convertView.findViewById(R.id.user_icon_image);
 			viewHolder.index = (TextView)convertView.findViewById(R.id.index_comment);
 			convertView.setTag(viewHolder);
 		}else{
@@ -50,6 +54,12 @@ public class CommentAdapter extends BaseContentAdapter<Comment>{
 			viewHolder.replycomment.setVisibility(View.VISIBLE);
 		}
 
+		if(null != comment.getUser().getAvatar()){
+			ImageLoader.getInstance()
+					.displayImage(comment.getUser().getAvatar().getFileUrl(), viewHolder.userIcon,
+							BeautyApplication.getInstance().getOptions(R.drawable.icon));
+		}
+
 		return convertView;
 	}
 
@@ -59,5 +69,6 @@ public class CommentAdapter extends BaseContentAdapter<Comment>{
 		public TextView replycomment;
 		public TextView commentDate;
 		public TextView index;
+		public CircleImageView userIcon;
 	}
 }

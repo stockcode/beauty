@@ -10,11 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -49,7 +46,6 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
-@ContentView(R.layout.activity_comment)
 public class CommentActivity extends RoboActivity implements OnClickListener{
 
     @InjectView(R.id.comment_list)
@@ -89,9 +85,13 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setupViews(savedInstanceState);
+		setContentView(R.layout.activity_comment);
 
-        setListener();
+		setupViews(savedInstanceState);
+
+
+
+		setListener();
 
         fetchComment();
     }
@@ -101,8 +101,6 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		photoGallery = (PhotoGallery)getIntent().getSerializableExtra("photoGallery");
-
-        setTitle(photoGallery.getTitle());
 
 		pageNum = 0;
 		
@@ -147,7 +145,6 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 				if(data.size()!=0 && data.get(data.size()-1)!=null){
 					
 					if(data.size()<Constant.NUMBERS_PER_PAGE){
-						ActivityUtil.show(CommentActivity.this, "已加载完所有评论~");
 						footer.setText("暂无更多评论~");
 					}
 					
@@ -156,7 +153,6 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 					setListViewHeightBasedOnChildren(commentList);
 					L.i("refresh");
 				}else{
-					ActivityUtil.show(CommentActivity.this, "暂无更多评论~");
 					footer.setText("暂无更多评论~");
 					pageNum--;
 				}

@@ -108,17 +108,7 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 			if(null != avatarFile){
                 ImageLoader.getInstance()
                         .displayImage(avatarFile.getFileUrl(), userIcon,
-                                BeautyApplication.getInstance().getOptions(R.drawable.icon),
-                                new SimpleImageLoadingListener(){
-
-                                    @Override
-                                    public void onLoadingComplete(String imageUri, View view,
-                                                                  Bitmap loadedImage) {
-                                        // TODO Auto-generated method stub
-                                        super.onLoadingComplete(imageUri, view, loadedImage);
-                                    }
-
-                                });
+                                BeautyApplication.getInstance().getOptions(R.drawable.icon));
 			}
 			logout.setText("退出登录");
 		}else{
