@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.entity.User;
@@ -21,6 +23,9 @@ import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import cn.smssdk.gui.RegisterPage;
 import com.google.inject.Inject;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -37,12 +42,15 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 @ContentView(R.layout.login)
@@ -77,7 +85,7 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
         super.onCreate(savedInstanceState);
         initView();
 
-        api = WXAPIFactory.createWXAPI(this, Data.WEIXIN_APP_ID, false);
+        api = WXAPIFactory.createWXAPI(this, Data.WEIXIN_APP_ID, true);
 
         api.registerApp(Data.WEIXIN_APP_ID);
 
@@ -124,12 +132,14 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
 		}
 	}
 
+    private BaseUiListener baseUiListener = new BaseUiListener();
+
     public void onQQClick(View v) {
         mTencent = Tencent.createInstance(Data.QQ_APP_ID, getApplicationContext());
         if (!mTencent.isSessionValid())
         {
             user = new User();
-            mTencent.login(this, "", new BaseUiListener());
+            mTencent.login(this, "", baseUiListener);
         }
     }
 
@@ -195,6 +205,8 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
         ActivityUtil.show(this, "登录成功。");
         L.i("login sucessed!");
         closeLoginUI(RESULT_OK);
+
+        if (mTencent != null) mTencent.logout(getApplicationContext());
     }
 
     @Override
@@ -211,7 +223,9 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
 
     @Override
     public void onSignUpFailure(String msg) {
-        userProxy.login(user.getUsername(), user.getPassword());
+        ActivityUtil.show(this, "注册失败，请检查网络");
+        L.i("signup failed!"+msg);
+
     }
 
     private class BaseUiListener implements IUiListener {
@@ -225,24 +239,66 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
                 if (json.has("openid")) {
                     user.setUsername(json.get("openid").toString());
                     user.setPassword(json.get("openid").toString());
+                    user.login(LoginActivity.this, new SaveListener() {
+                        @Override
+                        public void onSuccess() {
+                            onLoginSuccess();
+                        }
+
+                        @Override
+                        public void onFailure(int i, String s) {
+                            UserInfo info = new UserInfo(getApplicationContext(), mTencent.getQQToken());
+                            info.getUserInfo(baseUiListener);
+                        }
+                    });
+                    return;
                 }
 
                 if (json.has("nickname")) {
 
-                    mTencent.logout(getApplicationContext());
+
+
+                    String figureurl = json.get("figureurl_qq_1").toString();
 
                     user.setNickname(json.get("nickname").toString());
                     user.setLogintype("QQ");
 
-                    userProxy.signUp(user);
+                    AsyncHttpClient client = new AsyncHttpClient();
+
+                    File avatarFile = File.createTempFile("avatar", ".jpg");
+
+                    client.get(figureurl, new FileAsyncHttpResponseHandler(avatarFile) {
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, File file) {
+                            final BmobFile bmobFile = new BmobFile(file);
+
+                            bmobFile.upload(LoginActivity.this, new UploadFileListener() {
+                                @Override
+                                public void onSuccess() {
+                                    user.setAvatar(bmobFile);
+                                    userProxy.signUp(user);
+                                }
+
+                                @Override
+                                public void onFailure(int i, String s) {
+
+                                }
+                            });
+                        }
+                    });
+
 
                     progressbar.setVisibility(View.VISIBLE);
 
-                } else {
-                    UserInfo info = new UserInfo(getApplicationContext(), mTencent.getQQToken());
-                    info.getUserInfo(this);
                 }
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

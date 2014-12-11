@@ -37,8 +37,7 @@ public class UserProxy {
                 try {
                     String cloudCodeName = "firstRegister";
                     JSONObject params = new JSONObject();
-                    params.put("username", user.getUsername());
-                    params.put("password", user.getPassword());
+                    params.put("objectId", user.getObjectId());
                     AsyncCustomEndpoints cloudCode = new AsyncCustomEndpoints();
 
                     cloudCode.callEndpoint(mContext, cloudCodeName, params, new CloudCodeListener() {

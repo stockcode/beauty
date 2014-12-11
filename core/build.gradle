@@ -44,7 +44,6 @@ dependencies {
     compile 'com.tencent:opensdk:2.6'
     compile 'com.tencent:mtasdk:2.0.0'
     compile 'com.tencent:midsdk:2.1.0'
-    compile 'com.tencent:mmsdk:1.0.0'
     compile 'com.github.castorflex.smoothprogressbar:library:1.0.0'
 
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -102,6 +101,7 @@ android {
 
     buildTypes {
         debug {
+            signingConfig signingConfigs.release
         }
         release {
             signingConfig signingConfigs.release
@@ -125,27 +125,3 @@ android {
         abortOnError false
     }
 }
-
-configurations {
-    ftpAntTask
-}
-
-dependencies {
-    ftpAntTask("org.apache.ant:ant-commons-net:1.8.4") {
-        module("commons-net:commons-net:1.4.1") {
-            dependencies "oro:oro:2.0.8:jar"
-        }
-    }
-}
-
-task ftp << {
-    ant {
-        taskdef(name: 'ftp',
-                classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
-                classpath: configurations.ftpAntTask.asPath)
-        ftp(server: "ftp.apache.org", userid: "anonymous", password: "me@myorg.com") {
-            fileset(dir: "htdocs/manual")
-        }
-    }
-}
-

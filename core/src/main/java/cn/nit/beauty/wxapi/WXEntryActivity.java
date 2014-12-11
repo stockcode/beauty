@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.model.Person;
 import cn.nit.beauty.proxy.UserProxy;
@@ -13,6 +16,7 @@ import cn.nit.beauty.request.LoginRequest;
 import cn.nit.beauty.utils.*;
 import com.google.inject.Inject;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
@@ -20,6 +24,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.tencent.connect.UserInfo;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
@@ -31,6 +36,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import roboguice.activity.RoboActivity;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -88,27 +95,75 @@ public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler,
             client.get("https://api.weixin.qq.com/sns/oauth2/access_token", params, new JsonHttpResponseHandler(){
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
-                        RequestParams params = new RequestParams();
+                        final RequestParams params = new RequestParams();
                         params.put("access_token", response.getString("access_token"));
                         params.put("openid", response.getString("openid"));
-                        client.get("https://api.weixin.qq.com/sns/userinfo", params, new JsonHttpResponseHandler(){
-                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                try {
-                                    user = new User();
 
-                                    user.setUsername(response.getString("openid"));
-                                    user.setPassword(response.getString("openid"));
-                                    user.setNickname(response.getString("nickname"));
-                                    user.setLogintype("WEIXIN");
+                        user = new User();
 
-                                    userProxy.signUp(user);
+                        user.setUsername(response.getString("openid"));
+                        user.setPassword(response.getString("openid"));
+                        user.setLogintype("WEIXIN");
 
-                                    DialogFactory.showDialog(WXEntryActivity.this, "正在验证账号...");
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                        user.login(WXEntryActivity.this, new SaveListener() {
+                            @Override
+                            public void onSuccess() {
+                                onLoginSuccess();
+                            }
+
+                            @Override
+                            public void onFailure(int i, String s) {
+                                client.get("https://api.weixin.qq.com/sns/userinfo", params, new JsonHttpResponseHandler() {
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        try {
+
+                                            user.setNickname(response.getString("nickname"));
+
+
+                                            String headimgurl = response.getString("headimgurl");
+
+                                            File avatarFile = File.createTempFile("avatar", ".jpg");
+
+                                            client.get(headimgurl, new FileAsyncHttpResponseHandler(avatarFile) {
+                                                @Override
+                                                public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+
+                                                }
+
+                                                @Override
+                                                public void onSuccess(int statusCode, Header[] headers, File file) {
+                                                    final BmobFile bmobFile = new BmobFile(file);
+
+                                                    bmobFile.upload(WXEntryActivity.this, new UploadFileListener() {
+                                                        @Override
+                                                        public void onSuccess() {
+                                                            user.setAvatar(bmobFile);
+                                                            userProxy.signUp(user);
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(int i, String s) {
+
+                                                        }
+                                                    });
+                                                }
+                                            });
+
+
+                                            DialogFactory.showDialog(WXEntryActivity.this, "正在验证账号...");
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
                             }
                         });
+
+
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -127,7 +182,7 @@ public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler,
     @Override
     public void onSignUpFailure(String msg) {
         DialogFactory.dismiss();
-        userProxy.login(user.getUsername(), user.getPassword());
+        ActivityUtil.show(this, "注册失败。" + msg);
     }
 
     @Override
