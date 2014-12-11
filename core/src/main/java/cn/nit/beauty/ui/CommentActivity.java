@@ -46,6 +46,7 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
+@ContentView(R.layout.activity_comment)
 public class CommentActivity extends RoboActivity implements OnClickListener{
 
     @InjectView(R.id.comment_list)
@@ -59,9 +60,13 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 
     @InjectView(R.id.comment_commit)
 	private Button commentCommit;
-	
-	private TextView userName;
-	private TextView commentItemContent;
+
+	@InjectView(R.id.title)
+	private TextView title;
+
+	@InjectView(R.id.commentCount)
+	private TextView commentCount;
+
 	private ImageView commentItemImage;
 	
 	private ImageView userLogo;
@@ -85,8 +90,6 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_comment);
-
 		setupViews(savedInstanceState);
 
 
@@ -101,6 +104,8 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		photoGallery = (PhotoGallery)getIntent().getSerializableExtra("photoGallery");
+
+		title.setText(photoGallery.getTitle());
 
 		pageNum = 0;
 		
@@ -122,6 +127,8 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 		commentList.setScrollContainer(false);
 		commentList.setFastScrollEnabled(true);
 		commentList.setSmoothScrollbarEnabled(true);
+
+		updateCommentCount();
 	}
 
 	protected void setListener() {
@@ -235,12 +242,13 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 				BmobRelation relation = new BmobRelation();
 				relation.add(comment);
 				photoGallery.setRelation(relation);
+				photoGallery.setCommentCount(photoGallery.getCommentCount() + 1);
                 photoGallery.update(CommentActivity.this, new UpdateListener() {
 					
 					@Override
 					public void onSuccess() {
 						L.i("更新评论成功。");
-//						fetchData();
+						commentCount.setText(photoGallery.getCommentCount() + "条评论");
 					}
 
 					@Override
@@ -259,6 +267,9 @@ public class CommentActivity extends RoboActivity implements OnClickListener{
 		});
 	}
 
+	private void updateCommentCount() {
+		commentCount.setText(photoGallery.getCommentCount() + "条评论");
+	}
 	private void onClickComment() {
 		commentContent.requestFocus();
 
