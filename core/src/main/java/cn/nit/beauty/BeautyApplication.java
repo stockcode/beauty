@@ -52,14 +52,6 @@ public class BeautyApplication extends FrontiaApplication {
         return ActivityManagerUtils.getInstance().getTopActivity();
     }
 
-    public User getCurrentUser() {
-        User user = BmobUser.getCurrentUser(myApplication, User.class);
-        if(user!=null){
-            return user;
-        }
-        return null;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();

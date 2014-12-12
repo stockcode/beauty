@@ -137,6 +137,10 @@
         </activity>
 
         <activity
+                android:name=".ui.InputActivity">
+        </activity>
+
+        <activity
                 android:name=".wxapi.WXEntryActivity"
                 android:theme="@android:style/Theme.Dialog"
                 android:exported="true" />

@@ -32,6 +32,7 @@ import cn.bmob.v3.listener.UploadFileListener;
 
 import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.R;
+import cn.nit.beauty.Utils;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.ActivityUtil;
@@ -76,16 +77,24 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 
     @InjectView(R.id.user_sign_text)
 	TextView signature;
-	
+
+	@InjectView(R.id.tvPay)
+	TextView tvPay;
+
+
 	static final int UPDATE_SEX = 11;
 	static final int UPDATE_ICON = 12;
 	static final int GO_LOGIN = 13;
-	static final int UPDATE_SIGN = 14;
+	static final int UPDATE_NICK = 14;
 	static final int EDIT_SIGN = 15;
+
+	User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+		user = userProxy.getCurrentUser();
 
         initPersonalInfo();
 
@@ -93,7 +102,7 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
     }
 
 	private void initPersonalInfo(){
-		User user = userProxy.getCurrentUser();
+
 		if(user != null){
 			nickName.setText(user.getNickname());
 			signature.setText(user.getSignature());
@@ -115,23 +124,12 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 			logout.setText("登录");
 		}
 	}
-
-	
-	/**
-	 * 判断用户是否登录
-	 * @return
-	 */
-	private boolean isLogined(){
-		User user = userProxy.getCurrentUser();
-		if(user != null){
-			return true;
-		}
-		return false;
-	}
 	
 	protected void setListener() {
 		// TODO Auto-generated method stub
 		logout.setOnClickListener(this);
+
+		tvPay.setOnClickListener(this);
 
 		sexSwitch.setOnCheckedChangeListener(this);
 		
@@ -142,36 +140,40 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		Intent intent;
+
 		switch (v.getId()) {
+			case R.id.tvPay:
+				intent = new Intent(UserSettingsActivity.this, VipProductActivity.class);
+				startActivityForResult(intent, Utils.VIP);
+				break;
 		case R.id.user_logout:
-			if(isLogined()){
 				userProxy.logout();
 				ActivityUtil.show(this, "登出成功。");
                 finish();
-			}else{
-				redictToLogin(GO_LOGIN);
-			}
+
 			break;
 
 		case R.id.user_icon:
-			if(isLogined()){
 				showAlbumDialog();
-			}else{
-				redictToLogin(UPDATE_ICON);
-			}
 			break;
 		case R.id.user_nick:
-			//无需设置
+			intent = new Intent();
+			intent.putExtra("title", "更改昵称");
+			intent.putExtra("content", user.getNickname());
+			intent.putExtra("hint", "好名字可以让你的朋友更容易记住你");
+
+			intent.setClass(this, InputActivity.class);
+			startActivityForResult(intent, UPDATE_NICK);
 			break;
 		case R.id.user_sign:
-			if(isLogined()){
-//				Intent intent = new Intent();
-//				intent.setClass(this, EditSignActivity.class);
-//				startActivityForResult(intent, EDIT_SIGN);
-			}else{
-				redictToLogin(UPDATE_SIGN);
-			}
+			intent = new Intent();
+			intent.putExtra("title", "个性签名");
+			intent.putExtra("content", user.getSignature());
+			intent.putExtra("hint", "好签名可以让你的朋友记住你");
+
+				intent.setClass(this, InputActivity.class);
+				startActivityForResult(intent, EDIT_SIGN);
 			break;
 		default:
 			break;
@@ -259,8 +261,6 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 	}
 	
 	private void updateSex(int sex){
-		User user = userProxy.getCurrentUser();
-		if(user!=null){
 			if(sex == 0){
 				user.setSex(SEX_FEMALE);
 			}else{
@@ -272,7 +272,6 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 				@Override
 				public void onSuccess() {
 
-					ActivityUtil.show(UserSettingsActivity.this,"更新信息成功。");
 					L.i("更新信息成功。");
 				}
 				
@@ -283,19 +282,10 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 					L.i("更新失败1-->"+arg1);
 				}
 			});
-		}else{
-			redictToLogin(UPDATE_SEX);
-		}
+
 		
 	}
 
-	private void redictToLogin(int requestCode){
-		Intent intent = new Intent();
-		intent.setClass(this, LoginActivity.class);
-		startActivityForResult(intent, requestCode);
-		ActivityUtil.show(this, "请先登录。");
-	}
-	
 	String iconUrl;
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -309,11 +299,14 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 				initPersonalInfo();
 				iconLayout.performClick();
 				break;
-			case UPDATE_SIGN:
-				initPersonalInfo();
-				signLayout.performClick();
-				break;
+			case UPDATE_NICK:
+					user.setNickname(data.getStringExtra("content"));
+					user.update(UserSettingsActivity.this);
+					initPersonalInfo();
+					break;
 			case EDIT_SIGN:
+				user.setSignature(data.getStringExtra("content"));
+				user.update(UserSettingsActivity.this);
 				initPersonalInfo();
 				break;
 			case 1:
@@ -348,6 +341,7 @@ public class UserSettingsActivity extends RoboActivity implements OnClickListene
 				initPersonalInfo();
 				logout.setText("退出登录");
 				break;
+
 			default:
 				break;
 			}

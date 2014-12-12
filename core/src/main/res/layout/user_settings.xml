@@ -31,7 +31,6 @@
             android:id="@+id/user_icon_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="#eeeeee"
             android:src="@drawable/user_icon_default_main"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -174,11 +173,11 @@
         android:background="@drawable/selector_settings_item_down"
         >
         <TextView 
-            android:id="@+id/settings_date_tips"
+            android:id="@+id/tvPay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/tipstheme"
-            android:text="续费"
+            android:text="购买服务"
             android:layout_centerVertical="true"
             android:paddingTop="8dp"
         	android:paddingBottom="8dp"
