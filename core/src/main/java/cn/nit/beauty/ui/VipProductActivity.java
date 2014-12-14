@@ -37,7 +37,7 @@ import java.util.Date;
 import java.util.List;
 
 @ContentView(R.layout.activity_vip_product)
-public class VipProductActivity extends RoboActivity {
+public class VipProductActivity extends RoboActivity implements UserProxy.ILoginListener{
     @InjectView(R.id.vip_product_layout_item_first)
     RelativeLayout vip_product_layout_item_first;
 
@@ -59,9 +59,8 @@ public class VipProductActivity extends RoboActivity {
             //Toast.makeText(VipProductActivity.this, result, Toast.LENGTH_SHORT).show();
 
             if (result.contains("9000")) {
-                userProxy.getCurrentUser().Upgrade(products.get(msg.what).saleprice.replaceAll("元", ""));
-                setResult(RESULT_OK);
-                finish();
+                userProxy.login(userProxy.getCurrentUser().getUsername(), userProxy.getCurrentUser().getPassword());
+                //userProxy.getCurrentUser().Upgrade(products.get(msg.what).saleprice.replaceAll("元", ""));
             }
         };
     };
@@ -71,7 +70,7 @@ public class VipProductActivity extends RoboActivity {
         @Override
         public void onClick(View v) {
 
-            if (currentUser != null) {
+            if (currentUser == null) {
                 Intent intent = new Intent(VipProductActivity.this, LoginActivity.class);
                 startActivityForResult(intent, Utils.LOGIN);
                 Toast.makeText(VipProductActivity.this, "购买请先登录", Toast.LENGTH_SHORT).show();
@@ -190,7 +189,7 @@ public class VipProductActivity extends RoboActivity {
     }
 
     private String getNotifyUrl(String tradeNo, String totalFee) {
-        String url = String.format("http://www.matesapp.cn:8080/beauty-ajax/api/notify?sessionid=%s&type=%s&tradeno=%s",
+        String url = String.format("/beauty-ajax/api/notify?sessionid=%s&type=%s&tradeno=%s",
                 currentUser.getObjectId(), totalFee, tradeNo);
 
         return URLEncoder.encode(url);
@@ -240,6 +239,17 @@ public class VipProductActivity extends RoboActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public void onLoginFailure(String msg) {
+
     }
 
     class Product {

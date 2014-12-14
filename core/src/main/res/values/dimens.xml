@@ -3,7 +3,7 @@
 <dimen name="activity_myyouku_paddingbottom">6.0dip</dimen>
 <dimen name="activity_myyouku_paddingleft">7.0dip</dimen>
 <dimen name="activity_myyouku_gridview_verticalspacing">4.0dip</dimen>
-    <dimen name="activity_myyouku_header_top_layout_height">162.0dip</dimen>
+    <dimen name="activity_myyouku_header_top_layout_height">100dip</dimen>
     <dimen name="layout_myyouku_avatar_width">67.0dip</dimen>
     <dimen name="layout_myyouku_avatar_height">60.0dip</dimen>
     <dimen name="layout_myyouku_avatar_marginleft">9.0dip</dimen>

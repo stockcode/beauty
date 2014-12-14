@@ -115,7 +115,6 @@ public class SplashActivity extends Activity {
                 Category item = new Category();
                 item.setCATEGORY_ICON(Data.Items_icon[j]);
                 item.setCATEGORY("ROOT");
-                item.setICON(Data.Item0_icon[j]);
                 item.setTITLE(Data.Item0[j]);
                 item.setURL(Data.Items_url[j]);
                 item.setCHOICE(true);

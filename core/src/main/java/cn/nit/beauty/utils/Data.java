@@ -50,13 +50,10 @@ public class Data {
 	public static String[] Items_url = { "asia", "occident", "china", "favorite", "daily", "origin"};
 	public static int[] Items_icon = { R.drawable.asia, R.drawable.occident,
 			R.drawable.china, R.drawable.favorite,
-			R.drawable.daily, R.drawable.origin, R.drawable.add_fun,
-			R.drawable.add_weibo };
+			R.drawable.daily, R.drawable.origin };
 
-	public static String[] Item0 = { "岛国风情", "欧美情调", "中国气质","艳门天下","每日更新","原创自拍"};
+	public static String[] Item0 = { "岛国风情", "欧美情调", "中国气质","我的最爱","每日更新","原创自拍"};
 	public static Map<String, List<String>> categoryMap = new HashMap<String, List<String>>();
-	public static int[] Item0_icon = { R.drawable.c_love_channel,R.drawable.c_net_new, R.drawable.c_user
-		,R.drawable.c_entertainment,R.drawable.c_financial,R.drawable.c_technoledge};
 
 
     public static String getRandomKey() {
