@@ -8,7 +8,9 @@ import android.content.*;
 import android.preference.PreferenceManager;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.listener.GetListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
@@ -19,6 +21,7 @@ import cn.nit.beauty.entity.User;
 import cn.nit.beauty.model.ImageInfos;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.request.ImageListRequest;
+import cn.nit.beauty.utils.ActivityUtil;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 
@@ -184,9 +187,7 @@ public class ImageListActivity extends RoboSherlockActivity {
                 startActivity(intent);
                 return true;
             case R.id.mnuFavoriate:
-                database.updateFavorite(objectKey.replaceAll("/smallthumb", ""));
-                Data.categoryMap.put("favorite", database.getFavoriteList());
-                Toast.makeText(getApplicationContext(), "收藏完毕", Toast.LENGTH_SHORT).show();
+                doFav();
                 return true;
             case R.id.mnuDownload:
                 String url = Data.OSS_URL + objectKey.replaceAll("/smallthumb/", "/original.zip");
@@ -203,6 +204,33 @@ public class ImageListActivity extends RoboSherlockActivity {
         }
 
 
+    }
+
+    private void doFav() {
+        if (currentUser == null) {
+            Intent intent = new Intent(ImageListActivity.this, LoginActivity.class);
+            startActivityForResult(intent, Utils.FAVORITE);
+            Toast.makeText(ImageListActivity.this, "收藏图片请先登录", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        BmobRelation favRelaton = new BmobRelation();
+        favRelaton.add(photoGallery);
+        ActivityUtil.show(this, "收藏成功。");
+        currentUser.setFavorite(favRelaton);
+        currentUser.update(this, new UpdateListener() {
+            @Override
+            public void onSuccess() {
+                L.i("收藏成功。");
+                ActivityUtil.show(ImageListActivity.this, "收藏成功。");
+            }
+
+            @Override
+            public void onFailure(int arg0, String arg1) {
+                L.i("收藏失败。错误原因："+ arg1);
+                ActivityUtil.show(ImageListActivity.this, "收藏失败。请检查网络~");
+            }
+        });
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -286,6 +314,8 @@ public class ImageListActivity extends RoboSherlockActivity {
             } else {
                 AddItemToContainer();
             }
+        } else if (requestCode == Utils.FAVORITE && resultCode == RESULT_OK) {
+            doFav();
         }
     }
 }// end of class

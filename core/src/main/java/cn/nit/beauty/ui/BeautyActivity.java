@@ -17,10 +17,21 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import android.widget.Toast;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobPointer;
+import cn.bmob.v3.listener.FindListener;
+import cn.nit.beauty.Utils;
+import cn.nit.beauty.entity.PhotoGallery;
+import cn.nit.beauty.entity.User;
+import cn.nit.beauty.proxy.UserProxy;
+import cn.nit.beauty.utils.ActivityUtil;
+import cn.nit.beauty.utils.L;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.baidu.mobstat.StatService;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
+import com.google.inject.Inject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.lucasr.smoothie.AsyncGridView;
@@ -39,8 +50,10 @@ import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.ScaleImageView;
+import roboguice.inject.ContentView;
 
-public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavigationListener {
+@ContentView(R.layout.act_pull_to_refresh_sample)
+public class BeautyActivity extends RoboSherlockActivity implements ActionBar.OnNavigationListener {
 
     LaucherDataBase database;
     private AsyncGridView mAdapterView = null;
@@ -51,6 +64,11 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     private String category = "";
     private Category launcher;
     private List<String> folders, selectedFolders = new ArrayList<String>();
+
+    @Inject
+    UserProxy userProxy;
+
+    private User currentUser;
 
     /**
      * 添加内容
@@ -73,6 +91,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
             imageInfos.add(newsInfo1);
         }
 
+        mAdapter.clear();
             mAdapter.addItemLast(imageInfos);
             mAdapter.notifyDataSetChanged();
     }
@@ -82,8 +101,7 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        setContentView(R.layout.act_pull_to_refresh_sample);
+        currentUser = userProxy.getCurrentUser();
 
         database = new LaucherDataBase(getApplicationContext());
 
@@ -139,25 +157,55 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
 
             //setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.china);
 
-            folders = Data.categoryMap.get(category);
+            if (category.equals("favorite")) {
+                getFavorites();
+            }
+            else {
+                folders = Data.categoryMap.get(category);
 
-            if (folders == null) folders = new ArrayList<String>();
+                if (folders == null) folders = new ArrayList<String>();
 
 
 
-            updateFilters();
+                updateFilters();
 
-            Context context = getSupportActionBar().getThemedContext();
-            ArrayAdapter<String> list = new ArrayAdapter(context, R.layout.sherlock_spinner_item);
+                Context context = getSupportActionBar().getThemedContext();
+                ArrayAdapter<String> list = new ArrayAdapter(context, R.layout.sherlock_spinner_item);
 
-            list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-            list.addAll(filters);
-            getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-            getSupportActionBar().setListNavigationCallbacks(list, this);
-            getSupportActionBar().setSelectedNavigationItem(list.getPosition(selectedFilter));
+                list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+                list.addAll(filters);
+                getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+                getSupportActionBar().setListNavigationCallbacks(list, this);
+                getSupportActionBar().setSelectedNavigationItem(list.getPosition(selectedFilter));
+            }
         }
 
 
+    }
+
+    private void getFavorites() {
+        BmobQuery<PhotoGallery> query = new BmobQuery<PhotoGallery>();
+        query.addWhereRelatedTo("favorite", new BmobPointer(currentUser));
+        query.include("user");
+        query.order("createdAt");
+        query.findObjects(this, new FindListener<PhotoGallery>() {
+
+            @Override
+            public void onSuccess(List<PhotoGallery> data) {
+                L.i("get fav success!" + data.size());
+                selectedFolders.clear();
+                for(PhotoGallery photoGallery : data) {
+                    selectedFolders.add(photoGallery.getKey() + "::" + photoGallery.getObjectId());
+                }
+                AddItemToContainer();
+            }
+
+            @Override
+            public void onError(int arg0, String arg1) {
+                L.e("get fav error! reason:" + arg1);
+                ActivityUtil.show(BeautyActivity.this, "获取收藏失败。请检查网络~");
+            }
+        });
     }
 
     private List<String> doSearch(String query) {
@@ -218,7 +266,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         selectedFilter = filters.get(itemPosition);
         updateFilterFolder();
-        mAdapter.clear();
         AddItemToContainer();
         return true;
     }
@@ -238,4 +285,6 @@ public class BeautyActivity extends SherlockActivity implements ActionBar.OnNavi
         }
         return super.dispatchKeyEvent(event);
     }
+
+
 }

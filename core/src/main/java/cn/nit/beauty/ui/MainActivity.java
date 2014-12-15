@@ -14,6 +14,8 @@ import android.widget.*;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.update.BmobUpdateAgent;
+import cn.nit.beauty.Utils;
+import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.ui.listener.ShakeListener;
 import com.actionbarsherlock.app.ActionBar;
 import com.baidu.mobstat.StatService;
@@ -30,6 +32,7 @@ import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.DragGridView;
 import cn.nit.beauty.widget.ScrollLayout;
+import com.google.inject.Inject;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
@@ -52,6 +55,11 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
 
     @InjectView(R.id.btnSearch)
     ImageButton btnSearch;
+
+    @Inject
+    UserProxy userProxy;
+
+    Category launcher;
 
     LinearLayout.LayoutParams param;
     List<Category> lstDate = new ArrayList<Category>();// 每一页的数据
@@ -139,7 +147,7 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     final int arg2, long arg3) {
 
-                final Category launcher = lstDate.get(arg2);
+                launcher = lstDate.get(arg2);
 
                 if (launcher.getTITLE().equals("none")) return;
 
@@ -147,9 +155,15 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
                 Intent intent = new Intent();
                 if (text != null && !text.equals("none")) {
 
-                    intent.putExtra("launcher", launcher);
-                    intent.setClass(MainActivity.this, BeautyActivity.class);
-                    startActivity(intent);
+                    if (launcher.getURL().equals("favorite") && userProxy.getCurrentUser() == null) {
+                        intent.setClass(MainActivity.this, LoginActivity.class);
+                        startActivityForResult(intent, Utils.FAVORITE);
+                        Toast.makeText(MainActivity.this, "查看我的最爱请先登录", Toast.LENGTH_SHORT).show();
+                    } else {
+                        intent.putExtra("launcher", launcher);
+                        intent.setClass(MainActivity.this, BeautyActivity.class);
+                        startActivity(intent);
+                    }
                 }
 
 
@@ -223,6 +237,18 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
                     ImageListActivity.class);
             intent.putExtra("objectKey", strs[0] + "smallthumb/");
             intent.putExtra("objectId", strs[2]);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Utils.FAVORITE && resultCode == RESULT_OK) {
+            Intent intent = new Intent();
+            intent.putExtra("launcher", launcher);
+            intent.setClass(MainActivity.this, BeautyActivity.class);
             startActivity(intent);
         }
     }

@@ -1,30 +1,18 @@
 package cn.nit.beauty.wxapi;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import cn.nit.beauty.entity.User;
-import cn.nit.beauty.model.Person;
 import cn.nit.beauty.proxy.UserProxy;
-import cn.nit.beauty.request.LoginRequest;
 import cn.nit.beauty.utils.*;
 import com.google.inject.Inject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.octo.android.robospice.GsonSpringAndroidSpiceService;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-import com.tencent.connect.UserInfo;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
@@ -38,7 +26,6 @@ import roboguice.activity.RoboActivity;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * Created by vicky on 2014/10/9.
@@ -188,12 +175,14 @@ public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler,
     @Override
     public void onLoginSuccess() {
         ActivityUtil.show(this, "登录成功。");
+        setResult(RESULT_OK);
         finish();
     }
 
     @Override
     public void onLoginFailure(String msg) {
         ActivityUtil.show(this, "登录失败。"+msg);
+        setResult(RESULT_CANCELED);
         finish();
     }
 }

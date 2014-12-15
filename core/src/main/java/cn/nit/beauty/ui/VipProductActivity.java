@@ -189,7 +189,7 @@ public class VipProductActivity extends RoboActivity implements UserProxy.ILogin
     }
 
     private String getNotifyUrl(String tradeNo, String totalFee) {
-        String url = String.format("/beauty-ajax/api/notify?sessionid=%s&type=%s&tradeno=%s",
+        String url = String.format("http://www.matesapp.cn:8080/beauty-ajax/api/notify?sessionid=%s&type=%s&tradeno=%s",
                 currentUser.getObjectId(), totalFee, tradeNo);
 
         return URLEncoder.encode(url);

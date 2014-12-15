@@ -27,9 +27,11 @@ public class Utils {
 	protected static final String EXTRA_ACCESS_TOKEN = "access_token";
 	public static final String EXTRA_MESSAGE = "message";
 
-    public static final int LOGIN = 0;
-    public static final int VIP = 1;
-    public static final int REGISTER = 2;
+    public static final int LOGIN = 100;
+    public static final int VIP = 101;
+    public static final int REGISTER = 102;
+    public static final int FAVORITE = 103;
+
 	// 获取AppKey
     public static String getMetaValue(Context context, String metaKey) {
         Bundle metaData = null;

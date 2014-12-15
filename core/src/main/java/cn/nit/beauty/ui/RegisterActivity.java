@@ -1,30 +1,17 @@
 package cn.nit.beauty.ui;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.bmob.v3.listener.SaveListener;
 import cn.nit.beauty.R;
 import cn.nit.beauty.entity.User;
-import cn.nit.beauty.model.Person;
 import cn.nit.beauty.proxy.UserProxy;
-import cn.nit.beauty.request.RegisterRequest;
 import cn.nit.beauty.utils.ActivityUtil;
-import cn.nit.beauty.utils.DialogFactory;
 import cn.nit.beauty.utils.L;
-import com.google.inject.Inject;
-import com.octo.android.robospice.GsonSpringAndroidSpiceService;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
@@ -32,7 +19,7 @@ import roboguice.inject.InjectView;
 import cn.nit.beauty.proxy.UserProxy.ISignUpListener;
 import cn.nit.beauty.proxy.UserProxy.ILoginListener;
 
-@ContentView(R.layout.register)
+@ContentView(R.layout.activity_register)
 public class RegisterActivity extends RoboActivity implements OnClickListener, ISignUpListener, ILoginListener {
 
     @InjectView(R.id.nickname)
