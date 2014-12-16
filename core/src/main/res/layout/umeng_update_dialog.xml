@@ -8,7 +8,7 @@
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/bmob_update_dialog_bg"
+        android:background="@drawable/umeng_update_dialog_bg"
         android:orientation="vertical" >
 
         <!-- Title -->
@@ -18,24 +18,24 @@
             android:layout_height="40dp" >
 
             <ImageView
-                android:id="@+id/bmob_update_wifi_indicator"
+                android:id="@+id/umeng_update_wifi_indicator"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:contentDescription="@string/BMGprsCondition"
-                android:src="@drawable/bmob_update_wifi_disable" />
+                android:contentDescription="@string/UMGprsCondition"
+                android:src="@drawable/umeng_update_wifi_disable" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/BMUpdateTitle"
+                android:text="@string/UMUpdateTitle"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#63C2FF" />
             
             <Button
-                android:id="@+id/bmob_update_id_close"
+                android:id="@+id/umeng_update_id_close"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_alignParentRight="true"
@@ -43,7 +43,7 @@
 				android:layout_marginRight="10dp"
 				android:focusable="true"
 				android:visibility="gone"
-				android:background="@drawable/bmob_update_button_close_bg_selector"/>
+				android:background="@drawable/umeng_update_button_close_bg_selector"/>
             
         </RelativeLayout>
 
@@ -69,7 +69,7 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/bmob_update_content"
+                    android:id="@+id/umeng_update_content"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -83,12 +83,11 @@
         <!-- Ignore CheckBox -->
 
 		<CheckBox
-		    android:id="@+id/bmob_update_id_check"
+		    android:id="@+id/umeng_update_id_check"
 	        android:layout_width="fill_parent"
 	        android:layout_height="32dp"
-	        android:visibility="gone"
-	        android:text="@string/BMIgnore"
-	        android:button="@drawable/bmob_update_button_check_selector"
+	        android:text="@string/UMIgnore"
+	        android:button="@drawable/umeng_update_button_check_selector"
 	        android:textColor="#AAABAF" />
 
         <!-- OK&Cancel Button -->
@@ -98,42 +97,42 @@
             android:layout_height="wrap_content" >
 
             <Button
-                android:id="@+id/bmob_update_id_ok"
+                android:id="@+id/umeng_update_id_ok"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/bmob_update_button_ok_bg_selector"
+                android:background="@drawable/umeng_update_button_ok_bg_selector"
                 android:gravity="center"
                 android:padding="12dp"
-                android:text="@string/BMUpdateNow"
+                android:text="@string/UMUpdateNow"
 				android:focusable="true"
                 android:textColor="#FFFFFF" />
 
             <Button
-                android:id="@+id/bmob_update_id_cancel"
+                android:id="@+id/umeng_update_id_cancel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/bmob_update_button_cancel_bg_selector"
+                android:background="@drawable/umeng_update_button_cancel_bg_selector"
                 android:gravity="center"
                 android:padding="12dp"
-                android:text="@string/BMNotNow"
+                android:text="@string/UMNotNow"
 				android:focusable="true"
                 android:textColor="#AAABAF" />
 
             <Button
-                android:id="@+id/bmob_update_id_ignore"
+                android:id="@+id/umeng_update_id_ignore"
 				android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/bmob_update_button_cancel_bg_selector"
+                android:background="@drawable/umeng_update_button_cancel_bg_selector"
                 android:gravity="center"
                 android:padding="12dp"
-                android:text="@string/BMIgnore"
+                android:text="@string/UMIgnore"
 				android:focusable="true"
                 android:textColor="#AAABAF" />
         </LinearLayout>

@@ -49,7 +49,10 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import org.lucasr.smoothie.AsyncGridView;
 import org.lucasr.smoothie.ItemManager;
 import roboguice.activity.RoboActivity;
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
 
+@ContentView(R.layout.act_pull_to_refresh_sample)
 public class ImageListActivity extends RoboSherlockActivity {
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
@@ -60,6 +63,8 @@ public class ImageListActivity extends RoboSherlockActivity {
             GsonSpringAndroidSpiceService.class);
 
     private PhotoGallery photoGallery;
+
+    private MenuItem mnuFav;
 
     @Inject
     UserProxy userProxy;
@@ -99,7 +104,6 @@ public class ImageListActivity extends RoboSherlockActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_pull_to_refresh_sample);
 
         Intent intent = getIntent();
 
@@ -175,6 +179,13 @@ public class ImageListActivity extends RoboSherlockActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.imagelist_action, menu);
 
+        mnuFav = menu.findItem(R.id.mnuFavoriate);
+        if (Data.containFav(objectId))
+            mnuFav.setIcon(R.drawable.ic_action_fav_choose);
+        else
+            mnuFav.setIcon(R.drawable.ic_action_fav_normal);
+
+
         return true;
     }
 
@@ -215,14 +226,23 @@ public class ImageListActivity extends RoboSherlockActivity {
         }
 
         BmobRelation favRelaton = new BmobRelation();
-        favRelaton.add(photoGallery);
-        ActivityUtil.show(this, "收藏成功。");
+        if (Data.containFav(objectId)) {
+            mnuFav.setIcon(R.drawable.ic_action_fav_normal);
+            favRelaton.remove(photoGallery);
+            Data.removeFav(photoGallery.getUrl());
+            ActivityUtil.show(this, "取消收藏。");
+        }
+        else {
+            mnuFav.setIcon(R.drawable.ic_action_fav_choose);
+            favRelaton.add(photoGallery);
+            Data.addFav(photoGallery.getUrl());
+            ActivityUtil.show(this, "收藏成功。");
+        }
         currentUser.setFavorite(favRelaton);
         currentUser.update(this, new UpdateListener() {
             @Override
             public void onSuccess() {
                 L.i("收藏成功。");
-                ActivityUtil.show(ImageListActivity.this, "收藏成功。");
             }
 
             @Override
@@ -251,6 +271,7 @@ public class ImageListActivity extends RoboSherlockActivity {
         StatService.onResume(this);
 
         currentUser = userProxy.getCurrentUser();
+
     }
 
     @Override

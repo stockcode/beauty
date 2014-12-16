@@ -13,7 +13,6 @@ public class PhotoGallery extends BmobObject implements Serializable {
 
     private BmobRelation relation;
 
-
 	public PhotoGallery(String key) {
 		String[] strs = key.split("/");
 		
@@ -57,4 +56,8 @@ public class PhotoGallery extends BmobObject implements Serializable {
     public void setRelation(BmobRelation relation) {
         this.relation = relation;
     }
+
+	public String getUrl() {
+		return key + "::" + getObjectId();
+	}
 }

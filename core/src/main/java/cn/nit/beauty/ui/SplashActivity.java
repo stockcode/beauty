@@ -11,11 +11,18 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobPointer;
+import cn.bmob.v3.listener.FindListener;
 import cn.nit.beauty.Helper;
+import cn.nit.beauty.entity.PhotoGallery;
+import cn.nit.beauty.proxy.UserProxy;
+import cn.nit.beauty.utils.L;
 import cn.smssdk.SMSSDK;
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.mobstat.StatService;
+import com.google.inject.Inject;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -33,8 +40,12 @@ import cn.nit.beauty.model.Index;
 import cn.nit.beauty.request.IndexRequest;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
+import roboguice.activity.RoboActivity;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends RoboActivity {
+
+    @Inject
+    UserProxy userProxy;
 
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
@@ -175,29 +186,60 @@ public class SplashActivity extends Activity {
             if ( index != null ) {
                 database.insertItems(index.getCategories());
                 Data.categoryMap = index.getRoots();
-                Data.categoryMap.put("favorite", database.getFavoriteList());
+                Data.categoryMap.put("favorite", new ArrayList<String>());
+                if (userProxy.getCurrentUser() == null)
+                    startMain();
+                else
+                    getFavorites();
             }
-            startMain();
+
         }
+    }
 
-        private void startMain() {
-            checkItems();
+    private void startMain() {
+        checkItems();
 
-            Intent intent = new Intent();
+        Intent intent = new Intent();
 
-            if (isDaily) {
-                Category launcher = new Category();
-                launcher.setTITLE("每日更新");
-                launcher.setURL("daily");
-                launcher.setCATEGORY("daily");
-                intent.putExtra("launcher", launcher);
-                intent.setClass(SplashActivity.this, BeautyActivity.class);
-            } else {
-                intent.setClass(SplashActivity.this, MainActivity.class);
+        if (isDaily) {
+            Category launcher = new Category();
+            launcher.setTITLE("每日更新");
+            launcher.setURL("daily");
+            launcher.setCATEGORY("daily");
+            intent.putExtra("launcher", launcher);
+            intent.setClass(SplashActivity.this, BeautyActivity.class);
+        } else {
+            intent.setClass(SplashActivity.this, MainActivity.class);
+        }
+        startActivity(intent);
+        finish();
+    }
+
+    private void getFavorites() {
+        BmobQuery<PhotoGallery> query = new BmobQuery<PhotoGallery>();
+        query.addWhereRelatedTo("favorite", new BmobPointer(userProxy.getCurrentUser()));
+        query.include("user");
+        query.order("createdAt");
+        query.findObjects(this, new FindListener<PhotoGallery>() {
+
+            @Override
+            public void onSuccess(List<PhotoGallery> data) {
+                L.i("get fav success!" + data.size());
+                List<String> favs = Data.categoryMap.get("favorite");
+
+                for(PhotoGallery photoGallery : data) {
+                    favs.add(photoGallery.getUrl());
+                }
+
+                startMain();
             }
-            startActivity(intent);
-            finish();
-        }
+
+            @Override
+            public void onError(int arg0, String arg1) {
+                L.e("get fav error! reason:" + arg1);
+                startMain();
+            }
+        });
     }
 }
 

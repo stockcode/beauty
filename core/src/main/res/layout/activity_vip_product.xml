@@ -6,7 +6,7 @@
             <RelativeLayout android:id="@id/vip_product_body" android:layout_width="fill_parent" android:layout_height="wrap_content">
                 <LinearLayout android:orientation="vertical" android:id="@id/vip_product_layout" android:paddingTop="@dimen/vip_product_spacing" android:layout_width="fill_parent" android:layout_height="fill_parent">
                     <include android:id="@id/activity_vip_product_info" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/activity_vip_product_info" />
-                        <ImageView android:id="@id/vip_product_intro_img" android:background="@drawable/vip" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_margin="1.0px" android:scaleType="fitXY" android:layout_marginTop="@dimen/vip_product_spacing"/>
+                        <ImageView android:id="@id/vip_product_intro_img" android:background="@drawable/vipintro1" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_margin="1.0px" android:scaleType="fitXY" android:layout_marginTop="@dimen/vip_product_spacing"/>
                 </LinearLayout>
             </RelativeLayout>
         </ScrollView>

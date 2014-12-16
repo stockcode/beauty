@@ -6,11 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.datatype.BmobPointer;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
+import cn.nit.beauty.entity.PhotoGallery;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.*;
@@ -37,7 +41,9 @@ import roboguice.inject.InjectView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @ContentView(R.layout.login)
 public class LoginActivity extends RoboActivity implements OnClickListener, UserProxy.ILoginListener, UserProxy.ISignUpListener {
@@ -99,7 +105,6 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
         req.scope = "snsapi_userinfo";
         req.state = "beauty";
         api.sendReq(req);
-        finish();
     }
 
 	@Override
@@ -190,7 +195,8 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
         dimissProgressbar();
         ActivityUtil.show(this, "登录成功。");
         L.i("login sucessed!");
-        closeLoginUI(RESULT_OK);
+
+        getFavorites();
 
         if (mTencent != null) mTencent.logout(getApplicationContext());
     }
@@ -212,6 +218,41 @@ public class LoginActivity extends RoboActivity implements OnClickListener, User
         ActivityUtil.show(this, "注册失败，请检查网络");
         L.i("signup failed!"+msg);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (userProxy.getCurrentUser() != null) { //for WEIXIN
+            getFavorites();
+        }
+    }
+
+    private void getFavorites() {
+        BmobQuery<PhotoGallery> query = new BmobQuery<PhotoGallery>();
+        query.addWhereRelatedTo("favorite", new BmobPointer(userProxy.getCurrentUser()));
+        query.include("user");
+        query.order("createdAt");
+        query.findObjects(this, new FindListener<PhotoGallery>() {
+
+            @Override
+            public void onSuccess(List<PhotoGallery> data) {
+                L.i("get fav success!" + data.size());
+                List<String> favs = Data.categoryMap.get("favorite");
+                favs.clear();
+                for(PhotoGallery photoGallery : data) {
+                    favs.add(photoGallery.getUrl());
+                }
+                closeLoginUI(RESULT_OK);
+            }
+
+            @Override
+            public void onError(int arg0, String arg1) {
+                L.e("get fav error! reason:" + arg1);
+                closeLoginUI(RESULT_OK);
+            }
+        });
     }
 
     private class BaseUiListener implements IUiListener {

@@ -53,6 +53,8 @@
 
         <meta-data android:name="android.app.default_searchable" android:value="cn.nit.beauty.ui.BeautyActivity" />
 
+        <meta-data android:value="548fe31dfd98c542620004d2" android:name="UMENG_APPKEY"/>
+
         <activity
             android:name=".ui.SplashActivity"
             android:screenOrientation="portrait"
@@ -192,10 +194,17 @@
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"
                 android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <service
+                android:name="com.umeng.update.net.DownloadingService"
+                android:process=":DownloadingService" >
+        </service>
         <activity
-                android:name="cn.bmob.v3.update.UpdateDialogActivity"
+                android:name="com.umeng.update.UpdateDialogActivity"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
+
+        <activity
+                android:name="com.umeng.fb.ConversationActivity"/>
 
         <receiver android:name="cn.nit.beauty.PushMessageReceiver">
             <intent-filter>

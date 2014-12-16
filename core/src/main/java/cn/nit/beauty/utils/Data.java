@@ -10,6 +10,7 @@ import java.util.Random;
 
 import android.util.Log;
 import cn.nit.beauty.R;
+import cn.nit.beauty.entity.PhotoGallery;
 
 
 public class Data {
@@ -69,5 +70,21 @@ public class Data {
 
         int index = rd.nextInt(list.size());
         return  list.get(index);
+    }
+
+    public static boolean containFav(String objectId) {
+        for(String url : categoryMap.get("favorite")) {
+            if (url.contains(objectId)) return true;
+        }
+        return false;
+    }
+
+
+    public static void removeFav(String url) {
+        categoryMap.get("favorite").remove(url);
+    }
+
+    public static void addFav(String url) {
+        categoryMap.get("favorite").add(url);
     }
 }

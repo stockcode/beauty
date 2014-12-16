@@ -7,11 +7,6 @@
       android:title="@string/checkbox_title"
       android:summary="@string/checkbox_summary" />
 -->
-    <EditTextPreference
-      android:key="txtPasswd"
-      android:title="设置密码"
-      android:summary="密码："
-      android:dialogTitle="请输入密码" />
 <!--    <ListPreference
       android:key="list_key"
       android:title="@string/list_title"

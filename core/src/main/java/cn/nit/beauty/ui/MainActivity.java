@@ -13,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 
 import cn.bmob.v3.Bmob;
-import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.ui.listener.ShakeListener;
@@ -33,6 +32,7 @@ import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.DragGridView;
 import cn.nit.beauty.widget.ScrollLayout;
 import com.google.inject.Inject;
+import com.umeng.update.UmengUpdateAgent;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
@@ -70,9 +70,7 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        BmobUpdateAgent.setUpdateOnlyWifi(false);
-
-        BmobUpdateAgent.update(this);
+        UmengUpdateAgent.update(this);
 
         database = new LaucherDataBase(getApplicationContext());
 

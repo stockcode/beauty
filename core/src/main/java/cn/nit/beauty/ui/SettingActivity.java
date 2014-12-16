@@ -1,6 +1,7 @@
 package cn.nit.beauty.ui;
 
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.nit.beauty.alipay.Rsa;
+import cn.nit.beauty.utils.ActivityUtil;
+import cn.sharesdk.feedback.FeedbackAgent;
 import com.alipay.android.app.sdk.AliPay;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
@@ -30,12 +33,16 @@ import java.util.Date;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.utils.Data;
+import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
+import com.umeng.update.UpdateStatus;
 
 public class SettingActivity extends PreferenceActivity {
     public static final String TAG = "alipay-sdk";
 
 	private static final String[] PREFERENCE_KEYS = {"txtPasswd"};
-	private Preference prefCache, prefVersion, prefPay;
+	private Preference prefCache, prefVersion, prefPay, feedback;
     private float cacheSize= 0;
     DecimalFormat df   =   new   DecimalFormat("##0.00");
 
@@ -46,7 +53,17 @@ public class SettingActivity extends PreferenceActivity {
         prefCache = findPreference("clear_cache");
         prefVersion = findPreference("version");
         prefPay = findPreference("pay");
+        feedback = findPreference("feedback");
 
+        feedback.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                FeedbackAgent agent = new FeedbackAgent(getApplicationContext());
+                agent.startFeedbackActivity();
+                return true;
+            }
+        });
 
         final File cacheDir = StorageUtils.getCacheDirectory(this);
         float div = 1024*1024;
@@ -58,7 +75,30 @@ public class SettingActivity extends PreferenceActivity {
         prefVersion.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                BmobUpdateAgent.update(SettingActivity.this);
+                ActivityUtil.show(SettingActivity.this, "正在检查...");
+
+                UmengUpdateAgent.setUpdateAutoPopup(false);
+                UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+
+                    @Override
+                    public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
+                        switch (updateStatus) {
+                            case UpdateStatus.Yes: // has update
+                                UmengUpdateAgent.showUpdateDialog(SettingActivity.this, updateInfo);
+                                break;
+                            case UpdateStatus.No: // has no update
+                                ActivityUtil.show(SettingActivity.this, "当前为最新版本");
+                                break;
+                            case UpdateStatus.NoneWifi: // none wifi
+                                ActivityUtil.show(SettingActivity.this, "没有wifi连接， 只在wifi下更新");
+                                break;
+                            case UpdateStatus.Timeout: // time out
+                                ActivityUtil.show(SettingActivity.this, "请检查网络");
+                                break;
+                        }
+                    }
+                });
+                UmengUpdateAgent.forceUpdate(SettingActivity.this);
                 return true;
             }
         });

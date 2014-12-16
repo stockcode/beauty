@@ -157,10 +157,7 @@ public class BeautyActivity extends RoboSherlockActivity implements ActionBar.On
 
             //setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.china);
 
-            if (category.equals("favorite")) {
-                getFavorites();
-            }
-            else {
+
                 folders = Data.categoryMap.get(category);
 
                 if (folders == null) folders = new ArrayList<String>();
@@ -177,35 +174,10 @@ public class BeautyActivity extends RoboSherlockActivity implements ActionBar.On
                 getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
                 getSupportActionBar().setListNavigationCallbacks(list, this);
                 getSupportActionBar().setSelectedNavigationItem(list.getPosition(selectedFilter));
-            }
+
         }
 
 
-    }
-
-    private void getFavorites() {
-        BmobQuery<PhotoGallery> query = new BmobQuery<PhotoGallery>();
-        query.addWhereRelatedTo("favorite", new BmobPointer(currentUser));
-        query.include("user");
-        query.order("createdAt");
-        query.findObjects(this, new FindListener<PhotoGallery>() {
-
-            @Override
-            public void onSuccess(List<PhotoGallery> data) {
-                L.i("get fav success!" + data.size());
-                selectedFolders.clear();
-                for(PhotoGallery photoGallery : data) {
-                    selectedFolders.add(photoGallery.getKey() + "::" + photoGallery.getObjectId());
-                }
-                AddItemToContainer();
-            }
-
-            @Override
-            public void onError(int arg0, String arg1) {
-                L.e("get fav error! reason:" + arg1);
-                ActivityUtil.show(BeautyActivity.this, "获取收藏失败。请检查网络~");
-            }
-        });
     }
 
     private List<String> doSearch(String query) {
