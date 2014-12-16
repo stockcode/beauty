@@ -32,6 +32,8 @@ import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.DragGridView;
 import cn.nit.beauty.widget.ScrollLayout;
 import com.google.inject.Inject;
+import com.umeng.fb.FeedbackAgent;
+import com.umeng.message.PushAgent;
 import com.umeng.update.UmengUpdateAgent;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -90,6 +92,13 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
         mShaker.setOnShakeListener(this);
 
         initButtons();
+
+        FeedbackAgent fb = new FeedbackAgent(this);
+        // check if the app developer has replied to the feedback or not.
+        fb.sync();
+
+        fb.openFeedbackPush();
+        PushAgent.getInstance(this).enable();
     }
 
     private void initButtons() {

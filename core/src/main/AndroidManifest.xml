@@ -53,8 +53,11 @@
 
         <meta-data android:name="android.app.default_searchable" android:value="cn.nit.beauty.ui.BeautyActivity" />
 
-        <meta-data android:value="548fe31dfd98c542620004d2" android:name="UMENG_APPKEY"/>
+        <meta-data android:name="UMENG_APPKEY" android:value="548fe31dfd98c542620004d2"/>
 
+        <meta-data android:name="UMENG_MESSAGE_SECRET" android:value="8f25263b3710dbf4345aa0045c8daa51" >
+        </meta-data>
+        <meta-data android:name="UMENG_CHANNEL" android:value="Umeng" />
         <activity
             android:name=".ui.SplashActivity"
             android:screenOrientation="portrait"
@@ -204,7 +207,9 @@
         </activity>
 
         <activity
-                android:name="com.umeng.fb.ConversationActivity"/>
+                android:name="com.umeng.fb.ConversationActivity"
+                android:label="@string/umeng_fb_title"
+                android:launchMode="singleTop"/>
 
         <receiver android:name="cn.nit.beauty.PushMessageReceiver">
             <intent-filter>

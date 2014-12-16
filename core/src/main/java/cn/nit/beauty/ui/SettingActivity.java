@@ -3,6 +3,7 @@ package cn.nit.beauty.ui;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -19,7 +20,6 @@ import android.widget.Toast;
 import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.nit.beauty.alipay.Rsa;
 import cn.nit.beauty.utils.ActivityUtil;
-import cn.sharesdk.feedback.FeedbackAgent;
 import com.alipay.android.app.sdk.AliPay;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
@@ -37,6 +37,7 @@ import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
+import com.umeng.fb.FeedbackAgent;
 
 public class SettingActivity extends PreferenceActivity {
     public static final String TAG = "alipay-sdk";
@@ -59,7 +60,8 @@ public class SettingActivity extends PreferenceActivity {
 
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                FeedbackAgent agent = new FeedbackAgent(getApplicationContext());
+                com.umeng.fb.util.Log.LOG = true;
+                FeedbackAgent agent = new FeedbackAgent(SettingActivity.this);
                 agent.startFeedbackActivity();
                 return true;
             }
