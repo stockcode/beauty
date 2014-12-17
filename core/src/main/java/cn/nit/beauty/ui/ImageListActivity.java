@@ -3,15 +3,11 @@ package cn.nit.beauty.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.content.*;
-import android.preference.PreferenceManager;
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.UpdateListener;
-import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.adapter.StaggeredAdapter;
@@ -22,7 +18,6 @@ import cn.nit.beauty.model.ImageInfos;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.ActivityUtil;
-import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 
 import android.app.DownloadManager;
@@ -34,10 +29,8 @@ import android.widget.Toast;
 import cn.nit.beauty.model.ImageInfo;
 
 import cn.nit.beauty.utils.L;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -47,9 +40,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.lucasr.smoothie.AsyncGridView;
 import org.lucasr.smoothie.ItemManager;
-import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 
 @ContentView(R.layout.act_pull_to_refresh_sample)
 public class ImageListActivity extends BaseActivity {
@@ -80,9 +71,7 @@ public class ImageListActivity extends BaseActivity {
         for(int i = 0 ; i < imageInfoList.size(); i++) {
             ImageInfo imageInfo = imageInfoList.get(i);
 
-            if (imageInfo.getKey().toLowerCase().contains("cover")) continue;
-
-            if ((imageInfo.getKey().contains("origin") && i > 3)
+            if ((imageInfo.getKey().contains("origin") && i >= 3)
                     || ( i > (imageInfoList.size() - i))) {
 
                 if (userProxy.hasExpired()) {

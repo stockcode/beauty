@@ -1,6 +1,5 @@
 package cn.nit.beauty.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,11 +36,9 @@ import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.model.Index;
 import cn.nit.beauty.request.IndexRequest;
-import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import com.testin.agent.TestinAgent;
 import com.umeng.analytics.MobclickAgent;
-import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.activity_splashing)
@@ -76,7 +73,6 @@ public class SplashActivity extends BaseActivity {
         PushManager.startWork(getApplicationContext(),
                 PushConstants.LOGIN_TYPE_API_KEY, Utils.getMetaValue(SplashActivity.this, "api_key"));
 
-        Configure.inits(SplashActivity.this);
 
         settings = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -98,7 +94,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        spiceManager.start( this );
+        spiceManager.start(this);
     }
 
     @Override

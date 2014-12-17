@@ -14,13 +14,7 @@ import cn.nit.beauty.Utils;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.ui.listener.ShakeListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.nit.beauty.R;
-import cn.nit.beauty.database.Category;
-import cn.nit.beauty.database.LaucherDataBase;
-import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import com.google.inject.Inject;
 import com.testin.agent.TestinAgent;
@@ -35,8 +29,6 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
 
     private ShakeListener mShaker;
     Vibrator vibe;
-
-    LaucherDataBase database;
 
     @InjectView(R.id.ivAsia)
     ImageView ivAsia;
@@ -56,21 +48,10 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
     @InjectView(R.id.ivOrigin)
     ImageView ivOrigin;
 
-    @InjectView(R.id.btnUser)
-    ImageButton btnUser;
-
-    @InjectView(R.id.btnSettings)
-    ImageButton btnSettings;
-
-    @InjectView(R.id.btnSearch)
-    ImageButton btnSearch;
-
     @Inject
     UserProxy userProxy;
 
     String category;
-
-    LinearLayout.LayoutParams param;
 
     boolean finishCount = false;
 
@@ -84,11 +65,7 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
 
         UmengUpdateAgent.update(this);
 
-        database = new LaucherDataBase(getApplicationContext());
-
         init();
-
-        //    lst_views.addView(addGridView());
 
 
         vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
@@ -106,32 +83,21 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
         PushAgent.getInstance(this).enable();
     }
 
+    public void onUser (View v) {
+        Intent intent = new Intent(MainActivity.this, UserCenterActivity.class);
+        startActivity(intent);
+    }
+
+    public void onSearch(View v) {
+        onSearchRequested();
+    }
+
+    public void onSetting(View v) {
+        Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+        startActivity(intent);
+    }
     private void initButtons() {
 
-
-        btnUser.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, UserCenterActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-        btnSearch.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSearchRequested();
-            }
-        });
-
-        btnSettings.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-                startActivity(intent);
-            }
-        });
 
         ivAsia.setOnClickListener(this);
         ivOccident.setOnClickListener(this);
@@ -143,11 +109,6 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
 
 
     public void init() {
-
-        Configure.inits(MainActivity.this);
-        param = new LinearLayout.LayoutParams(
-                android.view.ViewGroup.LayoutParams.FILL_PARENT,
-                android.view.ViewGroup.LayoutParams.FILL_PARENT);
     }
 
     @Override

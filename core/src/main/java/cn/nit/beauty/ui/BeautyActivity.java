@@ -2,42 +2,23 @@ package cn.nit.beauty.ui;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Entity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 
-import android.widget.Toast;
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.datatype.BmobPointer;
-import cn.bmob.v3.listener.FindListener;
-import cn.nit.beauty.Utils;
-import cn.nit.beauty.entity.PhotoGallery;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
-import cn.nit.beauty.utils.ActivityUtil;
-import cn.nit.beauty.utils.L;
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Window;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.lucasr.smoothie.AsyncGridView;
 import org.lucasr.smoothie.ItemManager;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,9 +27,7 @@ import cn.nit.beauty.adapter.StaggeredAdapter;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.model.ImageInfo;
-import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
-import cn.nit.beauty.widget.ScaleImageView;
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.act_pull_to_refresh_sample)

@@ -179,7 +179,7 @@
         <LinearLayout android:layout_width="wrap_content" android:layout_height="fill_parent" android:orientation="vertical" android:layout_marginLeft="20dip">
             <ImageButton android:id="@+id/btnSearch" android:layout_width="wrap_content" android:layout_height="42dip"
                          android:src="@drawable/ic_action_search" android:background="#000000"
-                         />
+                         android:onClick="onSearch"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -187,14 +187,15 @@
 
         </LinearLayout>
         <ImageButton android:id="@+id/btnUser" android:layout_width="60dip" android:layout_height="fill_parent"
-                     android:src="@drawable/user" android:layout_centerInParent="true" android:background="#ee1d6d"/>
+                     android:src="@drawable/user" android:layout_centerInParent="true" android:background="#ee1d6d"
+                     android:onClick="onUser"/>
 
         <LinearLayout android:layout_width="wrap_content" android:layout_height="fill_parent" android:orientation="vertical"
                       android:layout_alignParentRight="true"
                       android:layout_marginRight="20dip">
         <ImageButton android:id="@+id/btnSettings" android:layout_width="wrap_content" android:layout_height="42dip"
                      android:src="@drawable/setting"
-                     android:background="#000000" />
+                     android:background="#000000" android:onClick="onSetting"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
