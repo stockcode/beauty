@@ -13,7 +13,6 @@ import android.widget.*;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.ui.listener.ShakeListener;
-import com.baidu.mobstat.StatService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,19 +177,15 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
 
-        StatService.onPause(this);
         mShaker.pause();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-
-
-        StatService.onResume(this);
 
         mShaker.resume();
     }

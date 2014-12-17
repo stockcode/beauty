@@ -29,7 +29,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
-import com.baidu.mobstat.StatService;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -57,6 +56,7 @@ import cn.nit.beauty.model.ImageInfos;
 import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Data;
 import com.testin.agent.TestinAgent;
+import com.umeng.analytics.MobclickAgent;
 import roboguice.activity.RoboActivity;
 import roboguice.activity.RoboFragmentActivity;
 import uk.co.senab.photoview.PhotoView;
@@ -382,7 +382,7 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        StatService.onPause(this);
+        MobclickAgent.onPause(this);
 
     }
 
@@ -403,7 +403,7 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        StatService.onResume(this);
+        MobclickAgent.onResume(this);
 
         ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + folder + Data.INDEX_KEY);
         spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());

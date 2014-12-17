@@ -29,7 +29,6 @@ import cn.nit.beauty.utils.L;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
-import com.baidu.mobstat.StatService;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -202,30 +201,6 @@ public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigati
         for (Category category : categories) {
             filters.add(category.getTITLE());
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        StatService.onResume(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     @Override

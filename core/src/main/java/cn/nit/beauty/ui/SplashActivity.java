@@ -21,7 +21,6 @@ import cn.nit.beauty.utils.L;
 import cn.smssdk.SMSSDK;
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
-import com.baidu.mobstat.StatService;
 import com.google.inject.Inject;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -41,6 +40,7 @@ import cn.nit.beauty.request.IndexRequest;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
 import com.testin.agent.TestinAgent;
+import com.umeng.analytics.MobclickAgent;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 
@@ -64,6 +64,8 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         TestinAgent.init(this);
+
+        MobclickAgent.updateOnlineConfig(this);
 
         Intent intent = getIntent();
 
@@ -91,21 +93,6 @@ public class SplashActivity extends BaseActivity {
         SMSSDK.initSDK(this, Data.SMS_APP_ID, Data.SMS_APP_SECRET);
 
         Bmob.initialize(this, "19fee4b5da44fc283e4c58e9f860ea96");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        StatService.onPause(this);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        StatService.onResume(this);
     }
 
     @Override

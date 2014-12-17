@@ -28,9 +28,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
     //compile  'com.github.chrisbanes.photoview:library:1.2.1'
-    compile 'com.baidu.android:mobstat:3.1'
     compile 'com.baidu.android:pushservice:4.0.0'
-    compile 'ch.acra:acra:4.5.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
 
     compile 'de.hdodenhof:circleimageview:1.2.1'
@@ -45,6 +43,7 @@ dependencies {
     compile 'com.tencent:mtasdk:2.0.0'
     compile 'com.tencent:midsdk:2.1.0'
     compile 'com.github.castorflex.smoothprogressbar:library:1.0.0'
+    compile 'com.umeng.analytics:analytics:latest.integration'
 
     compile fileTree(dir: 'libs', include: '*.jar')
     compile(name:'SMSSDK-1.0.0', ext:'aar')

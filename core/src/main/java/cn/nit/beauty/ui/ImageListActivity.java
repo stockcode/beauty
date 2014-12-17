@@ -37,7 +37,6 @@ import cn.nit.beauty.utils.L;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.baidu.mobstat.StatService;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
@@ -262,28 +261,13 @@ public class ImageListActivity extends BaseActivity {
     };
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
 
         setProgressBarIndeterminateVisibility(true);
 
-        StatService.onResume(this);
-
         currentUser = userProxy.getCurrentUser();
-
-    }
-
-    @Override
-	protected void onPause() {
-		super.onPause();
-		StatService.onPause(this);
-        //unregisterReceiver(receiver);
-    }
-
-	@Override
-    protected void onDestroy() {
-        super.onDestroy();
 
     }
 

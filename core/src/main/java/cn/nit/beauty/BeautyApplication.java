@@ -17,10 +17,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
-import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-
 import java.io.File;
 
 import cn.nit.beauty.widget.RotateBitmapProcessor;
@@ -28,10 +24,6 @@ import cn.nit.beauty.widget.RotateBitmapProcessor;
 /**
  * Created by gengke on 13-7-15.
  */
-@ReportsCrashes(
-        formUri = "http://www.bugsense.com/api/acra?api_key=fcc709f3",
-        formKey=""
-)
 public class BeautyApplication extends FrontiaApplication {
 
     private static BeautyApplication myApplication = null;
@@ -55,9 +47,6 @@ public class BeautyApplication extends FrontiaApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        // The following line triggers the initialization of ACRA
-        //ACRA.init(this);
 
         //由于Application类本身已经单例，所以直接按以下处理即可。
         myApplication = this;
