@@ -9,7 +9,7 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" android:layout_weight="0" android:gravity="center_horizontal"
-            android:layout_marginTop="40dip">
+            android:layout_marginTop="20dip">
         <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
                    android:src="@drawable/main_title" android:scaleType="fitCenter"
                    android:id="@+id/imageView"/>
@@ -19,6 +19,159 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_marginTop="20dip" android:id="@+id/views" android:orientation="vertical">
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <RelativeLayout android:layout_weight="0.5"
+                            android:layout_width="fill_parent"
+                            android:layout_height="130dip" android:layout_margin="5dip">
+                <ImageView
+                        android:id="@+id/ivAsia"
+                        android:src="@drawable/asia"
+                        android:tag="asia"
+                        android:layout_width="130dip"	android:layout_centerHorizontal="true"
+                        android:layout_height="130dip"	android:scaleType="centerInside"/>
+
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:gravity="center"	android:paddingTop="90dip"
+                        android:text="岛国风情"
+                        android:textColor="#ffffff"
+                        android:textSize="16sp"
+                        android:ellipsize="marquee"  android:singleLine="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        >
+                </TextView>
+
+            </RelativeLayout>
+            <RelativeLayout
+                            android:layout_weight="0.5"
+                            android:layout_width="fill_parent"
+                            android:layout_height="130dip" android:layout_margin="5dip">
+                <ImageView
+                        android:id="@+id/ivOccident"
+                        android:src="@drawable/occident"
+                        android:tag="occident"
+                        android:layout_width="130dip"	android:layout_centerHorizontal="true"
+                        android:layout_height="130dip"	android:scaleType="centerInside"/>
+
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:gravity="center"	android:paddingTop="90dip"
+                        android:text="欧美情调"
+                        android:textColor="#ffffff"
+                        android:textSize="16sp"
+                        android:ellipsize="marquee"  android:singleLine="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        >
+                </TextView>
+
+            </RelativeLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <RelativeLayout android:layout_weight="0.5"
+                            android:layout_width="fill_parent"
+                            android:layout_height="130dip" android:layout_margin="5dip">
+                <ImageView
+                        android:id="@+id/ivChina"
+                        android:src="@drawable/china"
+                        android:tag="china"
+                        android:layout_width="130dip"	android:layout_centerHorizontal="true"
+                        android:layout_height="130dip"	android:scaleType="centerInside"/>
+
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:gravity="center"	android:paddingTop="90dip"
+                        android:text="中国气质"
+                        android:textColor="#ffffff"
+                        android:textSize="16sp"
+                        android:ellipsize="marquee"  android:singleLine="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        >
+                </TextView>
+
+            </RelativeLayout>
+            <RelativeLayout
+                    android:layout_weight="0.5"
+                    android:layout_width="fill_parent"
+                    android:layout_height="130dip" android:layout_margin="5dip">
+                <ImageView
+                        android:id="@+id/ivFavorite"
+                        android:src="@drawable/favorite"
+                        android:tag="favorite"
+                        android:layout_width="130dip"	android:layout_centerHorizontal="true"
+                        android:layout_height="130dip"	android:scaleType="centerInside"/>
+
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:gravity="center"	android:paddingTop="90dip"
+                        android:text="我的最爱"
+                        android:textColor="#ffffff"
+                        android:textSize="16sp"
+                        android:ellipsize="marquee"  android:singleLine="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        >
+                </TextView>
+
+            </RelativeLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <RelativeLayout android:layout_weight="0.5"
+                            android:layout_width="fill_parent"
+                            android:layout_height="130dip" android:layout_margin="5dip">
+                <ImageView
+                        android:id="@+id/ivDaily"
+                        android:src="@drawable/daily"
+                        android:tag="daily"
+                        android:layout_width="130dip"	android:layout_centerHorizontal="true"
+                        android:layout_height="130dip"	android:scaleType="centerInside"/>
+
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:gravity="center"	android:paddingTop="90dip"
+                        android:text="每日更新"
+                        android:textColor="#ffffff"
+                        android:textSize="16sp"
+                        android:ellipsize="marquee"  android:singleLine="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        >
+                </TextView>
+
+            </RelativeLayout>
+            <RelativeLayout
+                    android:layout_weight="0.5"
+                    android:layout_width="fill_parent"
+                    android:layout_height="130dip" android:layout_margin="5dip">
+                <ImageView
+                        android:id="@+id/ivOrigin"
+                        android:src="@drawable/origin"
+                        android:tag="origin"
+                        android:layout_width="130dip"	android:layout_centerHorizontal="true"
+                        android:layout_height="130dip"	android:scaleType="centerInside"/>
+
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:gravity="center"	android:paddingTop="90dip"
+                        android:text="原创自拍"
+                        android:textColor="#ffffff"
+                        android:textSize="16sp"
+                        android:ellipsize="marquee"  android:singleLine="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        >
+                </TextView>
+
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <RelativeLayout android:layout_width="fill_parent" android:layout_height="60dip" android:layout_weight="0"

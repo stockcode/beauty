@@ -195,7 +195,7 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
                 changeWallpaper();
                 return true;
             case R.id.mnuOriginal:
-                if (currentUser != null) {
+                if (currentUser == null) {
                     Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
                     startActivityForResult(intent, Utils.LOGIN);
                     Toast.makeText(ImageGalleryActivity.this, "查看原图请先登录", Toast.LENGTH_SHORT).show();

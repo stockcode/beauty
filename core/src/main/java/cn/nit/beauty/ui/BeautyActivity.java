@@ -62,7 +62,7 @@ public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigati
 
     private String selectedFilter = "全部";
     private String category = "";
-    private Category launcher;
+
     private List<String> folders, selectedFolders = new ArrayList<String>();
 
     @Inject
@@ -144,16 +144,10 @@ public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigati
             AddItemToContainer();
 
         } else {
-            launcher = (Category) intent.getSerializableExtra("launcher");
 
-            if (launcher.getCATEGORY().equals("ROOT")) {
-                category = launcher.getURL();
-            } else {
-                category = launcher.getCATEGORY();
-                selectedFilter = launcher.getTITLE();
-            }
+            category = intent.getStringExtra("category");
 
-            setTitle(launcher.getTITLE());
+            setTitle(Data.getTitle(category));
 
             //setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.china);
 

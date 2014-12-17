@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.nit.beauty.R;
-import cn.nit.beauty.adapter.DragGridAdapter;
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.utils.Configure;
@@ -33,15 +32,30 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 @ContentView(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements ShakeListener.OnShakeListener {
+public class MainActivity extends BaseActivity implements ShakeListener.OnShakeListener, OnClickListener {
 
     private ShakeListener mShaker;
     Vibrator vibe;
 
     LaucherDataBase database;
 
-    @InjectView(R.id.views)
-    LinearLayout lst_views;
+    @InjectView(R.id.ivAsia)
+    ImageView ivAsia;
+
+    @InjectView(R.id.ivOccident)
+    ImageView ivOccident;
+
+    @InjectView(R.id.ivChina)
+    ImageView ivChina;
+
+    @InjectView(R.id.ivFavorite)
+    ImageView ivFavorite;
+
+    @InjectView(R.id.ivDaily)
+    ImageView ivDaily;
+
+    @InjectView(R.id.ivOrigin)
+    ImageView ivOrigin;
 
     @InjectView(R.id.btnUser)
     ImageButton btnUser;
@@ -55,10 +69,9 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
     @Inject
     UserProxy userProxy;
 
-    Category launcher;
+    String category;
 
     LinearLayout.LayoutParams param;
-    List<Category> lstDate = new ArrayList<Category>();// 每一页的数据
 
     boolean finishCount = false;
 
@@ -74,14 +87,9 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
 
         database = new LaucherDataBase(getApplicationContext());
 
-        lstDate = database.getLauncher();
-
-        if (lstDate.size() == 0)
-            Toast.makeText(MainActivity.this, "网络有点不给力哦", Toast.LENGTH_LONG).show();
-
         init();
 
-            lst_views.addView(addGridView());
+        //    lst_views.addView(addGridView());
 
 
         vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
@@ -125,6 +133,13 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
                 startActivity(intent);
             }
         });
+
+        ivAsia.setOnClickListener(this);
+        ivOccident.setOnClickListener(this);
+        ivChina.setOnClickListener(this);
+        ivFavorite.setOnClickListener(this);
+        ivDaily.setOnClickListener(this);
+        ivOrigin.setOnClickListener(this);
     }
 
 
@@ -134,50 +149,6 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
         param = new LinearLayout.LayoutParams(
                 android.view.ViewGroup.LayoutParams.FILL_PARENT,
                 android.view.ViewGroup.LayoutParams.FILL_PARENT);
-    }
-
-    public LinearLayout addGridView() {
-
-        LinearLayout linear = new LinearLayout(MainActivity.this);
-
-        GridView gridView = new GridView(MainActivity.this);
-
-        gridView.setAdapter(new DragGridAdapter(MainActivity.this, gridView, lstDate));
-        gridView.setNumColumns(2);
-        gridView.setHorizontalSpacing(0);
-        gridView.setVerticalSpacing(0);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    final int arg2, long arg3) {
-
-                launcher = lstDate.get(arg2);
-
-                if (launcher.getTITLE().equals("none")) return;
-
-                String text = launcher.getTITLE();
-                Intent intent = new Intent();
-                if (text != null && !text.equals("none")) {
-
-                    if (launcher.getURL().equals("favorite") && userProxy.getCurrentUser() == null) {
-                        intent.setClass(MainActivity.this, LoginActivity.class);
-                        startActivityForResult(intent, Utils.FAVORITE);
-                        Toast.makeText(MainActivity.this, "查看我的最爱请先登录", Toast.LENGTH_SHORT).show();
-                    } else {
-                        intent.putExtra("launcher", launcher);
-                        intent.setClass(MainActivity.this, BeautyActivity.class);
-                        startActivity(intent);
-                    }
-                }
-
-
-            }
-        });
-        gridView.setSelector(R.drawable.selector_null);
-
-        linear.addView(gridView, param);
-        return linear;
     }
 
     @Override
@@ -215,11 +186,6 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
@@ -252,7 +218,23 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
 
         if (requestCode == Utils.FAVORITE && resultCode == RESULT_OK) {
             Intent intent = new Intent();
-            intent.putExtra("launcher", launcher);
+            intent.putExtra("category", "favorite");
+            intent.setClass(MainActivity.this, BeautyActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        Intent intent = new Intent();
+
+        if (v.getId() == R.id.ivFavorite && userProxy.getCurrentUser() == null) {
+            intent.setClass(MainActivity.this, LoginActivity.class);
+            startActivityForResult(intent, Utils.FAVORITE);
+            Toast.makeText(MainActivity.this, "查看我的最爱请先登录", Toast.LENGTH_SHORT).show();
+        } else {
+            intent.putExtra("category", v.getTag().toString());
             intent.setClass(MainActivity.this, BeautyActivity.class);
             startActivity(intent);
         }

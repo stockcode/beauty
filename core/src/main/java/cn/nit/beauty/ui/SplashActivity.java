@@ -120,28 +120,6 @@ public class SplashActivity extends BaseActivity {
         super.onStop();
     }
 
-    public void checkItems() {
-        //database.upgrade();
-        isLaucher = database.hasLauncher();
-        if (!isLaucher) {// 没有预存列表数据
-            List<Category> launchers = new ArrayList<Category>();
-
-            for (int j = 0; j < Data.Item0.length; j++) {
-                Category item = new Category();
-                item.setCATEGORY_ICON(Data.Items_icon[j]);
-                item.setCATEGORY("ROOT");
-                item.setTITLE(Data.Item0[j]);
-                item.setURL(Data.Items_url[j]);
-                item.setCHOICE(true);
-                launchers.add(item);
-            }
-
-            database.insertLauncher(launchers);
-        }
-
-
-    }
-
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
@@ -201,7 +179,6 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void startMain() {
-        checkItems();
 
         Intent intent = new Intent();
 

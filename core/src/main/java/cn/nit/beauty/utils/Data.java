@@ -20,7 +20,7 @@ public class Data {
 
     public final static String AUTH_URL = "http://www.matesapp.cn:8080/beauty-ajax/api";
     public final static String OSS_URL = "http://beauty-photo.oss.aliyuncs.com/";
-	public final static String UPDATE_URL = "http://beauty-app.oss.aliyuncs.com/beauty/update.json";
+
     public final static String mbApiKey = "6NxlGErC78G5tGB2aWPblquO";//请替换申请客户端应用时获取的Api Key串
 
     public final static String QQ_APP_ID = "1102386164";
@@ -48,12 +48,15 @@ public class Data {
     public final static int PAGE_COUNT = 10;
 	public final static String INDEX_KEY = "index.json";
 	
-	public static String[] Items_url = { "asia", "occident", "china", "favorite", "daily", "origin"};
-	public static int[] Items_icon = { R.drawable.asia, R.drawable.occident,
-			R.drawable.china, R.drawable.favorite,
-			R.drawable.daily, R.drawable.origin };
 
-	public static String[] Item0 = { "岛国风情", "欧美情调", "中国气质","我的最爱","每日更新","原创自拍"};
+    private static Map<String,String> titleMap = new HashMap<String, String>(){{
+        put("asia", "岛国风情");
+        put("occident", "欧美情调");
+        put("china", "中国气质");
+        put("favorite", "我的最爱");
+        put("daily", "每日更新");
+        put("origin", "原创自拍");
+    }};
 	public static Map<String, List<String>> categoryMap = new HashMap<String, List<String>>();
 
 
@@ -86,5 +89,9 @@ public class Data {
 
     public static void addFav(String url) {
         categoryMap.get("favorite").add(url);
+    }
+
+    public static String getTitle(String category) {
+        return titleMap.get(category);
     }
 }
