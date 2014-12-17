@@ -20,7 +20,7 @@ import cn.nit.beauty.proxy.UserProxy.ISignUpListener;
 import cn.nit.beauty.proxy.UserProxy.ILoginListener;
 
 @ContentView(R.layout.activity_register)
-public class RegisterActivity extends RoboActivity implements OnClickListener, ISignUpListener, ILoginListener {
+public class RegisterActivity extends BaseActivity implements OnClickListener, ISignUpListener, ILoginListener {
 
     @InjectView(R.id.nickname)
     private EditText nickname;

@@ -40,9 +40,12 @@ import cn.nit.beauty.model.Index;
 import cn.nit.beauty.request.IndexRequest;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
+import com.testin.agent.TestinAgent;
 import roboguice.activity.RoboActivity;
+import roboguice.inject.ContentView;
 
-public class SplashActivity extends RoboActivity {
+@ContentView(R.layout.activity_splashing)
+public class SplashActivity extends BaseActivity {
 
     @Inject
     UserProxy userProxy;
@@ -59,7 +62,8 @@ public class SplashActivity extends RoboActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splashing);
+
+        TestinAgent.init(this);
 
         Intent intent = getIntent();
 

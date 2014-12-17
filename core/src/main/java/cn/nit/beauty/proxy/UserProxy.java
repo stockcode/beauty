@@ -12,6 +12,7 @@ import cn.nit.beauty.entity.User;
 import cn.nit.beauty.utils.Constant;
 import cn.nit.beauty.utils.L;
 import com.google.inject.Inject;
+import com.testin.agent.TestinAgent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,7 +108,7 @@ public class UserProxy {
 		return null;
 	}
 	
-	public void login(String userName,String password){
+	public void login(final String userName,String password){
 		final BmobUser user = new BmobUser();
 		user.setUsername(userName);
 		user.setPassword(password);
@@ -115,7 +116,9 @@ public class UserProxy {
 			
 			@Override
 			public void onSuccess() {
-				// TODO Auto-generated method stub
+
+				TestinAgent.setUserInfo(userName);
+
 				if(loginListener != null){
 					loginListener.onLoginSuccess();
 				}else{
@@ -146,6 +149,7 @@ public class UserProxy {
 	
 	public void logout(){
 		BmobUser.logOut(mContext);
+		TestinAgent.setUserInfo("");
 		L.i("logout result:"+(null == getCurrentUser()));
 	}
 	

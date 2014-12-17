@@ -53,7 +53,7 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 @ContentView(R.layout.act_pull_to_refresh_sample)
-public class ImageListActivity extends RoboSherlockActivity {
+public class ImageListActivity extends BaseActivity {
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();

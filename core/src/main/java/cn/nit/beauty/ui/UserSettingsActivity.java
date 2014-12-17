@@ -49,7 +49,7 @@ import roboguice.inject.InjectView;
 import static cn.nit.beauty.utils.Constant.SEX_FEMALE;
 
 @ContentView(R.layout.user_settings)
-public class UserSettingsActivity extends RoboActivity implements OnClickListener,OnCheckedChangeListener{
+public class UserSettingsActivity extends BaseActivity implements OnClickListener,OnCheckedChangeListener{
 
     @Inject
     UserProxy userProxy;

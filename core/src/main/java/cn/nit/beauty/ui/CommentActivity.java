@@ -47,7 +47,7 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 @ContentView(R.layout.activity_comment)
-public class CommentActivity extends RoboActivity implements OnClickListener{
+public class CommentActivity extends BaseActivity implements OnClickListener{
 
     @InjectView(R.id.comment_list)
 	private ListView commentList;

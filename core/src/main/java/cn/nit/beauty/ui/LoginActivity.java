@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @ContentView(R.layout.login)
-public class LoginActivity extends RoboActivity implements OnClickListener, UserProxy.ILoginListener, UserProxy.ISignUpListener {
+public class LoginActivity extends BaseActivity implements OnClickListener, UserProxy.ILoginListener, UserProxy.ISignUpListener {
 
     @InjectView(R.id.regist)
 	private TextView mBtnRegister;

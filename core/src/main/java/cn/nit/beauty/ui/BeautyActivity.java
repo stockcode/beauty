@@ -53,7 +53,7 @@ import cn.nit.beauty.widget.ScaleImageView;
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.act_pull_to_refresh_sample)
-public class BeautyActivity extends RoboSherlockActivity implements ActionBar.OnNavigationListener {
+public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigationListener {
 
     LaucherDataBase database;
     private AsyncGridView mAdapterView = null;

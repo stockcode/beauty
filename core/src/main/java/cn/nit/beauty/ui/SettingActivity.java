@@ -33,6 +33,7 @@ import java.util.Date;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.utils.Data;
+import com.testin.agent.TestinAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
@@ -148,9 +149,20 @@ public class SettingActivity extends PreferenceActivity {
             return true;
         }
     }
-	
 
-	@Override
+    @Override
+    protected void onStop() {
+        super.onStop();
+        TestinAgent.onStop(getApplicationContext());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        TestinAgent.onStart(getApplicationContext());
+    }
+
+    @Override
     protected void onResume() {  
         super.onResume();  
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);

@@ -24,7 +24,7 @@ import roboguice.inject.InjectView;
 
 
 @ContentView(R.layout.activity_myyouku)
-public class UserCenterActivity extends RoboActivity {
+public class UserCenterActivity extends BaseActivity {
 
     @InjectView(R.id.btn_myyouku_login)
     Button btnLogin;

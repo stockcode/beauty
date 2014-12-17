@@ -37,7 +37,7 @@ import java.util.Date;
 import java.util.List;
 
 @ContentView(R.layout.activity_vip_product)
-public class VipProductActivity extends RoboActivity implements UserProxy.ILoginListener{
+public class VipProductActivity extends BaseActivity implements UserProxy.ILoginListener{
     @InjectView(R.id.vip_product_layout_item_first)
     RelativeLayout vip_product_layout_item_first;
 

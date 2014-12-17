@@ -5,20 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
-import cn.bmob.v3.Bmob;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.ui.listener.ShakeListener;
-import com.actionbarsherlock.app.ActionBar;
 import com.baidu.mobstat.StatService;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +24,16 @@ import cn.nit.beauty.database.Category;
 import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.utils.Configure;
 import cn.nit.beauty.utils.Data;
-import cn.nit.beauty.widget.DragGridView;
-import cn.nit.beauty.widget.ScrollLayout;
 import com.google.inject.Inject;
+import com.testin.agent.TestinAgent;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.update.UmengUpdateAgent;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
-@ContentView(R.layout.main)
-public class MainActivity extends RoboSherlockActivity implements ShakeListener.OnShakeListener {
+@ContentView(R.layout.activity_main)
+public class MainActivity extends BaseActivity implements ShakeListener.OnShakeListener {
 
     private ShakeListener mShaker;
     Vibrator vibe;
@@ -71,6 +65,10 @@ public class MainActivity extends RoboSherlockActivity implements ShakeListener.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (userProxy.getCurrentUser() != null) {
+            TestinAgent.setUserInfo(userProxy.getCurrentUser().getUsername());
+        }
 
         UmengUpdateAgent.update(this);
 

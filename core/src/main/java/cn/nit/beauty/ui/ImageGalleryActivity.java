@@ -56,6 +56,7 @@ import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.model.ImageInfos;
 import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Data;
+import com.testin.agent.TestinAgent;
 import roboguice.activity.RoboActivity;
 import roboguice.activity.RoboFragmentActivity;
 import uk.co.senab.photoview.PhotoView;
@@ -389,12 +390,14 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
     protected void onStart() {
         super.onStart();
         spiceManager.start(this);
+        TestinAgent.onStart(this);
     }
 
     @Override
     protected void onStop() {
         spiceManager.shouldStop();
         super.onStop();
+        TestinAgent.onStop(this);
     }
 
     @Override
