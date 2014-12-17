@@ -1,13 +1,21 @@
 package cn.nit.beauty.ui;
 
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
+import android.os.Bundle;
+import butterknife.ButterKnife;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.testin.agent.TestinAgent;
 import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by vicky on 2014/12/17.
  */
-public class BaseActivity extends RoboSherlockActivity{
+public class BaseActivity extends SherlockActivity{
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ButterKnife.inject(this);
+    }
 
     @Override
     protected void onResume() {

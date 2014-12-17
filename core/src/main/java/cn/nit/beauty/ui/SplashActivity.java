@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import butterknife.ButterKnife;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobPointer;
@@ -41,7 +42,6 @@ import com.testin.agent.TestinAgent;
 import com.umeng.analytics.MobclickAgent;
 import roboguice.inject.ContentView;
 
-@ContentView(R.layout.activity_splashing)
 public class SplashActivity extends BaseActivity {
 
     @Inject
@@ -61,6 +61,9 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         TestinAgent.init(this);
+
+        setContentView(R.layout.activity_splashing);
+
 
         MobclickAgent.updateOnlineConfig(this);
 

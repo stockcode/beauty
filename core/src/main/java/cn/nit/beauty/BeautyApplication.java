@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 
 import cn.bmob.v3.BmobUser;
 import cn.nit.beauty.entity.User;
+import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.ActivityManagerUtils;
 import com.baidu.frontia.FrontiaApplication;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -50,6 +51,8 @@ public class BeautyApplication extends FrontiaApplication {
 
         //由于Application类本身已经单例，所以直接按以下处理即可。
         myApplication = this;
+
+        UserProxy.createInstance(getApplicationContext());
 
         // Create global configuration and initialize ImageLoader with this configuration
         initImageLoader();

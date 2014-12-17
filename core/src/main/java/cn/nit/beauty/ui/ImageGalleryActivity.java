@@ -29,7 +29,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
@@ -59,6 +58,7 @@ import com.testin.agent.TestinAgent;
 import com.umeng.analytics.MobclickAgent;
 import roboguice.activity.RoboActivity;
 import roboguice.activity.RoboFragmentActivity;
+import roboguice.activity.RoboSherlockFragmentActivity;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 

@@ -11,7 +11,6 @@ import android.content.Context;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.utils.Constant;
 import cn.nit.beauty.utils.L;
-import com.google.inject.Inject;
 import com.testin.agent.TestinAgent;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,11 +18,22 @@ import org.json.JSONObject;
 public class UserProxy {
 
 	public static final String TAG = "UserProxy";
-	
+
+	private static UserProxy userProxy = null;
+
+	public static UserProxy getInstance(){
+		return userProxy;
+	}
+
+	public static void createInstance(Context context){
+		if (userProxy ==null) {
+			userProxy = new UserProxy(context);
+		}
+	}
+
 	private Context mContext;
 
-    @Inject
-	public UserProxy(Context context){
+	private UserProxy(Context context){
 		this.mContext = context;
 	}
 	
