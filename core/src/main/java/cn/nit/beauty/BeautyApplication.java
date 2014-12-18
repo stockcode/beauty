@@ -8,7 +8,6 @@ import cn.bmob.v3.BmobUser;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.ActivityManagerUtils;
-import com.baidu.frontia.FrontiaApplication;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -25,7 +24,7 @@ import cn.nit.beauty.widget.RotateBitmapProcessor;
 /**
  * Created by gengke on 13-7-15.
  */
-public class BeautyApplication extends FrontiaApplication {
+public class BeautyApplication extends Application {
 
     private static BeautyApplication myApplication = null;
 
@@ -51,8 +50,6 @@ public class BeautyApplication extends FrontiaApplication {
 
         //由于Application类本身已经单例，所以直接按以下处理即可。
         myApplication = this;
-
-        UserProxy.createInstance(getApplicationContext());
 
         // Create global configuration and initialize ImageLoader with this configuration
         initImageLoader();
@@ -95,5 +92,9 @@ public class BeautyApplication extends FrontiaApplication {
                 .imageScaleType(ImageScaleType.EXACTLY)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
+    }
+
+    public User getCurrentUser() {
+        return BmobUser.getCurrentUser(this, User.class);
     }
 }

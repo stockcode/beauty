@@ -7,29 +7,27 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import cn.nit.beauty.R;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.ActivityUtil;
 import cn.nit.beauty.utils.L;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import roboguice.activity.RoboActivity;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 import cn.nit.beauty.proxy.UserProxy.ISignUpListener;
 import cn.nit.beauty.proxy.UserProxy.ILoginListener;
 
-@ContentView(R.layout.activity_register)
 public class RegisterActivity extends BaseActivity implements OnClickListener, ISignUpListener, ILoginListener {
 
     @InjectView(R.id.nickname)
-    private EditText nickname;
+    EditText nickname;
 
     @InjectView(R.id.phone)
-    private TextView phone;
+    TextView phone;
 
     @InjectView(R.id.password)
-    private EditText password;
+    EditText password;
 
     @InjectView(R.id.sm_progressbar)
     SmoothProgressBar progressbar;
@@ -39,6 +37,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, I
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_register);
+        ButterKnife.inject(this);
 
         Intent intent = getIntent();
 

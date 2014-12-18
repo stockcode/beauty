@@ -5,6 +5,7 @@ import butterknife.ButterKnife;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.testin.agent.TestinAgent;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 /**
  * Created by vicky on 2014/12/17.
@@ -14,7 +15,8 @@ public class BaseActivity extends SherlockActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.inject(this);
+
+        PushAgent.getInstance(this).onAppStart();
     }
 
     @Override

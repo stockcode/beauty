@@ -10,21 +10,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.Utils;
+import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.ui.listener.ShakeListener;
 
 import cn.nit.beauty.R;
 import cn.nit.beauty.utils.Data;
-import com.google.inject.Inject;
 import com.testin.agent.TestinAgent;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.update.UmengUpdateAgent;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 
-@ContentView(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements ShakeListener.OnShakeListener, OnClickListener {
 
     private ShakeListener mShaker;
@@ -48,10 +48,10 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
     @InjectView(R.id.ivOrigin)
     ImageView ivOrigin;
 
-    @Inject
-    UserProxy userProxy;
 
     String category;
+
+    User currentUser;
 
     boolean finishCount = false;
 
@@ -59,9 +59,8 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (userProxy.getCurrentUser() != null) {
-            TestinAgent.setUserInfo(userProxy.getCurrentUser().getUsername());
-        }
+        setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
 
         UmengUpdateAgent.update(this);
 
@@ -147,8 +146,13 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
     @Override
     public void onResume() {
         super.onResume();
-
         mShaker.resume();
+
+        currentUser = BeautyApplication.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            TestinAgent.setUserInfo(currentUser.getUsername());
+        }
     }
 
     @Override
@@ -185,7 +189,7 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
 
         Intent intent = new Intent();
 
-        if (v.getId() == R.id.ivFavorite && userProxy.getCurrentUser() == null) {
+        if (v.getId() == R.id.ivFavorite && currentUser == null) {
             intent.setClass(MainActivity.this, LoginActivity.class);
             startActivityForResult(intent, Utils.FAVORITE);
             Toast.makeText(MainActivity.this, "查看我的最爱请先登录", Toast.LENGTH_SHORT).show();

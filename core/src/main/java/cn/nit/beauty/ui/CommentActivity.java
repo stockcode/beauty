@@ -22,6 +22,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
@@ -42,30 +44,26 @@ import cn.nit.beauty.utils.L;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-import roboguice.activity.RoboActivity;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 
-@ContentView(R.layout.activity_comment)
 public class CommentActivity extends BaseActivity implements OnClickListener{
 
     @InjectView(R.id.comment_list)
-	private ListView commentList;
+	ListView commentList;
 
     @InjectView(R.id.loadmore)
-	private TextView footer;
+	TextView footer;
 
     @InjectView(R.id.comment_content)
-	private EditText commentContent ;
+	EditText commentContent ;
 
     @InjectView(R.id.comment_commit)
-	private Button commentCommit;
+	Button commentCommit;
 
 	@InjectView(R.id.title)
-	private TextView title;
+	TextView title;
 
 	@InjectView(R.id.commentCount)
-	private TextView commentCount;
+	TextView commentCount;
 
 	private ImageView commentItemImage;
 	
@@ -89,6 +87,9 @@ public class CommentActivity extends BaseActivity implements OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_comment);
+		ButterKnife.inject(this);
 
 		setupViews(savedInstanceState);
 

@@ -19,21 +19,9 @@ public class UserProxy {
 
 	public static final String TAG = "UserProxy";
 
-	private static UserProxy userProxy = null;
-
-	public static UserProxy getInstance(){
-		return userProxy;
-	}
-
-	public static void createInstance(Context context){
-		if (userProxy ==null) {
-			userProxy = new UserProxy(context);
-		}
-	}
-
 	private Context mContext;
 
-	private UserProxy(Context context){
+	public UserProxy(Context context){
 		this.mContext = context;
 	}
 	

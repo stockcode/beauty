@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.entity.User;
@@ -29,7 +30,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
-import com.google.inject.Inject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -56,13 +56,10 @@ import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Data;
 import com.testin.agent.TestinAgent;
 import com.umeng.analytics.MobclickAgent;
-import roboguice.activity.RoboActivity;
-import roboguice.activity.RoboFragmentActivity;
-import roboguice.activity.RoboSherlockFragmentActivity;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
+public class ImageGalleryActivity extends SherlockFragmentActivity {
 
     List<ImageInfo> imageInfoList;
     private GalleryAdapter mAdapter;
@@ -75,9 +72,6 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
             GsonSpringAndroidSpiceService.class);
 
     private MenuItem mnuSave;
-
-    @Inject
-    UserProxy userProxy;
 
     private SharedPreferences settings;
 
@@ -174,7 +168,7 @@ public class ImageGalleryActivity extends RoboSherlockFragmentActivity {
     protected void onResumeFragments() {
         super.onResumeFragments();
 
-        currentUser = userProxy.getCurrentUser();
+        currentUser = BeautyApplication.getInstance().getCurrentUser();
 
     }
 

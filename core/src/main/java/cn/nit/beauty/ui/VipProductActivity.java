@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.alipay.Rsa;
@@ -21,13 +23,8 @@ import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.Data;
 import com.alipay.android.app.sdk.AliPay;
-import com.google.inject.Inject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-import roboguice.RoboGuice;
-import roboguice.activity.RoboActivity;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -36,8 +33,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@ContentView(R.layout.activity_vip_product)
 public class VipProductActivity extends BaseActivity implements UserProxy.ILoginListener{
+
     @InjectView(R.id.vip_product_layout_item_first)
     RelativeLayout vip_product_layout_item_first;
 
@@ -47,7 +44,6 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
     @InjectView(R.id.vip_product_layout_item_third)
     RelativeLayout vip_product_layout_item_third;
 
-    @Inject
     UserProxy userProxy;
 
     private List<Product> products =new ArrayList<Product>();
@@ -113,6 +109,11 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_vip_product);
+        ButterKnife.inject(this);
+
+        userProxy = new UserProxy(this);
 
         currentUser = userProxy.getCurrentUser();
         initProducts();

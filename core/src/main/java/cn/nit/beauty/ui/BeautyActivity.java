@@ -3,6 +3,7 @@ package cn.nit.beauty.ui;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -10,10 +11,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 
+import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
 import com.actionbarsherlock.app.ActionBar;
-import com.google.inject.Inject;
 
 import org.lucasr.smoothie.AsyncGridView;
 import org.lucasr.smoothie.ItemManager;
@@ -28,9 +29,7 @@ import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.database.Category;
 import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.utils.Data;
-import roboguice.inject.ContentView;
 
-@ContentView(R.layout.act_pull_to_refresh_sample)
 public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigationListener {
 
     LaucherDataBase database;
@@ -42,9 +41,6 @@ public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigati
     private String category = "";
 
     private List<String> folders, selectedFolders = new ArrayList<String>();
-
-    @Inject
-    UserProxy userProxy;
 
     private User currentUser;
 
@@ -79,7 +75,9 @@ public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        currentUser = userProxy.getCurrentUser();
+        setContentView(R.layout.act_pull_to_refresh_sample);
+
+        currentUser = BeautyApplication.getInstance().getCurrentUser();
 
         database = new LaucherDataBase(getApplicationContext());
 
@@ -142,7 +140,13 @@ public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigati
                 ArrayAdapter<String> list = new ArrayAdapter(context, R.layout.sherlock_spinner_item);
 
                 list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-                list.addAll(filters);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    list.addAll(filters);
+                } else {
+                    for(String filter :filters) {
+                        list.add(filter);
+                    }
+                }
                 getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
                 getSupportActionBar().setListNavigationCallbacks(list, this);
                 getSupportActionBar().setSelectedNavigationItem(list.getPosition(selectedFilter));

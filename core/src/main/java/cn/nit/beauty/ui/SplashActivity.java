@@ -14,14 +14,12 @@ import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.listener.FindListener;
+import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.entity.PhotoGallery;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.L;
 import cn.smssdk.SMSSDK;
-import com.baidu.android.pushservice.PushConstants;
-import com.baidu.android.pushservice.PushManager;
-import com.google.inject.Inject;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -40,12 +38,8 @@ import cn.nit.beauty.request.IndexRequest;
 import cn.nit.beauty.utils.Data;
 import com.testin.agent.TestinAgent;
 import com.umeng.analytics.MobclickAgent;
-import roboguice.inject.ContentView;
 
 public class SplashActivity extends BaseActivity {
-
-    @Inject
-    UserProxy userProxy;
 
     private SpiceManager spiceManager = new SpiceManager(
             GsonSpringAndroidSpiceService.class);
@@ -58,9 +52,10 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
         TestinAgent.init(this);
+
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splashing);
 
@@ -72,9 +67,6 @@ public class SplashActivity extends BaseActivity {
         isDaily = intent.hasExtra("isDaily");
 
         database = new LaucherDataBase(getApplicationContext());
-
-        PushManager.startWork(getApplicationContext(),
-                PushConstants.LOGIN_TYPE_API_KEY, Utils.getMetaValue(SplashActivity.this, "api_key"));
 
 
         settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -155,7 +147,7 @@ public class SplashActivity extends BaseActivity {
                 database.insertItems(index.getCategories());
                 Data.categoryMap = index.getRoots();
                 Data.categoryMap.put("favorite", new ArrayList<String>());
-                if (userProxy.getCurrentUser() == null)
+                if (BeautyApplication.getInstance().getCurrentUser() == null)
                     startMain();
                 else
                     getFavorites();
@@ -184,7 +176,7 @@ public class SplashActivity extends BaseActivity {
 
     private void getFavorites() {
         BmobQuery<PhotoGallery> query = new BmobQuery<PhotoGallery>();
-        query.addWhereRelatedTo("favorite", new BmobPointer(userProxy.getCurrentUser()));
+        query.addWhereRelatedTo("favorite", new BmobPointer(BeautyApplication.getInstance().getCurrentUser()));
         query.include("user");
         query.order("createdAt");
         query.findObjects(this, new FindListener<PhotoGallery>() {

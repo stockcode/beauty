@@ -7,8 +7,8 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
+import cn.nit.beauty.ui.BaseActivity;
 import cn.nit.beauty.utils.*;
-import com.google.inject.Inject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -22,7 +22,6 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-import roboguice.activity.RoboActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,9 +29,8 @@ import java.io.IOException;
 /**
  * Created by vicky on 2014/10/9.
  */
-public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler, UserProxy.ISignUpListener, UserProxy.ILoginListener {
+public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler, UserProxy.ISignUpListener, UserProxy.ILoginListener {
 
-    @Inject
     UserProxy userProxy;
 
     User user;
@@ -44,6 +42,8 @@ public class WXEntryActivity extends RoboActivity implements IWXAPIEventHandler,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        userProxy = new UserProxy(this);
 
         api = WXAPIFactory.createWXAPI(this, Data.WEIXIN_APP_ID, false);
 

@@ -5,55 +5,47 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
-
 import android.widget.TextView;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.listener.UpdateListener;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import cn.nit.beauty.R;
 import cn.nit.beauty.utils.ActivityUtil;
-import com.google.inject.Inject;
-import roboguice.activity.RoboActivity;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 
-@ContentView(R.layout.input_activity)
-public class InputActivity extends RoboActivity{
+public class InputActivity extends BaseActivity {
 
+    @InjectView(R.id.content)
+    EditText mContent;
+    @InjectView(R.id.hint)
+    TextView mHint;
 
-	@InjectView(R.id.content)
-	private EditText etContent;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-	@InjectView(R.id.hint)
-	private TextView tvHint;
+        setContentView(R.layout.input_activity);
+        ButterKnife.inject(this);
 
+        Intent intent = getIntent();
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+        setTitle(intent.getStringExtra("title"));
 
-		Intent intent = getIntent();
+        mContent.setText(intent.getStringExtra("content"));
 
-		setTitle(intent.getStringExtra("title"));
+        mHint.setText(intent.getStringExtra("hint"));
 
-		etContent.setText(intent.getStringExtra("content"));
+    }
 
-		tvHint.setText(intent.getStringExtra("hint"));
+    public void onSave(View view) {
+        String content = mContent.getText().toString().trim();
+        if (TextUtils.isEmpty(content)) {
+            ActivityUtil.show(this, "内容不能为空");
+        } else {
+            Intent data = new Intent();
+            data.putExtra("content", content);
+            setResult(Activity.RESULT_OK, data);
 
-	}
-
-	public void onSave(View view) {
-		String content = etContent.getText().toString().trim();
-		if(TextUtils.isEmpty(content)){
-			ActivityUtil.show(this, "内容不能为空");
-		}else{
-			Intent data=new Intent();
-			data.putExtra("content", content);
-			setResult(Activity.RESULT_OK, data);
-
-			finish();
-		}
-	}
+            finish();
+        }
+    }
 }

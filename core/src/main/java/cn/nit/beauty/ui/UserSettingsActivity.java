@@ -25,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.UpdateListener;
@@ -38,20 +40,14 @@ import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.ActivityUtil;
 import cn.nit.beauty.utils.Constant;
 import cn.nit.beauty.utils.L;
-import com.google.inject.Inject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
-import roboguice.activity.RoboActivity;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 
 import static cn.nit.beauty.utils.Constant.SEX_FEMALE;
 
-@ContentView(R.layout.user_settings)
 public class UserSettingsActivity extends BaseActivity implements OnClickListener,OnCheckedChangeListener{
 
-    @Inject
     UserProxy userProxy;
 
     @InjectView(R.id.user_logout)
@@ -93,6 +89,11 @@ public class UserSettingsActivity extends BaseActivity implements OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.user_settings);
+		ButterKnife.inject(this);
+
+		userProxy = new UserProxy(this);
 
 		user = userProxy.getCurrentUser();
 
@@ -268,18 +269,18 @@ public class UserSettingsActivity extends BaseActivity implements OnClickListene
 			}
 
 			user.update(this, new UpdateListener() {
-				
+
 				@Override
 				public void onSuccess() {
 
 					L.i("更新信息成功。");
 				}
-				
+
 				@Override
 				public void onFailure(int arg0, String arg1) {
 
 					ActivityUtil.show(UserSettingsActivity.this, "更新信息失败。请检查网络~");
-					L.i("更新失败1-->"+arg1);
+					L.i("更新失败1-->" + arg1);
 				}
 			});
 

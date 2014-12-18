@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobPointer;
@@ -21,7 +23,6 @@ import cn.nit.beauty.utils.*;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import cn.smssdk.gui.RegisterPage;
-import com.google.inject.Inject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.tencent.connect.UserInfo;
@@ -35,9 +36,6 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-import roboguice.activity.RoboActivity;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,26 +43,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@ContentView(R.layout.login)
 public class LoginActivity extends BaseActivity implements OnClickListener, UserProxy.ILoginListener, UserProxy.ISignUpListener {
 
     @InjectView(R.id.regist)
-	private TextView mBtnRegister;
+	TextView mBtnRegister;
 
     @InjectView(R.id.login)
-	private Button mBtnLogin;
+	Button mBtnLogin;
 
     @InjectView(R.id.sm_progressbar)
     SmoothProgressBar progressbar;
 
-    @Inject
     UserProxy userProxy;
 
     @InjectView(R.id.accounts)
-    private EditText username;
+    EditText username;
 
     @InjectView(R.id.password)
-    private EditText passwd;
+    EditText passwd;
 
 	private boolean mShowMenu = false;
 
@@ -75,6 +71,12 @@ public class LoginActivity extends BaseActivity implements OnClickListener, User
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.login);
+        ButterKnife.inject(this);
+
+        userProxy = new UserProxy(this);
+
         initView();
 
         api = WXAPIFactory.createWXAPI(this, Data.WEIXIN_APP_ID, true);
@@ -86,8 +88,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, User
     
     public void initView()
     {
-        username = (EditText) findViewById(R.id.accounts);
-        passwd = (EditText)findViewById(R.id.password);
 
         mBtnRegister.setPaintFlags(mBtnRegister.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
     	mBtnRegister.setOnClickListener(this);

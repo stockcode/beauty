@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="BeautyTheme" parent="Theme.Sherlock.Light.DarkActionBar"/>
+    <style name="BeautyTheme.NoTitleBar" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="android:windowNoTitle">true</item>
+    </style>
 <style name="mycenter_txt_nickname">
     <item name="android:textSize">@dimen/txt_myyouku_nickname_textsize</item>
     <item name="android:textColor">#ffffffff</item>

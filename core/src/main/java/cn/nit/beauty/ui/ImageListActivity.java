@@ -8,6 +8,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.UpdateListener;
+import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.adapter.StaggeredAdapter;
@@ -31,7 +32,6 @@ import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.utils.L;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.inject.Inject;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -40,9 +40,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.lucasr.smoothie.AsyncGridView;
 import org.lucasr.smoothie.ItemManager;
-import roboguice.inject.ContentView;
 
-@ContentView(R.layout.act_pull_to_refresh_sample)
 public class ImageListActivity extends BaseActivity {
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
@@ -55,9 +53,6 @@ public class ImageListActivity extends BaseActivity {
     private PhotoGallery photoGallery;
 
     private MenuItem mnuFav;
-
-    @Inject
-    UserProxy userProxy;
 
     private User currentUser;
     /**
@@ -74,7 +69,7 @@ public class ImageListActivity extends BaseActivity {
             if ((imageInfo.getKey().contains("origin") && i >= 3)
                     || ( i > (imageInfoList.size() - i))) {
 
-                if (userProxy.hasExpired()) {
+                if (currentUser ==null || currentUser.hasExpired()) {
                     imageInfo.setUrl(imageInfo.getUrl().replaceAll("small", "filter"));
                 }else if (imageInfo.getUrl().contains("filter")) {
                     imageInfo.setUrl(imageInfo.getUrl().replaceAll("filter", "small"));
@@ -92,6 +87,8 @@ public class ImageListActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.act_pull_to_refresh_sample);
 
         Intent intent = getIntent();
 
@@ -256,7 +253,7 @@ public class ImageListActivity extends BaseActivity {
 
         setProgressBarIndeterminateVisibility(true);
 
-        currentUser = userProxy.getCurrentUser();
+        currentUser = BeautyApplication.getInstance().getCurrentUser();
 
     }
 

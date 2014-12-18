@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.nit.beauty.BeautyApplication;
@@ -15,15 +17,10 @@ import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
-import com.google.inject.Inject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-import roboguice.activity.RoboActivity;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 
 
-@ContentView(R.layout.activity_myyouku)
 public class UserCenterActivity extends BaseActivity {
 
     @InjectView(R.id.btn_myyouku_login)
@@ -45,8 +42,7 @@ public class UserCenterActivity extends BaseActivity {
     @InjectView(R.id.myyouku_viewflipper)
     ViewFlipper my_viewflipper;
 
-    @Inject
-    UserProxy userProxy;
+    User currentUser;
 
     private View.OnClickListener loginClickListener = new View.OnClickListener() {
         @Override
@@ -77,7 +73,8 @@ public class UserCenterActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        setContentView(R.layout.activity_myyouku);
+        ButterKnife.inject(this);
 
         ibSetting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +97,7 @@ public class UserCenterActivity extends BaseActivity {
     }
 
     private void checkUserStatus() {
-        User currentUser = userProxy.getCurrentUser();
+        currentUser = BeautyApplication.getInstance().getCurrentUser();
 
         if (currentUser != null) {
             tvNickname.setText(currentUser.getNickname());
@@ -112,17 +109,7 @@ public class UserCenterActivity extends BaseActivity {
             if(null != avatarFile){
                 ImageLoader.getInstance()
                         .displayImage(avatarFile.getFileUrl(), ivLogout,
-                                BeautyApplication.getInstance().getOptions(R.drawable.icon),
-                                new SimpleImageLoadingListener(){
-
-                                    @Override
-                                    public void onLoadingComplete(String imageUri, View view,
-                                                                  Bitmap loadedImage) {
-                                        // TODO Auto-generated method stub
-                                        super.onLoadingComplete(imageUri, view, loadedImage);
-                                    }
-
-                                });
+                                BeautyApplication.getInstance().getOptions(R.drawable.icon));
             }
         } else {
             tvNickname.setText(R.string.txt_nickname);
@@ -139,7 +126,7 @@ public class UserCenterActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Utils.VIP && resultCode == RESULT_OK) {
-            Toast.makeText(UserCenterActivity.this, "支付成功，您的有效期至" + userProxy.getCurrentUser().getExpiredDate(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserCenterActivity.this, "支付成功，您的有效期至" + currentUser.getExpiredDate(), Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -29,7 +29,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
     //compile  'com.github.chrisbanes.photoview:library:1.2.1'
-    compile 'com.baidu.android:pushservice:4.0.0'
+
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
 
     compile 'de.hdodenhof:circleimageview:1.2.1'
@@ -39,7 +39,6 @@ dependencies {
     //compile 'org.lucasr.smoothie:library:0.1'
     compile 'org.apache.httpcomponents:httpmime:4.2.5'
     compile 'com.alipay:alipay:1.2'
-    compile 'com.alipay:alipay_lib:1.2@aar'
     compile 'com.tencent:opensdk:2.6'
     compile 'com.tencent:mtasdk:2.0.0'
     compile 'com.tencent:midsdk:2.1.0'
@@ -79,8 +78,8 @@ android {
     defaultConfig {
 //        minSdkVersion 7
 //        targetSdkVersion 16
-        versionCode 20
-        versionName '1.1.20'
+        versionCode 21
+        versionName '1.1.21'
     }
 
     compileSdkVersion 17
