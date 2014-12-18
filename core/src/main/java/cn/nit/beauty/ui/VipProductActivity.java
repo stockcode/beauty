@@ -22,7 +22,7 @@ import cn.nit.beauty.alipay.Rsa;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.Data;
-import com.alipay.android.app.sdk.AliPay;
+import com.alipay.sdk.app.PayTask;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -84,12 +84,10 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
                 final String orderInfo = info;
                 new Thread() {
                     public void run() {
-                        AliPay alipay = new AliPay(VipProductActivity.this, mHandler);
+                        PayTask payTask = new PayTask(VipProductActivity.this);
 
-                        //设置为沙箱模式，不设置默认为线上环境
-                        //alipay.setSandBox(true);
 
-                        String result = alipay.pay(orderInfo);
+                        String result = payTask.pay(orderInfo);
 
                         Message msg = new Message();
                         msg.what = position;
@@ -140,7 +138,7 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
         txt_vip_product_layout_item_price2.setText(products.get(1).price);
         txt_vip_product_layout_item_price2.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
-        if (!currentUser.hasDiscount()) vip_product_layout_item_third.setVisibility(View.GONE);
+        if (currentUser== null || !currentUser.hasDiscount()) vip_product_layout_item_third.setVisibility(View.GONE);
 
         TextView btn_vip_product_layout_item_open3 = (TextView) vip_product_layout_item_third.findViewById(R.id.btn_vip_product_layout_item_open);
         btn_vip_product_layout_item_open3.setTag(2);

@@ -39,7 +39,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -72,7 +71,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, User
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.login);
+        setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
 
         userProxy = new UserProxy(this);

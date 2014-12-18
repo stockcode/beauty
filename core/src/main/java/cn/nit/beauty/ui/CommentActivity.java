@@ -59,7 +59,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener{
     @InjectView(R.id.comment_commit)
 	Button commentCommit;
 
-	@InjectView(R.id.title)
+	@InjectView(R.id.commentTitle)
 	TextView title;
 
 	@InjectView(R.id.commentCount)
@@ -105,6 +105,11 @@ public class CommentActivity extends BaseActivity implements OnClickListener{
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		photoGallery = (PhotoGallery)getIntent().getSerializableExtra("photoGallery");
+
+		if (photoGallery == null) {
+			L.e("photoGallery can not be null");
+			return;
+		}
 
 		title.setText(photoGallery.getTitle());
 

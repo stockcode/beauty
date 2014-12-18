@@ -4,6 +4,8 @@ package cn.nit.beauty.ui.listener;
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.content.Context;
+import cn.nit.beauty.utils.L;
+
 import java.lang.UnsupportedOperationException;
 
 public class ShakeListener implements SensorListener
@@ -42,12 +44,12 @@ public class ShakeListener implements SensorListener
     public void resume() {
         mSensorMgr = (SensorManager)mContext.getSystemService(Context.SENSOR_SERVICE);
         if (mSensorMgr == null) {
-            throw new UnsupportedOperationException("Sensors not supported");
+            L.e("Sensors not supported");
         }
         boolean supported = mSensorMgr.registerListener(this, SensorManager.SENSOR_ACCELEROMETER, SensorManager.SENSOR_DELAY_GAME);
         if (!supported) {
             mSensorMgr.unregisterListener(this, SensorManager.SENSOR_ACCELEROMETER);
-            throw new UnsupportedOperationException("Accelerometer not supported");
+            L.e("Accelerometer not supported");
         }
     }
 

@@ -18,9 +18,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import cn.bmob.v3.update.BmobUpdateAgent;
-import cn.nit.beauty.alipay.Rsa;
 import cn.nit.beauty.utils.ActivityUtil;
-import com.alipay.android.app.sdk.AliPay;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
