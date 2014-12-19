@@ -45,7 +45,7 @@ public class SplashActivity extends BaseActivity {
             GsonSpringAndroidSpiceService.class);
 
     LaucherDataBase database;
-    boolean isLaucher, isDaily;
+    boolean isDaily;
     boolean isFinish = false;
 
     private SharedPreferences settings;
@@ -161,11 +161,7 @@ public class SplashActivity extends BaseActivity {
         Intent intent = new Intent();
 
         if (isDaily) {
-            Category launcher = new Category();
-            launcher.setTITLE("每日更新");
-            launcher.setURL("daily");
-            launcher.setCATEGORY("daily");
-            intent.putExtra("launcher", launcher);
+            intent.putExtra("category", "daily");
             intent.setClass(SplashActivity.this, BeautyActivity.class);
         } else {
             intent.setClass(SplashActivity.this, MainActivity.class);

@@ -20,9 +20,11 @@ import cn.nit.beauty.ui.listener.ShakeListener;
 
 import cn.nit.beauty.R;
 import cn.nit.beauty.utils.Data;
+import cn.nit.beauty.utils.L;
 import com.testin.agent.TestinAgent;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
 import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends BaseActivity implements ShakeListener.OnShakeListener, OnClickListener {
@@ -64,6 +66,12 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
 
         UmengUpdateAgent.update(this);
 
+        PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.setDebugMode(true);
+        mPushAgent.enable();
+
+        L.i("Device Token:" + UmengRegistrar.getRegistrationId(this));
+
         init();
 
 
@@ -79,7 +87,7 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
         fb.sync();
 
         fb.openFeedbackPush();
-        PushAgent.getInstance(this).enable();
+
     }
 
     public void onUser (View v) {
