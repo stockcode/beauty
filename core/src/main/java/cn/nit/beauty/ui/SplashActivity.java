@@ -16,9 +16,13 @@ import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.listener.FindListener;
 import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.Helper;
+import cn.nit.beauty.entity.BeautyPlatform;
 import cn.nit.beauty.entity.PhotoGallery;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.L;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.socialization.Socialization;
 import cn.smssdk.SMSSDK;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -81,9 +85,17 @@ public class SplashActivity extends BaseActivity {
         IndexRequest indexRequest = new IndexRequest(Data.OSS_URL + Data.INDEX_KEY);
         spiceManager.execute(indexRequest, "beauty.index", DurationInMillis.ALWAYS_EXPIRED, new IndexRequestListener());
 
+        ShareSDK.initSDK(this);
+
+        ShareSDK.registerService(Socialization.class);
+
         SMSSDK.initSDK(this, Data.SMS_APP_ID, Data.SMS_APP_SECRET);
 
         Bmob.initialize(this, "19fee4b5da44fc283e4c58e9f860ea96");
+
+        Socialization service = ShareSDK.getService(Socialization.class);
+        BeautyPlatform beautyPlatform = new BeautyPlatform(SplashActivity.this);
+        service.setCustomPlatform(beautyPlatform);
     }
 
     @Override
@@ -149,8 +161,12 @@ public class SplashActivity extends BaseActivity {
                 Data.categoryMap.put("favorite", new ArrayList<String>());
                 if (BeautyApplication.getInstance().getCurrentUser() == null)
                     startMain();
-                else
+                else {
+
+                    BeautyApplication.getInstance().authorize();
+
                     getFavorites();
+                }
             }
 
         }

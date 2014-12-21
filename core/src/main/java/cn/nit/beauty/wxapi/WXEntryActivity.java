@@ -1,188 +1,50 @@
+/*
+ * 官网地站:http://www.mob.com
+ * 技术支持QQ: 4006852216
+ * 官方微信:ShareSDK   （如果发布新版本的话，我们将会第一时间通过微信将版本更新内容推送给您。如果使用过程中有任何问题，也可以通过微信与我们取得联系，我们将会在24小时内给予回复）
+ *
+ * Copyright (c) 2013年 mob.com. All rights reserved.
+ */
+
 package cn.nit.beauty.wxapi;
 
 import android.content.Intent;
-import android.os.Bundle;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UploadFileListener;
-import cn.nit.beauty.entity.User;
-import cn.nit.beauty.proxy.UserProxy;
-import cn.nit.beauty.ui.BaseActivity;
-import cn.nit.beauty.utils.*;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.FileAsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-import com.tencent.mm.sdk.modelbase.BaseReq;
-import com.tencent.mm.sdk.modelbase.BaseResp;
-import com.tencent.mm.sdk.modelmsg.SendAuth;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import org.apache.http.Header;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.Toast;
+import cn.sharesdk.wechat.utils.WXAppExtendObject;
+import cn.sharesdk.wechat.utils.WXMediaMessage;
+import cn.sharesdk.wechat.utils.WechatHandlerActivity;
 
-import java.io.File;
-import java.io.IOException;
+/** 微信客户端回调activity示例 */
+public class WXEntryActivity extends WechatHandlerActivity {
 
-/**
- * Created by vicky on 2014/10/9.
- */
-public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler, UserProxy.ISignUpListener, UserProxy.ILoginListener {
+	/**
+	 * 处理微信发出的向第三方应用请求app message
+	 * <p>
+	 * 在微信客户端中的聊天页面有“添加工具”，可以将本应用的图标添加到其中
+	 * 此后点击图标，下面的代码会被执行。Demo仅仅只是打开自己而已，但你可
+	 * 做点其他的事情，包括根本不打开任何页面
+	 */
+	public void onGetMessageFromWXReq(WXMediaMessage msg) {
+		Intent iLaunchMyself = getPackageManager().getLaunchIntentForPackage(getPackageName());
+		startActivity(iLaunchMyself);
+	}
 
-    UserProxy userProxy;
+	/**
+	 * 处理微信向第三方应用发起的消息
+	 * <p>
+	 * 此处用来接收从微信发送过来的消息，比方说本demo在wechatpage里面分享
+	 * 应用时可以不分享应用文件，而分享一段应用的自定义信息。接受方的微信
+	 * 客户端会通过这个方法，将这个信息发送回接收方手机上的本demo中，当作
+	 * 回调。
+	 * <p>
+	 * 本Demo只是将信息展示出来，但你可做点其他的事情，而不仅仅只是Toast
+	 */
+	public void onShowMessageFromWXReq(WXMediaMessage msg) {
+		if (msg != null && msg.mediaObject != null
+				&& (msg.mediaObject instanceof WXAppExtendObject)) {
+			WXAppExtendObject obj = (WXAppExtendObject) msg.mediaObject;
+			Toast.makeText(this, obj.extInfo, Toast.LENGTH_SHORT).show();
+		}
+	}
 
-    User user;
-
-    private IWXAPI api;
-
-    AsyncHttpClient client = new AsyncHttpClient();
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        userProxy = new UserProxy(this);
-
-        api = WXAPIFactory.createWXAPI(this, Data.WEIXIN_APP_ID, false);
-
-        api.handleIntent(getIntent(), this);
-
-        userProxy.setOnSignUpListener(this);
-        userProxy.setOnLoginListener(this);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        setIntent(intent);
-        api.handleIntent(intent, this);
-    }
-
-    @Override
-    public void onReq(BaseReq baseReq) {
-    }
-
-    @Override
-    public void onResp(BaseResp baseResp) {
-
-        SendAuth.Resp resp = (SendAuth.Resp) baseResp;
-
-        L.e("weixin:" + resp.errCode + ":resp");
-
-        if (resp.errCode == 0) {
-            final RequestParams params = new RequestParams();
-            params.put("appid", Data.WEIXIN_APP_ID);
-            params.put("secret", Data.WEIXIN_APP_SECRET);
-            params.put("code", resp.code);
-            params.put("grant_type", "authorization_code");
-
-            client.get("https://api.weixin.qq.com/sns/oauth2/access_token", params, new JsonHttpResponseHandler(){
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        final RequestParams params = new RequestParams();
-                        params.put("access_token", response.getString("access_token"));
-                        params.put("openid", response.getString("openid"));
-
-                        user = new User();
-
-                        user.setUsername(response.getString("openid"));
-                        user.setPassword(response.getString("openid"));
-                        user.setLogintype("WEIXIN");
-
-                        user.login(WXEntryActivity.this, new SaveListener() {
-                            @Override
-                            public void onSuccess() {
-                                onLoginSuccess();
-                            }
-
-                            @Override
-                            public void onFailure(int i, String s) {
-                                client.get("https://api.weixin.qq.com/sns/userinfo", params, new JsonHttpResponseHandler() {
-                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                        try {
-
-                                            user.setNickname(response.getString("nickname"));
-
-
-                                            String headimgurl = response.getString("headimgurl");
-
-                                            File avatarFile = File.createTempFile("avatar", ".jpg");
-
-                                            client.get(headimgurl, new FileAsyncHttpResponseHandler(avatarFile) {
-                                                @Override
-                                                public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-
-                                                }
-
-                                                @Override
-                                                public void onSuccess(int statusCode, Header[] headers, File file) {
-                                                    final BmobFile bmobFile = new BmobFile(file);
-
-                                                    bmobFile.upload(WXEntryActivity.this, new UploadFileListener() {
-                                                        @Override
-                                                        public void onSuccess() {
-                                                            user.setAvatar(bmobFile);
-                                                            userProxy.signUp(user);
-                                                        }
-
-                                                        @Override
-                                                        public void onFailure(int i, String s) {
-
-                                                        }
-                                                    });
-                                                }
-                                            });
-
-
-                                            DialogFactory.showDialog(WXEntryActivity.this, "正在验证账号...");
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                            }
-                        });
-
-
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onSignUpSuccess() {
-        DialogFactory.dismiss();
-        userProxy.login(user.getUsername(), user.getPassword());
-    }
-
-    @Override
-    public void onSignUpFailure(String msg) {
-        DialogFactory.dismiss();
-        ActivityUtil.show(this, "注册失败。" + msg);
-    }
-
-    @Override
-    public void onLoginSuccess() {
-        ActivityUtil.show(this, "登录成功。");
-        setResult(RESULT_OK);
-        finish();
-    }
-
-    @Override
-    public void onLoginFailure(String msg) {
-        ActivityUtil.show(this, "登录失败。"+msg);
-        setResult(RESULT_CANCELED);
-        finish();
-    }
 }

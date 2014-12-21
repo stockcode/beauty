@@ -25,6 +25,8 @@ import cn.nit.beauty.Helper;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -103,13 +105,13 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
                 if ((objectKey.startsWith("origin") && i > 3)
                         || i > (imageInfoList.size() - i)) {
 
-                    autoPlay = false;
-
                     if (currentUser == null) {
+                        autoPlay = false;
                         Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
                         startActivityForResult(intent, Utils.LOGIN);
                         Toast.makeText(ImageGalleryActivity.this, "查看更多图片请先登录", Toast.LENGTH_SHORT).show();
                     } else if (currentUser.hasExpired()) {
+                        autoPlay = false;
                         Intent intent = new Intent(ImageGalleryActivity.this, VipProductActivity.class);
                         startActivityForResult(intent, Utils.VIP);
                         Toast.makeText(ImageGalleryActivity.this, "有效期为" + currentUser.getExpiredDate() + "，请续费", Toast.LENGTH_SHORT).show();
@@ -132,6 +134,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         mViewPager.setAdapter(mAdapter);
         mViewPager.setId(R.id.view_pager);
 
+        ShareSDK.initSDK(this);
     }
 
 
@@ -139,12 +142,6 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate your menu.
         getSupportMenuInflater().inflate(R.menu.share_action_provider, menu);
-
-        // Set file with share history to the provider and set the share intent.
-        MenuItem actionItem = menu.findItem(R.id.menu_item_share_action_provider_action_bar);
-
-        actionProvider = (ShareActionProvider) actionItem.getActionProvider();
-        actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
 
         return true;
     }
@@ -176,6 +173,10 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         switch (mi.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
+                return true;
+
+            case R.id.mnuShare:
+                showShare();
                 return true;
 
             case R.id.mnuPlay:
@@ -439,6 +440,34 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
                 sendMessageDelayed(message, 2000);
             }
         }
+    }
+
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+// 分享时Notification的图标和文字
+        oks.setNotification(R.drawable.icon, getString(R.string.app_name));
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+        oks.setTitle(getString(R.string.share));
+        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("我是分享文本");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl("http://sharesdk.cn");
+        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+        oks.setComment("我是测试评论文本");
+        // site是分享此内容的网站名称，仅在QQ空间使用
+        oks.setSite(getString(R.string.app_name));
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl("http://sharesdk.cn");
+
+// 启动分享GUI
+        oks.show(this);
     }
 
     @Override

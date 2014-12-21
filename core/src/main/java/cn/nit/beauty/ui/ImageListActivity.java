@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.*;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.listener.GetListener;
@@ -16,7 +18,6 @@ import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.entity.PhotoGallery;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.model.ImageInfos;
-import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.ActivityUtil;
 import cn.nit.beauty.utils.Data;
@@ -30,6 +31,11 @@ import android.widget.Toast;
 import cn.nit.beauty.model.ImageInfo;
 
 import cn.nit.beauty.utils.L;
+import cn.nit.beauty.widget.Image;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.socialization.QuickCommentBar;
+import cn.sharesdk.socialization.Socialization;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
@@ -42,6 +48,10 @@ import org.lucasr.smoothie.AsyncGridView;
 import org.lucasr.smoothie.ItemManager;
 
 public class ImageListActivity extends BaseActivity {
+
+    @InjectView(R.id.qcBar)
+    QuickCommentBar qcBar;
+
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
@@ -88,7 +98,9 @@ public class ImageListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.act_pull_to_refresh_sample);
+
+        setContentView(R.layout.activity_imagelist);
+        ButterKnife.inject(this);
 
         Intent intent = getIntent();
 
@@ -151,6 +163,9 @@ public class ImageListActivity extends BaseActivity {
             @Override
             public void onSuccess(PhotoGallery gallery) {
                 photoGallery = gallery;
+                qcBar.setTopic(photoGallery.getObjectId(), photoGallery.getTitle(), photoGallery.getCreatedAt(), photoGallery.getTitle());
+                qcBar.getBackButton().setVisibility(View.INVISIBLE);
+                qcBar.setOnekeyShare(new OnekeyShare());
             }
 
             @Override
@@ -176,12 +191,6 @@ public class ImageListActivity extends BaseActivity {
 
     public boolean onOptionsItemSelected(MenuItem mi) {
         switch (mi.getItemId()) {
-            case R.id.mnuComment:
-                Intent intent = new Intent();
-                intent.putExtra("photoGallery", photoGallery);
-                intent.setClass(ImageListActivity.this, CommentActivity.class);
-                startActivity(intent);
-                return true;
             case R.id.mnuFavoriate:
                 doFav();
                 return true;

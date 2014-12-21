@@ -5,9 +5,12 @@ import android.app.Application;
 import android.graphics.Bitmap;
 
 import cn.bmob.v3.BmobUser;
+import cn.nit.beauty.entity.BeautyPlatform;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.ActivityManagerUtils;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -96,5 +99,15 @@ public class BeautyApplication extends Application {
 
     public User getCurrentUser() {
         return BmobUser.getCurrentUser(this, User.class);
+    }
+
+    public void authorize() {
+        Platform platform = ShareSDK.getPlatform("Beauty");
+        platform.authorize();
+    }
+
+    public void unauthorize() {
+        Platform platform = ShareSDK.getPlatform("Beauty");
+        platform.removeAccount();
     }
 }

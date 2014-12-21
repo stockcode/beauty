@@ -13,7 +13,8 @@ import android.widget.ArrayAdapter;
 
 import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.entity.User;
-import cn.nit.beauty.proxy.UserProxy;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.socialization.Socialization;
 import com.actionbarsherlock.app.ActionBar;
 
 import org.lucasr.smoothie.AsyncGridView;
@@ -75,7 +76,7 @@ public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.act_pull_to_refresh_sample);
+        setContentView(R.layout.activity_category);
 
         currentUser = BeautyApplication.getInstance().getCurrentUser();
 

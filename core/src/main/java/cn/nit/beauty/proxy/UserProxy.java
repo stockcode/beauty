@@ -8,6 +8,7 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 import android.content.Context;
+import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.utils.Constant;
 import cn.nit.beauty.utils.L;
@@ -116,6 +117,7 @@ public class UserProxy {
 			public void onSuccess() {
 
 				TestinAgent.setUserInfo(userName);
+				BeautyApplication.getInstance().authorize();
 
 				if(loginListener != null){
 					loginListener.onLoginSuccess();
@@ -148,6 +150,7 @@ public class UserProxy {
 	public void logout(){
 		BmobUser.logOut(mContext);
 		TestinAgent.setUserInfo("");
+		BeautyApplication.getInstance().unauthorize();
 		L.i("logout result:"+(null == getCurrentUser()));
 	}
 	
