@@ -109,7 +109,7 @@ public final class ActivityUtil {
         } catch(NameNotFoundException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
 
     }
 

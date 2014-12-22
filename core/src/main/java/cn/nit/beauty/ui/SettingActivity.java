@@ -42,7 +42,7 @@ public class SettingActivity extends PreferenceActivity {
     public static final String TAG = "alipay-sdk";
 
 	private static final String[] PREFERENCE_KEYS = {"txtPasswd"};
-	private Preference prefCache, prefVersion, prefPay, feedback;
+	private Preference prefCache, prefVersion, prefPay, feedback, about;
     private float cacheSize= 0;
     DecimalFormat df   =   new   DecimalFormat("##0.00");
 
@@ -54,6 +54,18 @@ public class SettingActivity extends PreferenceActivity {
         prefVersion = findPreference("version");
         prefPay = findPreference("pay");
         feedback = findPreference("feedback");
+        about = findPreference("about");
+
+        about.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent();
+                intent.setClass(SettingActivity.this, AboutActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
 
         feedback.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
@@ -72,7 +84,8 @@ public class SettingActivity extends PreferenceActivity {
         prefCache.setSummary("当前共有缓存" + df.format(cacheSize) + "MB");
         prefCache.setOnPreferenceClickListener(new PrefClickListener());
 
-        prefVersion.setSummary("当前版本为" + getPackageVersion());
+        prefVersion.setSummary("当前版本为" + ActivityUtil.getVersionName(this));
+
         prefVersion.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -107,21 +120,6 @@ public class SettingActivity extends PreferenceActivity {
         for (String key: PREFERENCE_KEYS) {
 	        setPreferenceSummary(key);
         }
-    }
-
-
-
-    public String getPackageVersion() {
-        String version = "";
-        try {
-            PackageManager pm = getApplication().getPackageManager();
-            PackageInfo pi = null;
-            pi = pm.getPackageInfo(getApplication().getPackageName(), 0);
-            version = pi.versionName;
-        } catch (Exception e) {
-            version = ""; // failed, ignored
-        }
-        return version;
     }
 
 	private class PrefClickListener implements OnPreferenceClickListener {

@@ -23,6 +23,7 @@ import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
 import cn.nit.beauty.utils.Data;
 import com.alipay.sdk.app.PayTask;
+import com.umeng.analytics.MobclickAgent;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -226,8 +227,8 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
                     product = new Product();
                     product.subject = parser.getAttributeValue(0);
                     product.body = parser.getAttributeValue(1);
-                    product.price = parser.getAttributeValue(2);
-                    product.saleprice = parser.getAttributeValue(3);
+                    product.price = MobclickAgent.getConfigParams(this, parser.getAttributeValue(2));
+                    product.saleprice = MobclickAgent.getConfigParams(this, parser.getAttributeValue(3));
                     products.add(product);
                 }
                 eventType = parser.next();
