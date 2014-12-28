@@ -29,6 +29,8 @@ import cn.nit.beauty.widget.RotateBitmapProcessor;
  */
 public class BeautyApplication extends Application {
 
+    private User currentUser = null;
+
     private static BeautyApplication myApplication = null;
 
     public static BeautyApplication getInstance(){
@@ -98,7 +100,8 @@ public class BeautyApplication extends Application {
     }
 
     public User getCurrentUser() {
-        return BmobUser.getCurrentUser(this, User.class);
+        if (currentUser == null) currentUser = BmobUser.getCurrentUser(this, User.class);
+        return currentUser;
     }
 
     public void authorize() {
@@ -107,6 +110,7 @@ public class BeautyApplication extends Application {
     }
 
     public void unauthorize() {
+        currentUser = null;
         Platform platform = ShareSDK.getPlatform("Beauty");
         platform.removeAccount();
     }

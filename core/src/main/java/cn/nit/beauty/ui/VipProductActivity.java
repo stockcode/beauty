@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.alipay.Rsa;
@@ -53,11 +54,11 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
 
         public void handleMessage(Message msg) {
             String result = msg.obj.toString();
-            //Toast.makeText(VipProductActivity.this, result, Toast.LENGTH_SHORT).show();
 
             if (result.contains("9000")) {
-                userProxy.login(userProxy.getCurrentUser().getUsername(), userProxy.getCurrentUser().getPassword());
-                //userProxy.getCurrentUser().Upgrade(products.get(msg.what).saleprice.replaceAll("元", ""));
+                currentUser.Upgrade(products.get(msg.what).days);
+                setResult(RESULT_OK);
+                finish();
             }
         };
     };
@@ -114,7 +115,8 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
 
         userProxy = new UserProxy(this);
 
-        currentUser = userProxy.getCurrentUser();
+        currentUser = BeautyApplication.getInstance().getCurrentUser();
+
         initProducts();
 
 
@@ -189,7 +191,7 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
     }
 
     private String getNotifyUrl(String tradeNo, String totalFee) {
-        String url = String.format("http://www.matesapp.cn:8080/beauty-ajax/api/notify?sessionid=%s&type=%s&tradeno=%s",
+        String url = String.format("http://www.matesapp.cn:8080/beauty-web/notify?sessionid=%s&type=%s&tradeno=%s",
                 currentUser.getObjectId(), totalFee, tradeNo);
 
         return URLEncoder.encode(url);
@@ -229,6 +231,7 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
                     product.body = parser.getAttributeValue(1);
                     product.price = MobclickAgent.getConfigParams(this, parser.getAttributeValue(2));
                     product.saleprice = MobclickAgent.getConfigParams(this, parser.getAttributeValue(3));
+                    product.days = MobclickAgent.getConfigParams(this, parser.getAttributeValue(4));
                     products.add(product);
                 }
                 eventType = parser.next();
@@ -257,5 +260,6 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
         public String body;
         public String price;
         public String saleprice;
+        public String days;
     }
 }

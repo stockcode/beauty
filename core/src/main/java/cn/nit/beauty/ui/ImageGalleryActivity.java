@@ -30,6 +30,7 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
 import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.weibo.TencentWeibo;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -169,6 +170,9 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem mi) {
+
+        if (imageInfoList == null) return true;
+
         switch (mi.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
@@ -444,7 +448,8 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         oks.setText(share_text);
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
         File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + imageInfo.getUrl(), ImageLoader.getInstance().getDiscCache());
-        oks.setImagePath(cacheFile.getAbsolutePath());//确保SDcard下面存在此张图片
+        if (cacheFile != null) oks.setImagePath(cacheFile.getAbsolutePath());//确保SDcard下面存在此张图片
+
         // url仅在微信（包括好友和朋友圈）中使用
         oks.setUrl(url);
         // comment是我对这条分享的评论，仅在人人网和QQ空间使用
@@ -457,7 +462,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
             @Override
             public void onShare(Platform platform, Platform.ShareParams paramsToShare) {
-                if (SinaWeibo.NAME.equals(platform.getName())) {
+                if (SinaWeibo.NAME.equals(platform.getName()) || TencentWeibo.NAME.equals(platform.getName())) {
                     paramsToShare.setText(share_text + "→ →" + url + " @丽图-美腿套图");
                 }
             }

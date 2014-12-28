@@ -124,6 +124,7 @@
 
         <activity
             android:name=".ui.LoginActivity"
+            android:screenOrientation="portrait"
             android:label="用户登录">
         </activity>
 
@@ -138,6 +139,7 @@
 
         <activity
             android:name=".ui.RegisterActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/BeautyTheme.NoTitleBar"
             android:windowSoftInputMode="stateVisible">
         </activity>

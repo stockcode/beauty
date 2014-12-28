@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <products>
-    <product subject="一年"  body="一年会员有效期" price="year" saleprice="year_discount" />
-    <product subject="一个月"  body="一个月会员有效期" price="month" saleprice="month_discount" />
-    <product subject="限时优惠"  body="一个月会员有效期(限时优惠)" price="month" saleprice="month_trail" />
+    <product subject="一年"  body="一年会员有效期" price="year" saleprice="year_discount" days = "dayofyear" />
+    <product subject="一个月"  body="一个月会员有效期" price="month" saleprice="month_discount" days = "dayofmonth"/>
+    <product subject="限时优惠"  body="一个月会员有效期(限时优惠)" price="month" saleprice="month_trail" days = "dayofmonth"/>
 </products>

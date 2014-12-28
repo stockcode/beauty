@@ -113,21 +113,18 @@ public class User extends BmobUser{
         this.type = type;
     }
 
-    public void Upgrade(String totalfee) {
+    public void Upgrade(String days) {
 
         try {
             Date expired = new SimpleDateFormat("yyyy-MM-dd").parse(this.expiredDate);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(expired);
 
-            if (totalfee.equals("0.1")) {
-                calendar.add(Calendar.MONTH, 1);
-            } else if (totalfee.equals("10")) {
-                calendar.add(Calendar.MONTH, 1);
-            } else if (totalfee.equals("100")) {
-                calendar.add(Calendar.YEAR, 1);
-            }
+            calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(days));
+
             setExpiredDate(DateFormat.format("yyyy-MM-dd", calendar.getTime()).toString());
+
+            setType(1);
 
         } catch (ParseException e) {
             e.printStackTrace();

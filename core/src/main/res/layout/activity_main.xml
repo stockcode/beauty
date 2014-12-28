@@ -33,16 +33,8 @@
                         android:layout_height="wrap_content"	android:scaleType="centerInside"/>
 
                 <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:gravity="center"	android:paddingTop="90dip"
                         android:text="岛国风情"
-                        android:textColor="#ffffff"
-                        android:textSize="16sp"
-                        android:ellipsize="marquee"  android:singleLine="true"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        >
+                        style="@style/mainTextTheme">
                 </TextView>
 
             </RelativeLayout>
@@ -58,16 +50,8 @@
                         android:layout_height="wrap_content"	android:scaleType="centerInside"/>
 
                 <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:gravity="center"	android:paddingTop="90dip"
                         android:text="欧美情调"
-                        android:textColor="#ffffff"
-                        android:textSize="16sp"
-                        android:ellipsize="marquee"  android:singleLine="true"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        >
+                        style="@style/mainTextTheme">
                 </TextView>
 
             </RelativeLayout>
@@ -84,16 +68,8 @@
                         android:layout_height="wrap_content"	android:scaleType="centerInside"/>
 
                 <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:gravity="center"	android:paddingTop="90dip"
                         android:text="中国气质"
-                        android:textColor="#ffffff"
-                        android:textSize="16sp"
-                        android:ellipsize="marquee"  android:singleLine="true"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        >
+                        style="@style/mainTextTheme">
                 </TextView>
 
             </RelativeLayout>
@@ -109,16 +85,8 @@
                         android:layout_height="wrap_content"	android:scaleType="centerInside"/>
 
                 <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:gravity="center"	android:paddingTop="90dip"
                         android:text="我的最爱"
-                        android:textColor="#ffffff"
-                        android:textSize="16sp"
-                        android:ellipsize="marquee"  android:singleLine="true"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        >
+                        style="@style/mainTextTheme">
                 </TextView>
 
             </RelativeLayout>
@@ -135,16 +103,8 @@
                         android:layout_height="wrap_content"	android:scaleType="centerInside"/>
 
                 <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:gravity="center"	android:paddingTop="90dip"
                         android:text="每日更新"
-                        android:textColor="#ffffff"
-                        android:textSize="16sp"
-                        android:ellipsize="marquee"  android:singleLine="true"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        >
+                        style="@style/mainTextTheme">
                 </TextView>
 
             </RelativeLayout>
@@ -160,16 +120,8 @@
                         android:layout_height="wrap_content"	android:scaleType="centerInside"/>
 
                 <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:gravity="center"	android:paddingTop="90dip"
                         android:text="原创自拍"
-                        android:textColor="#ffffff"
-                        android:textSize="16sp"
-                        android:ellipsize="marquee"  android:singleLine="true"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        >
+                        style="@style/mainTextTheme">
                 </TextView>
 
             </RelativeLayout>
