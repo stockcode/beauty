@@ -24,10 +24,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
@@ -41,7 +39,6 @@ import cn.nit.beauty.utils.ActivityUtil;
 import cn.nit.beauty.utils.Constant;
 import cn.nit.beauty.utils.L;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import static cn.nit.beauty.utils.Constant.SEX_FEMALE;
@@ -90,7 +87,7 @@ public class UserSettingsActivity extends BaseActivity implements OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.user_settings);
+		setContentView(R.layout.activity_user_settings);
 		ButterKnife.inject(this);
 
 		userProxy = new UserProxy(this);

@@ -42,6 +42,8 @@ dependencies {
     compile 'com.tencent:mtasdk:2.0.0'
     compile 'com.tencent:midsdk:2.1.0'
     compile 'com.github.castorflex.smoothprogressbar:library:1.0.0'
+    compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.2'
+
     compile 'com.umeng.analytics:analytics:latest.integration'
 
     compile fileTree(dir: 'libs', include: '*.jar')

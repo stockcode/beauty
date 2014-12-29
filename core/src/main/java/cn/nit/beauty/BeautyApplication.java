@@ -2,13 +2,17 @@ package cn.nit.beauty;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import cn.bmob.v3.BmobUser;
 import cn.nit.beauty.entity.BeautyPlatform;
 import cn.nit.beauty.entity.User;
 import cn.nit.beauty.proxy.UserProxy;
+import cn.nit.beauty.request.IndexRequest;
 import cn.nit.beauty.utils.ActivityManagerUtils;
+import cn.nit.beauty.utils.Data;
+import cn.nit.beauty.utils.L;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -17,17 +21,30 @@ import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
 
 import cn.nit.beauty.widget.RotateBitmapProcessor;
+import com.octo.android.robospice.GsonSpringAndroidSpiceService;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.request.listener.RequestListener;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UmengMessageHandler;
+import com.umeng.message.UmengNotificationClickHandler;
+import com.umeng.message.UmengRegistrar;
+import com.umeng.message.entity.UMessage;
 
 /**
  * Created by gengke on 13-7-15.
  */
 public class BeautyApplication extends Application {
+
+    private SpiceManager spiceManager = new SpiceManager(
+            GsonSpringAndroidSpiceService.class);
 
     private User currentUser = null;
 
@@ -59,6 +76,22 @@ public class BeautyApplication extends Application {
         // Create global configuration and initialize ImageLoader with this configuration
         initImageLoader();
 
+        PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.setDebugMode(true);
+        mPushAgent.enable();
+
+        L.i("Device Token:" + UmengRegistrar.getRegistrationId(this));
+
+        UmengMessageHandler messageHandler = new UmengMessageHandler(){
+            @Override
+            public void dealWithCustomMessage(final Context context, final UMessage msg) {
+                  if (msg.custom.toLowerCase().equals("update")) {
+                      DiscCacheUtil.removeFromCache(Data.OSS_URL + Data.INDEX_KEY, ImageLoader.getInstance().getDiscCache());
+                      L.i("index.json has been removed");
+                  }
+            }
+        };
+        mPushAgent.setMessageHandler(messageHandler);
     }
 
     private void initImageLoader() {

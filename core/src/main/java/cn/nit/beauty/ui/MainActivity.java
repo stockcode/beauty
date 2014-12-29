@@ -66,12 +66,6 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
 
         UmengUpdateAgent.update(this);
 
-        PushAgent mPushAgent = PushAgent.getInstance(this);
-        mPushAgent.setDebugMode(true);
-        mPushAgent.enable();
-
-        L.i("Device Token:" + UmengRegistrar.getRegistrationId(this));
-
         init();
 
 

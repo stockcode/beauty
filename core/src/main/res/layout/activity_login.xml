@@ -46,7 +46,8 @@
     </LinearLayout>
 
 
-    <Button
+    <com.dd.processbutton.FlatButton
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:textSize="18.0sp"
         android:textColor="#FFFFFF"
         android:gravity="center"
@@ -59,6 +60,7 @@
         android:layout_marginTop="30.0dip"
         android:layout_marginRight="28.0dip"
         android:text="@string/login"
+        custom:pb_textProgress="登录中"
         android:layout_below="@id/input" />
 
 

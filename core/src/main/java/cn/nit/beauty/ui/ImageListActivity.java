@@ -155,7 +155,7 @@ public class ImageListActivity extends BaseActivity {
         mAdapterView.setItemManager(itemManager);
 
         ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey + Data.INDEX_KEY);
-        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
+        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_WEEK, new ImageListRequestListener());
 
         BmobQuery<PhotoGallery> query = new BmobQuery<PhotoGallery>();
 

@@ -385,7 +385,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         MobclickAgent.onResume(this);
 
         ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + folder + Data.INDEX_KEY);
-        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_DAY, new ImageListRequestListener());
+        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_WEEK, new ImageListRequestListener());
     }
 
     public int getCurrentItem() {
