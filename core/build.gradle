@@ -38,9 +38,6 @@ dependencies {
     //compile 'com.origamilabs.library:staggeredgridview:1.0.0'
     //compile 'org.lucasr.smoothie:library:0.1'
     compile 'org.apache.httpcomponents:httpmime:4.2.5'
-    compile 'com.tencent:opensdk:2.6'
-    compile 'com.tencent:mtasdk:2.0.0'
-    compile 'com.tencent:midsdk:2.1.0'
     compile 'com.github.castorflex.smoothprogressbar:library:1.0.0'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.2'
 

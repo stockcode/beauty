@@ -12,6 +12,7 @@ import android.widget.*;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.entity.User;
@@ -27,28 +28,10 @@ import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.update.UmengUpdateAgent;
 
-public class MainActivity extends BaseActivity implements ShakeListener.OnShakeListener, OnClickListener {
+public class MainActivity extends BaseActivity implements ShakeListener.OnShakeListener {
 
     private ShakeListener mShaker;
     Vibrator vibe;
-
-    @InjectView(R.id.ivAsia)
-    ImageView ivAsia;
-
-    @InjectView(R.id.ivOccident)
-    ImageView ivOccident;
-
-    @InjectView(R.id.ivChina)
-    ImageView ivChina;
-
-    @InjectView(R.id.ivFavorite)
-    ImageView ivFavorite;
-
-    @InjectView(R.id.ivDaily)
-    ImageView ivDaily;
-
-    @InjectView(R.id.ivOrigin)
-    ImageView ivOrigin;
 
 
     String category;
@@ -66,15 +49,10 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
 
         UmengUpdateAgent.update(this);
 
-        init();
-
-
         vibe = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
         mShaker = new ShakeListener(this);
         mShaker.setOnShakeListener(this);
-
-        initButtons();
 
         FeedbackAgent fb = new FeedbackAgent(this);
         // check if the app developer has replied to the feedback or not.
@@ -96,20 +74,6 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
     public void onSetting(View v) {
         Intent intent = new Intent(MainActivity.this, SettingActivity.class);
         startActivity(intent);
-    }
-    private void initButtons() {
-
-
-        ivAsia.setOnClickListener(this);
-        ivOccident.setOnClickListener(this);
-        ivChina.setOnClickListener(this);
-        ivFavorite.setOnClickListener(this);
-        ivDaily.setOnClickListener(this);
-        ivOrigin.setOnClickListener(this);
-    }
-
-
-    public void init() {
     }
 
     @Override
@@ -186,8 +150,8 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
         }
     }
 
-    @Override
-    public void onClick(View v) {
+    @OnClick({R.id.ivAsia, R.id.ivFavorite, R.id.ivOrigin, R.id.ivDaily, R.id.ivChina, R.id.ivOccident})
+    public void onCategoryClick(View v) {
 
         Intent intent = new Intent();
 

@@ -1,6 +1,8 @@
 package cn.nit.beauty.adapter;
 
 import android.graphics.Color;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import cn.nit.beauty.R;
 import android.content.Context;
 import android.content.Intent;
@@ -47,9 +49,7 @@ public class StaggeredAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater layoutInflator = LayoutInflater.from(parent.getContext());
             convertView = layoutInflator.inflate(R.layout.infos_list, null);
-            holder = new ViewHolder();
-            holder.imageView = (ScaleImageView) convertView.findViewById(R.id.news_pic);
-            holder.contentView = (TextView) convertView.findViewById(R.id.news_title);
+            holder = new ViewHolder(convertView);
 
             convertView.setTag(holder);
             convertView.setOnClickListener(mOnClickListener);
@@ -74,10 +74,14 @@ public class StaggeredAdapter extends BaseAdapter {
     }
 
     public class ViewHolder {
-        public ScaleImageView imageView;
-        TextView contentView;
-        TextView timeView;
+        @InjectView(R.id.news_pic) public ScaleImageView imageView;
+        @InjectView(R.id.news_title) TextView contentView;
+
         public ImageInfo imageInfo;
+
+        public ViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
     }
 
     @Override

@@ -77,7 +77,7 @@ public class BeautyApplication extends Application {
         initImageLoader();
 
         PushAgent mPushAgent = PushAgent.getInstance(this);
-        mPushAgent.setDebugMode(true);
+        //mPushAgent.setDebugMode(true);
         mPushAgent.enable();
 
         L.i("Device Token:" + UmengRegistrar.getRegistrationId(this));
