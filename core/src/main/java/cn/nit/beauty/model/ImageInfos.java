@@ -1,15 +1,16 @@
 package cn.nit.beauty.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageInfos {
-	private List<ImageInfo>	 results;
+	private ArrayList<ImageInfo>	 results;
 
-    public List<ImageInfo> getResults() {
+    public ArrayList<ImageInfo> getResults() {
         return results;
     }
 
-    public void setResults(List<ImageInfo> results) {
+    public void setResults(ArrayList<ImageInfo> results) {
         this.results = results;
     }
 }

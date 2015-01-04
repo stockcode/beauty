@@ -2,7 +2,9 @@ package cn.nit.beauty.ui;
 
 import android.os.Bundle;
 import butterknife.ButterKnife;
+import cn.nit.beauty.BeautyApplication;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.octo.android.robospice.SpiceManager;
 import com.testin.agent.TestinAgent;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
@@ -12,9 +14,13 @@ import com.umeng.message.PushAgent;
  */
 public class BaseActivity extends SherlockActivity{
 
+    protected SpiceManager spiceManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        spiceManager = BeautyApplication.getInstance().getSpiceManager();
 
         PushAgent.getInstance(this).onAppStart();
     }
@@ -35,10 +41,13 @@ public class BaseActivity extends SherlockActivity{
     protected void onStart() {
         super.onStart();
         TestinAgent.onStart(this);
+
+        if (!spiceManager.isStarted())  spiceManager.start(this);
     }
 
     @Override
     protected void onStop() {
+        if (spiceManager.isStarted())  spiceManager.shouldStop();
         super.onStop();
         TestinAgent.onStop(this);
     }

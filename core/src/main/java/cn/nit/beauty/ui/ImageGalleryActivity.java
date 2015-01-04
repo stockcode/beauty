@@ -52,6 +52,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.nit.beauty.R;
@@ -74,8 +75,6 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
     private String objectKey, folder;
     private Message message;
     private Boolean autoPlay = false, isOriginal = false;
-    private SpiceManager spiceManager = new SpiceManager(
-            GsonSpringAndroidSpiceService.class);
 
     private MenuItem mnuSave;
 
@@ -93,7 +92,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
         objectKey = intent.getStringExtra("objectKey").replaceAll("small", "big");
         folder = intent.getStringExtra("folder").replaceAll("small", "big");
-
+        imageInfoList = (List<ImageInfo>) intent.getSerializableExtra("imageList");
         setTitle(intent.getStringExtra("title"));
 
         mViewPager = new ViewPager(this);
@@ -135,6 +134,10 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         mViewPager.setId(R.id.view_pager);
 
         ShareSDK.initSDK(this);
+
+        mAdapter.addItemLast(imageInfoList);
+        mAdapter.notifyDataSetChanged();
+        mViewPager.setCurrentItem(getCurrentItem(), false);
     }
 
 
@@ -368,13 +371,11 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        spiceManager.start(this);
         TestinAgent.onStart(this);
     }
 
     @Override
     protected void onStop() {
-        spiceManager.shouldStop();
         super.onStop();
         TestinAgent.onStop(this);
     }
@@ -383,9 +384,6 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
-
-        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + folder + Data.INDEX_KEY);
-        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_WEEK, new ImageListRequestListener());
     }
 
     public int getCurrentItem() {
@@ -395,20 +393,6 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         return 0;
     }
 
-    private class ImageListRequestListener implements RequestListener<ImageInfos> {
-        @Override
-        public void onRequestFailure(SpiceException e) {
-            Toast.makeText(ImageGalleryActivity.this, "网络不给力,错误: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onRequestSuccess(ImageInfos imageInfos) {
-            imageInfoList = imageInfos.getResults();
-            mAdapter.addItemLast(imageInfoList);
-            mAdapter.notifyDataSetChanged();
-            mViewPager.setCurrentItem(getCurrentItem(), false);
-        }
-    }
 
     class AutoPlayHandler extends Handler {
 

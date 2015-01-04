@@ -42,7 +42,7 @@ public class SettingActivity extends PreferenceActivity {
     public static final String TAG = "alipay-sdk";
 
 	private static final String[] PREFERENCE_KEYS = {"txtPasswd"};
-	private Preference prefCache, prefVersion, prefPay, feedback, about;
+	private Preference prefCache, prefVersion, prefPay, feedback, about, userguide;
     private float cacheSize= 0;
     DecimalFormat df   =   new   DecimalFormat("##0.00");
 
@@ -55,6 +55,18 @@ public class SettingActivity extends PreferenceActivity {
         prefPay = findPreference("pay");
         feedback = findPreference("feedback");
         about = findPreference("about");
+        userguide = findPreference("userguide");
+
+        userguide.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent();
+                intent.setClass(SettingActivity.this, HelpActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
 
         about.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 

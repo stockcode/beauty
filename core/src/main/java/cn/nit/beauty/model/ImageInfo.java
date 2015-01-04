@@ -1,6 +1,9 @@
 package cn.nit.beauty.model;
 
-public class ImageInfo {
+import java.io.Serializable;
+
+public class ImageInfo implements Serializable{
+
 
     private String objectId;
 	private String key = "";

@@ -45,9 +45,6 @@ import com.umeng.analytics.MobclickAgent;
 
 public class SplashActivity extends BaseActivity {
 
-    private SpiceManager spiceManager = new SpiceManager(
-            GsonSpringAndroidSpiceService.class);
-
     LaucherDataBase database;
     boolean isDaily;
     boolean isFinish = false;
@@ -96,18 +93,6 @@ public class SplashActivity extends BaseActivity {
         Socialization service = ShareSDK.getService(Socialization.class);
         BeautyPlatform beautyPlatform = new BeautyPlatform(SplashActivity.this);
         service.setCustomPlatform(beautyPlatform);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        spiceManager.start(this);
-    }
-
-    @Override
-    protected void onStop() {
-        spiceManager.shouldStop();
-        super.onStop();
     }
 
     @Override

@@ -86,8 +86,8 @@ public class BeautyApplication extends Application {
             @Override
             public void dealWithCustomMessage(final Context context, final UMessage msg) {
                   if (msg.custom.toLowerCase().equals("update")) {
-                      DiscCacheUtil.removeFromCache(Data.OSS_URL + Data.INDEX_KEY, ImageLoader.getInstance().getDiscCache());
-                      L.i("index.json has been removed");
+                      spiceManager.removeAllDataFromCache();
+                      L.i("json has been removed");
                   }
             }
         };
@@ -135,6 +135,10 @@ public class BeautyApplication extends Application {
     public User getCurrentUser() {
         if (currentUser == null) currentUser = BmobUser.getCurrentUser(this, User.class);
         return currentUser;
+    }
+
+    public SpiceManager getSpiceManager() {
+        return  spiceManager;
     }
 
     public void authorize() {

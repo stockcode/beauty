@@ -54,11 +54,8 @@ public class ImageListActivity extends BaseActivity {
 
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
-    private List<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
+    private ArrayList<ImageInfo> imageInfoList = new ArrayList<ImageInfo>();
     private String objectId, objectKey, title;
-    private LaucherDataBase database;
-    private SpiceManager spiceManager = new SpiceManager(
-            GsonSpringAndroidSpiceService.class);
 
     private PhotoGallery photoGallery;
 
@@ -111,7 +108,6 @@ public class ImageListActivity extends BaseActivity {
         title = strs[strs.length - 2];
         setTitle(title);
 
-        database = new LaucherDataBase(getApplicationContext());
 
         mAdapterView = (AsyncGridView) findViewById(R.id.list);
 
@@ -139,6 +135,7 @@ public class ImageListActivity extends BaseActivity {
                 intent.putExtra("objectKey", holder.imageInfo.getKey());
                 intent.putExtra("folder", objectKey);
                 intent.putExtra("title", title);
+                intent.putExtra("imageList", imageInfoList);
                 startActivity(intent);
             }
         });
@@ -265,24 +262,6 @@ public class ImageListActivity extends BaseActivity {
         currentUser = BeautyApplication.getInstance().getCurrentUser();
 
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        spiceManager.start( this );
-    }
-
-    @Override
-    protected void onStop() {
-        spiceManager.shouldStop();
-        super.onStop();
-    }
-
-
-
-
-
-
 
     private class ImageListRequestListener implements RequestListener<ImageInfos> {
         @Override
