@@ -78,14 +78,14 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent" android:layout_margin="5dip">
                 <ImageView
-                        android:id="@+id/ivFavorite"
-                        android:src="@drawable/favorite"
-                        android:tag="favorite"
+                        android:id="@+id/ivOrigin"
+                        android:src="@drawable/origin"
+                        android:tag="origin"
                         android:layout_width="wrap_content"	android:layout_centerHorizontal="true"
                         android:layout_height="wrap_content"	android:scaleType="centerInside"/>
 
                 <TextView
-                        android:text="我的最爱"
+                        android:text="原创自拍"
                         style="@style/mainTextTheme">
                 </TextView>
 
@@ -113,14 +113,14 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent" android:layout_margin="5dip">
                 <ImageView
-                        android:id="@+id/ivOrigin"
-                        android:src="@drawable/origin"
-                        android:tag="origin"
+                        android:id="@+id/ivFavorite"
+                        android:src="@drawable/favorite"
+                        android:tag="favorite"
                         android:layout_width="wrap_content"	android:layout_centerHorizontal="true"
                         android:layout_height="wrap_content"	android:scaleType="centerInside"/>
 
                 <TextView
-                        android:text="原创自拍"
+                        android:text="我的最爱"
                         style="@style/mainTextTheme">
                 </TextView>
 
