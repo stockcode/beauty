@@ -6,6 +6,9 @@
 
 package cn.nit.beauty.alipay;
 
+import android.util.Log;
+
+import javax.crypto.Cipher;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -13,13 +16,9 @@ import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
-import javax.crypto.Cipher;
-
-import android.util.Log;
-import cn.nit.beauty.alipay.Base64;
-
 public class Rsa {
 
+	public static final String SIGN_ALGORITHMS = "SHA1WithRSA";
 	private static final String ALGORITHM = "RSA";
 
 	/**
@@ -30,7 +29,7 @@ public class Rsa {
 	 * @throws AlipayException
 	 */
 	private static PublicKey getPublicKeyFromX509(String algorithm,
-			String bysKey) throws NoSuchAlgorithmException, Exception {
+												  String bysKey) throws Exception {
 		byte[] decodedKey = Base64.decode(bysKey);
 		X509EncodedKeySpec x509 = new X509EncodedKeySpec(decodedKey);
 
@@ -57,8 +56,6 @@ public class Rsa {
 			return null;
 		}
 	}
-
-	public static final String SIGN_ALGORITHMS = "SHA1WithRSA";
 
 	public static String sign(String content, String privateKey) {
 		String charset = "UTF-8";

@@ -7,19 +7,6 @@
  */
 package cn.smssdk.gui;
 
-import static cn.smssdk.framework.utils.R.getBitmapRes;
-import static cn.smssdk.framework.utils.R.getIdRes;
-import static cn.smssdk.framework.utils.R.getLayoutRes;
-import static cn.smssdk.framework.utils.R.getStringRes;
-import static cn.smssdk.framework.utils.R.getStyleRes;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.json.JSONObject;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.telephony.TelephonyManager;
@@ -30,14 +17,18 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import cn.smssdk.framework.FakeActivity;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static cn.smssdk.framework.utils.R.*;
 
 /** 短信注册页面*/
 public class RegisterPage extends FakeActivity implements OnClickListener, TextWatcher {
@@ -392,32 +383,32 @@ public class RegisterPage extends FakeActivity implements OnClickListener, TextW
 				}
 				resId = getIdRes(activity, "btn_dialog_ok");
 				if (resId > 0) {
-					((Button) dialog.findViewById(resId)).setOnClickListener(
+					dialog.findViewById(resId).setOnClickListener(
 							new OnClickListener() {
-						public void onClick(View v) {
-							// 跳转到验证码页面
-							dialog.dismiss();
+								public void onClick(View v) {
+									// 跳转到验证码页面
+									dialog.dismiss();
 
-							if (pd != null && pd.isShowing()) {
-								pd.dismiss();
-							}
-							pd = CommonDialog.ProgressDialog(activity);
-							if (pd != null) {
-								pd.show();
-							}
-							Log.e("verification phone ==>>", phone);
-							SMSSDK.getVerificationCode(code, phone.trim());
-						}
-					});
+									if (pd != null && pd.isShowing()) {
+										pd.dismiss();
+									}
+									pd = CommonDialog.ProgressDialog(activity);
+									if (pd != null) {
+										pd.show();
+									}
+									Log.e("verification phone ==>>", phone);
+									SMSSDK.getVerificationCode(code, phone.trim());
+								}
+							});
 				}
 				resId = getIdRes(activity, "btn_dialog_cancel");
 				if (resId > 0) {
-					((Button) dialog.findViewById(resId)).setOnClickListener(
+					dialog.findViewById(resId).setOnClickListener(
 							new OnClickListener() {
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
+								public void onClick(View v) {
+									dialog.dismiss();
+								}
+							});
 				}
 				dialog.setCanceledOnTouchOutside(true);
 				dialog.show();

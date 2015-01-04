@@ -1,19 +1,5 @@
 package cn.nit.beauty.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -35,22 +21,32 @@ import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.R;
 import cn.nit.beauty.ui.SplashActivity;
 
+import java.io.*;
+import java.lang.reflect.Field;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author adison Activity帮助器类
  */
 public final class ActivityUtil {
+
+    public static MessageFilter msgFilter;
 
     /**
      * 获取屏幕宽高
@@ -77,8 +73,8 @@ public final class ActivityUtil {
         if(bitmap == null) {
             // rawWidth = sourceWidth;
             // rawHeight = sourceHeigth;
-            width=(float)(screenWidth / screenRadio);
-            height=(float)width;
+            width = screenWidth / screenRadio;
+            height = width;
             imageView.setScaleType(ScaleType.FIT_XY);
         } else {
             rawWidth=bitmap.getWidth();
@@ -90,27 +86,10 @@ public final class ActivityUtil {
             }
             float radio=rawHeight / rawWidth;
 
-            width=(float)(screenWidth / screenRadio);
-            height=(float)(radio * width);
+            width = screenWidth / screenRadio;
+            height = radio * width;
         }
         return new float[]{width, height};
-    }
-
-    /**
-     * 获取应用版本号
-     * @param context
-     * @return
-     */
-    public static String getVersionName(Context context) {
-        PackageManager pm=context.getPackageManager();
-        try {
-            PackageInfo info=pm.getPackageInfo(context.getPackageName(), 0);
-            return info.versionName;
-        } catch(NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return "";
-
     }
 
     //
@@ -134,6 +113,23 @@ public final class ActivityUtil {
     // layoutParams.setMargins(left, top, right, bottom);
     // return layoutParams;
     // }
+
+    /**
+     * 获取应用版本号
+     * @param context
+     * @return
+     */
+    public static String getVersionName(Context context) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            PackageInfo info = pm.getPackageInfo(context.getPackageName(), 0);
+            return info.versionName;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
+
+    }
 
     /**
      * 通过外部浏览器打开页面
@@ -244,13 +240,6 @@ public final class ActivityUtil {
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
-    public interface MessageFilter {
-
-        String filter(String msg);
-    }
-
-    public static MessageFilter msgFilter;
-
     /**
      * 短时间显示Toast消息，并保证运行在UI线程中
      * @param activity Activity
@@ -268,6 +257,7 @@ public final class ActivityUtil {
             }
         });
     }
+
     /**
      * 短时间显示Toast消息，并保证运行在UI线程中
      * @param activity Activity
@@ -279,12 +269,13 @@ public final class ActivityUtil {
 
             public void run() {
                 // Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
-                Toast toast=ToastFactory.getToast(BeautyApplication.getInstance().getTopActivity(), message);
+                Toast toast = ToastFactory.getToast(BeautyApplication.getInstance().getTopActivity(), message);
                 toast.setGravity(Gravity.BOTTOM, 0, 0);
                 toast.show();
             }
         });
     }
+
     /**
      * 长时间显示Toast消息，并保证运行在UI线程中
      * @param activity Activity
@@ -296,7 +287,7 @@ public final class ActivityUtil {
 
             public void run() {
                 // Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
-                Toast toast=ToastFactory.getToast(activity, message);
+                Toast toast = ToastFactory.getToast(activity, message);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
             }
@@ -415,8 +406,8 @@ public final class ActivityUtil {
                 byte[] md5Byte=md5.digest(str.getBytes("UTF8"));
                 StringBuffer sb=new StringBuffer();
                 for(int i=0; i < md5Byte.length; i++) {
-                    sb.append(HEX[(int)(md5Byte[i] & 0xff) / 16]);
-                    sb.append(HEX[(int)(md5Byte[i] & 0xff) % 16]);
+                    sb.append(HEX[(md5Byte[i] & 0xff) / 16]);
+                    sb.append(HEX[(md5Byte[i] & 0xff) % 16]);
                 }
                 str=sb.toString();
             } catch(NoSuchAlgorithmException e) {
@@ -614,7 +605,7 @@ public final class ActivityUtil {
         }
         return 0;
     }
-    
+
     // I added a generic return type to reduce the casting noise in client code
     @SuppressWarnings("unchecked")
     public static <T extends View> T get(View view, int id) {
@@ -629,6 +620,11 @@ public final class ActivityUtil {
             viewHolder.put(id, childView);
         }
         return (T) childView;
+    }
+
+    public interface MessageFilter {
+
+        String filter(String msg);
     }
 
 }

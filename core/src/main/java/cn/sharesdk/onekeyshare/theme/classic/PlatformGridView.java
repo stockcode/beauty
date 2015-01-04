@@ -8,16 +8,6 @@
 
 package cn.sharesdk.onekeyshare.theme.classic;
 
-import static cn.sharesdk.framework.utils.R.getBitmapRes;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import m.framework.ui.widget.viewpager.ViewPagerAdapter;
-import m.framework.ui.widget.viewpager.ViewPagerClassic;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,6 +28,16 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.framework.utils.UIHandler;
 import cn.sharesdk.onekeyshare.CustomerLogo;
+import m.framework.ui.widget.viewpager.ViewPagerAdapter;
+import m.framework.ui.widget.viewpager.ViewPagerClassic;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import static cn.sharesdk.framework.utils.R.getBitmapRes;
 
 /** platform logo list gridview */
 public class PlatformGridView extends LinearLayout implements
@@ -241,9 +241,9 @@ public class PlatformGridView extends LinearLayout implements
 		}
 		try {
 			Method m = View.class.getMethod("setOverScrollMode",
-					new Class[] { Integer.TYPE });
+					Integer.TYPE);
 			m.setAccessible(true);
-			m.invoke(view, new Object[] { Integer.valueOf(2) });
+			m.invoke(view, Integer.valueOf(2));
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

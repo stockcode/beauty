@@ -19,13 +19,9 @@ package org.lucasr.smoothie;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.view.View.OnTouchListener;
-import android.widget.AbsListView;
+import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 class ItemManaged {
     private final AbsListView mAbsListView;
@@ -152,9 +148,9 @@ class ItemManaged {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mAbsListView.setAdapter(adapter);
         } else if (mAbsListView instanceof ListView) {
-            ((ListView) mAbsListView).setAdapter(adapter);
+            mAbsListView.setAdapter(adapter);
         } else if (mAbsListView instanceof GridView) {
-            ((GridView) mAbsListView).setAdapter(adapter);
+            mAbsListView.setAdapter(adapter);
         }
     }
 }

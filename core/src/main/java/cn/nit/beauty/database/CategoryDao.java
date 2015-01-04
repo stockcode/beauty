@@ -3,7 +3,6 @@ package cn.nit.beauty.database;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
 import de.greenrobot.dao.internal.DaoConfig;
@@ -16,25 +15,11 @@ public class CategoryDao extends AbstractDao<Category, Long> {
 
     public static final String TABLENAME = "CATEGORY";
 
-    /**
-     * Properties of entity Category.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-    */
-    public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property CATEGORY = new Property(1, String.class, "CATEGORY", false, "CATEGORY");
-        public final static Property CATEGORY_ICON = new Property(2, Integer.class, "CATEGORY_ICON", false, "CATEGORY__ICON");
-        public final static Property ICON = new Property(3, Integer.class, "ICON", false, "ICON");
-        public final static Property TITLE = new Property(4, String.class, "TITLE", false, "TITLE");
-        public final static Property URL = new Property(5, String.class, "URL", false, "URL");
-        public final static Property CHOICE = new Property(6, Boolean.class, "CHOICE", false, "CHOICE");
-    };
-
-
     public CategoryDao(DaoConfig config) {
         super(config);
     }
-    
+
+
     public CategoryDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
     }
@@ -62,29 +47,29 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     @Override
     protected void bindValues(SQLiteStatement stmt, Category entity) {
         stmt.clearBindings();
- 
+
         Long id = entity.getId();
         if (id != null) {
             stmt.bindLong(1, id);
         }
         stmt.bindString(2, entity.getCATEGORY());
- 
+
         Integer CATEGORY_ICON = entity.getCATEGORY_ICON();
         if (CATEGORY_ICON != null) {
             stmt.bindLong(3, CATEGORY_ICON);
         }
- 
+
         Integer ICON = entity.getICON();
         if (ICON != null) {
             stmt.bindLong(4, ICON);
         }
         stmt.bindString(5, entity.getTITLE());
- 
+
         String URL = entity.getURL();
         if (URL != null) {
             stmt.bindString(6, URL);
         }
- 
+
         Boolean CHOICE = entity.getCHOICE();
         if (CHOICE != null) {
             stmt.bindLong(7, CHOICE ? 1l: 0l);
@@ -95,7 +80,7 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }    
+    }
 
     /** @inheritdoc */
     @Override
@@ -111,7 +96,7 @@ public class CategoryDao extends AbstractDao<Category, Long> {
         );
         return entity;
     }
-     
+
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Category entity, int offset) {
@@ -123,7 +108,7 @@ public class CategoryDao extends AbstractDao<Category, Long> {
         entity.setURL(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setCHOICE(cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0);
      }
-    
+
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(Category entity, long rowId) {
@@ -142,9 +127,23 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     }
 
     /** @inheritdoc */
-    @Override    
+    @Override
     protected boolean isEntityUpdateable() {
         return true;
+    }
+
+    /**
+     * Properties of entity Category.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property CATEGORY = new Property(1, String.class, "CATEGORY", false, "CATEGORY");
+        public final static Property CATEGORY_ICON = new Property(2, Integer.class, "CATEGORY_ICON", false, "CATEGORY__ICON");
+        public final static Property ICON = new Property(3, Integer.class, "ICON", false, "ICON");
+        public final static Property TITLE = new Property(4, String.class, "TITLE", false, "TITLE");
+        public final static Property URL = new Property(5, String.class, "URL", false, "URL");
+        public final static Property CHOICE = new Property(6, Boolean.class, "CHOICE", false, "CHOICE");
     }
     
 }

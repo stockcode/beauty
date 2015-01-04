@@ -1,16 +1,12 @@
 package cn.nit.beauty.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Html;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +45,7 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
     UserProxy userProxy;
 
     private List<Product> products =new ArrayList<Product>();
-
+    private User currentUser;
     private Handler mHandler = new Handler(){
 
         public void handleMessage(Message msg) {
@@ -60,9 +56,8 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
                 setResult(RESULT_OK);
                 finish();
             }
-        };
+        }
     };
-
     View.OnClickListener onPayClickListener = new View.OnClickListener() {
 
         @Override
@@ -105,7 +100,6 @@ public class VipProductActivity extends BaseActivity implements UserProxy.ILogin
             }
         }
     };
-    private User currentUser;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
