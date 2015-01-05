@@ -107,7 +107,7 @@ public class ImageListActivity extends BaseActivity {
         objectKey = intent.getStringExtra("objectKey");
 
         String[] strs = objectKey.split("/");
-        title = strs[strs.length - 2];
+        title = strs[strs.length - 1];
         setTitle(title);
 
 

@@ -5,7 +5,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:0.14.+'
-        //classpath 'com.github.jcandksolutions.gradle:android-unit-test:2.1.1'
+        classpath 'com.github.jcandksolutions.gradle:android-unit-test:2.0.2'
     }
 }
 
@@ -18,39 +18,6 @@ repositories {
         dirs 'aars'
     }
 }
-
-dependencies {
-    compile 'com.jakewharton:butterknife:6.0.0'
-    compile 'com.android.support:support-v4:21.0.+'
-    compile 'de.greenrobot:greendao:1.3.1'
-
-    compile 'com.octo.android.robospice:robospice:1.4.14'
-    compile 'com.octo.android.robospice:robospice-spring-android:1.4.14'
-    compile 'com.loopj.android:android-async-http:1.4.5'
-    compile 'com.google.code.gson:gson:2.2.4'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
-    //compile  'com.github.chrisbanes.photoview:library:1.2.1'
-
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
-
-    compile 'de.hdodenhof:circleimageview:1.2.1'
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
-    //compile 'me.maxwin.view:OneXListview:1.0.0'
-    //compile 'com.origamilabs.library:staggeredgridview:1.0.0'
-    //compile 'org.lucasr.smoothie:library:0.1'
-    compile 'org.apache.httpcomponents:httpmime:4.2.5'
-    compile 'com.github.castorflex.smoothprogressbar:library:1.0.0'
-    compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.2'
-
-    compile 'com.umeng.analytics:analytics:latest.integration'
-
-    compile fileTree(dir: 'libs', include: '*.jar')
-
-    //testCompile 'junit:junit:4.11'
-    //testCompile 'org.robolectric:robolectric:2.4'
-    //testCompile 'com.squareup:fest-android:1.0.8'
-}
-
 
 tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn copyNativeLibs }
 tasks.withType(com.android.build.gradle.tasks.PackageApplication) { pkgTask ->
@@ -78,16 +45,13 @@ android {
     }
 
     defaultConfig {
-//        minSdkVersion 7
-//        targetSdkVersion 16
+        applicationId "cn.nit.beauty"
         versionCode 26
         versionName '1.1.26'
     }
 
     compileSdkVersion 17
     buildToolsVersion '19.1.0'
-
-    project.archivesBaseName = "beauty";
 
     signingConfigs {
         release{
@@ -121,4 +85,37 @@ android {
     }
 }
 
-//apply plugin: 'android-unit-test'
+apply plugin: 'android-unit-test'
+
+dependencies {
+    compile 'com.jakewharton:butterknife:6.0.0'
+    compile 'com.android.support:support-v4:21.0.+'
+    compile 'de.greenrobot:greendao:1.3.1'
+
+    compile 'com.octo.android.robospice:robospice:1.4.14'
+    compile 'com.octo.android.robospice:robospice-spring-android:1.4.14'
+    compile 'com.loopj.android:android-async-http:1.4.5'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
+    //compile  'com.github.chrisbanes.photoview:library:1.2.1'
+
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
+
+    compile 'de.hdodenhof:circleimageview:1.2.1'
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    //compile 'me.maxwin.view:OneXListview:1.0.0'
+    //compile 'com.origamilabs.library:staggeredgridview:1.0.0'
+    //compile 'org.lucasr.smoothie:library:0.1'
+    compile 'org.apache.httpcomponents:httpmime:4.2.5'
+    compile 'com.github.castorflex.smoothprogressbar:library:1.0.0'
+    compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.2'
+
+    compile 'com.umeng.analytics:analytics:latest.integration'
+
+    compile fileTree(dir: 'libs', include: '*.jar')
+
+    // testing
+    testCompile "org.assertj:assertj-core:1.7.0"
+    testCompile 'org.robolectric:robolectric:2.3'
+    testCompile 'junit:junit:4.+'
+}
