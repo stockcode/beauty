@@ -83,6 +83,10 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    sourceSets {
+        instrumentTest.setRoot('src/test')
+    }
 }
 
 apply plugin: 'android-unit-test'
@@ -115,7 +119,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 
     // testing
-    testCompile "org.assertj:assertj-core:1.7.0"
     testCompile 'org.robolectric:robolectric:2.3'
     testCompile 'junit:junit:4.+'
+    testCompile 'com.squareup:fest-android:1.0.8'
 }

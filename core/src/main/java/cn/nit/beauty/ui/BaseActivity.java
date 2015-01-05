@@ -1,14 +1,11 @@
 package cn.nit.beauty.ui;
 
 import android.os.Bundle;
-import butterknife.ButterKnife;
-import cn.nit.beauty.BeautyApplication;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.octo.android.robospice.GsonSpringAndroidSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.testin.agent.TestinAgent;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.PushAgent;
 
 /**
  * Created by vicky on 2014/12/17.
@@ -23,7 +20,7 @@ public class BaseActivity extends SherlockActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PushAgent.getInstance(this).onAppStart();
+        //PushAgent.getInstance(this).onAppStart();
     }
 
     @Override
