@@ -179,7 +179,7 @@ public class SettingActivity extends PreferenceActivity {
                     .setMessage("确定要清除所有缓存?")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            BeautyApplication.getInstance().getSpiceManager().removeAllDataFromCache();
+                            //BeautyApplication.getInstance().getSpiceManager().removeAllDataFromCache();
                             ImageLoader.getInstance().clearDiscCache();
                             prefCache.setSummary("当前共有缓存0.00MB");
                             Toast.makeText(SettingActivity.this, "已清理缓存,共释放" + df.format(cacheSize) + "空间!", Toast.LENGTH_SHORT).show();

@@ -58,12 +58,13 @@ public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigati
             String url = strs[0];
             String objectId = strs[2];
 
-            ImageInfo newsInfo1 = new ImageInfo();
-            newsInfo1.setObjectId(objectId);
-            newsInfo1.setKey(url);
-            newsInfo1.setUrl(url + "smallthumb/cover.jpg");
-            newsInfo1.setTitle(url);
-            imageInfos.add(newsInfo1);
+            ImageInfo imageInfo = new ImageInfo();
+            imageInfo.setObjectId(objectId);
+            imageInfo.setKey(url);
+            imageInfo.setSmall(true);
+            imageInfo.setSmallUrl(url + "smallthumb/cover.jpg");
+            imageInfo.setTitle(url);
+            imageInfos.add(imageInfo);
         }
 
         mAdapter.clear();
@@ -92,7 +93,7 @@ public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigati
 
                 Intent intent = new Intent(BeautyActivity.this,
                         ImageListActivity.class);
-                intent.putExtra("objectKey", holder.imageInfo.getKey() + "smallthumb/");
+                intent.putExtra("objectKey", holder.imageInfo.getKey());
                 intent.putExtra("objectId", holder.imageInfo.getObjectId());
                 startActivity(intent);
             }

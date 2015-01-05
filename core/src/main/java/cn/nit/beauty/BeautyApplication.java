@@ -43,9 +43,6 @@ import com.umeng.message.entity.UMessage;
  */
 public class BeautyApplication extends Application {
 
-    private SpiceManager spiceManager = new SpiceManager(
-            GsonSpringAndroidSpiceService.class);
-
     private User currentUser = null;
 
     private static BeautyApplication myApplication = null;
@@ -86,7 +83,7 @@ public class BeautyApplication extends Application {
             @Override
             public void dealWithCustomMessage(final Context context, final UMessage msg) {
                   if (msg.custom.toLowerCase().equals("update")) {
-                      spiceManager.removeAllDataFromCache();
+                      //spiceManager.removeAllDataFromCache();
                       L.i("json has been removed");
                   }
             }
@@ -135,10 +132,6 @@ public class BeautyApplication extends Application {
     public User getCurrentUser() {
         if (currentUser == null) currentUser = BmobUser.getCurrentUser(this, User.class);
         return currentUser;
-    }
-
-    public SpiceManager getSpiceManager() {
-        return  spiceManager;
     }
 
     public void authorize() {

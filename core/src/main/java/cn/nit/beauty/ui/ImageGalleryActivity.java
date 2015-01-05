@@ -90,13 +90,19 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
         Intent intent = getIntent();
 
-        objectKey = intent.getStringExtra("objectKey").replaceAll("small", "big");
-        folder = intent.getStringExtra("folder").replaceAll("small", "big");
+        objectKey = intent.getStringExtra("objectKey");
+        folder = intent.getStringExtra("folder");
         imageInfoList = (List<ImageInfo>) intent.getSerializableExtra("imageList");
+        setBigPicture();
+
         setTitle(intent.getStringExtra("title"));
+
+        currentUser = BeautyApplication.getInstance().getCurrentUser();
 
         mViewPager = new ViewPager(this);
         setContentView(mViewPager);
+
+
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -105,8 +111,8 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
             @Override
             public void onPageSelected(int i) {
-                if ((objectKey.startsWith("origin") && i > 3)
-                        || i > (imageInfoList.size() - i)) {
+                if ((folder.startsWith("origin") && i >= 3)
+                        || i >= Data.DISPLAY_COUNT) {
 
                     if (currentUser == null) {
                         autoPlay = false;
@@ -140,6 +146,12 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         mViewPager.setCurrentItem(getCurrentItem(), false);
     }
 
+    private void setBigPicture() {
+        for(ImageInfo imageInfo:imageInfoList) {
+            imageInfo.setBig(true);
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -162,14 +174,6 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         }
 
         return true;
-    }
-
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-
-        currentUser = BeautyApplication.getInstance().getCurrentUser();
-
     }
 
     public boolean onOptionsItemSelected(MenuItem mi) {
@@ -246,7 +250,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
     private void savePicture() {
         ImageInfo imageInfo = mAdapter.getImageInfo(mViewPager.getCurrentItem());
-        String imageSrc = imageInfo.getUrl().replaceAll("bigthumb", "original");
+        String imageSrc = imageInfo.getOriginalUrl();
 
         File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + imageSrc, ImageLoader.getInstance().getDiscCache());
 
@@ -266,8 +270,8 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
     private void changeOriginal() {
 
         final ImageInfo imageInfo = mAdapter.getImageInfo(mViewPager.getCurrentItem());
-        String imageSrc = imageInfo.getUrl().replaceAll("bigthumb", "original");
-        imageInfo.setUrl(imageSrc);
+        imageInfo.setOriginal(true);
+        String imageSrc = imageInfo.getUrl();
 
         View imageLayout = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
 

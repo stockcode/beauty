@@ -93,7 +93,7 @@ public class SplashActivity extends BaseActivity {
         Toast.makeText( SplashActivity.this, "检测到网络:" + Helper.getNetworkName(this), Toast.LENGTH_SHORT ).show();
 
         IndexRequest indexRequest = new IndexRequest(Data.OSS_URL + Data.INDEX_KEY);
-        spiceManager.execute(indexRequest, "beauty.index", DurationInMillis.ONE_WEEK, new IndexRequestListener());
+        getSpiceManager().execute(indexRequest, "beauty.index", DurationInMillis.ONE_WEEK, new IndexRequestListener());
 
         ShareSDK.initSDK(this);
 

@@ -23,6 +23,7 @@ import cn.nit.beauty.R;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.utils.L;
 import com.testin.agent.TestinAgent;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
@@ -60,6 +61,7 @@ public class MainActivity extends BaseActivity implements ShakeListener.OnShakeL
 
         fb.openFeedbackPush();
 
+        Data.DISPLAY_COUNT = Integer.parseInt(MobclickAgent.getConfigParams(this, "display_num"));
     }
 
     public void onUser (View v) {

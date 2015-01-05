@@ -80,8 +80,8 @@ android {
     defaultConfig {
 //        minSdkVersion 7
 //        targetSdkVersion 16
-        versionCode 25
-        versionName '1.1.25'
+        versionCode 26
+        versionName '1.1.26'
     }
 
     compileSdkVersion 17

@@ -56,7 +56,6 @@ public class ImageListActivity extends BaseActivity {
 
     private User currentUser;
 
-    private int display_num = 12;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -75,14 +74,16 @@ public class ImageListActivity extends BaseActivity {
 
         for(int i = 0 ; i < imageInfoList.size(); i++) {
             ImageInfo imageInfo = imageInfoList.get(i);
+            imageInfo.init(objectKey);
+            imageInfo.setSmall(true);
 
-            if ((imageInfo.getKey().contains("origin") && i >= 3)
-                    || (i >= display_num)) {
+            if ((objectKey.contains("origin") && i >= 3)
+                    || (i >= Data.DISPLAY_COUNT)) {
 
                 if (currentUser ==null || currentUser.hasExpired()) {
-                    imageInfo.setUrl(imageInfo.getUrl().replaceAll("small", "filter"));
-                }else if (imageInfo.getUrl().contains("filter")) {
-                    imageInfo.setUrl(imageInfo.getUrl().replaceAll("filter", "small"));
+                    imageInfo.setFilter(true);
+                }else if (imageInfo.isFilter()) {
+                    imageInfo.setFilter(false);
                 }
             }
 
@@ -118,7 +119,7 @@ public class ImageListActivity extends BaseActivity {
             public void onClick(View v) {
                 StaggeredAdapter.ViewHolder holder = (StaggeredAdapter.ViewHolder) v.getTag();
 
-                if (holder.imageInfo.getUrl().contains("filterthumb")) {
+                if (holder.imageInfo.isFilter()) {
                     if (currentUser == null) {
                         Intent intent = new Intent(ImageListActivity.this, LoginActivity.class);
                         startActivityForResult(intent, Utils.LOGIN);
@@ -153,7 +154,7 @@ public class ImageListActivity extends BaseActivity {
         mAdapterView.setItemManager(itemManager);
 
         ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey + Data.INDEX_KEY);
-        spiceManager.execute(imageListRequest, objectKey, DurationInMillis.ONE_WEEK, new ImageListRequestListener());
+        getSpiceManager().execute(imageListRequest, objectKey, DurationInMillis.ONE_WEEK, new ImageListRequestListener());
 
         BmobQuery<PhotoGallery> query = new BmobQuery<PhotoGallery>();
 
@@ -171,8 +172,6 @@ public class ImageListActivity extends BaseActivity {
                 L.i("get photoGallery failure !" + s);
             }
         });
-
-        display_num = Integer.parseInt(MobclickAgent.getConfigParams(this, "display_num"));
     }
 
     @Override
