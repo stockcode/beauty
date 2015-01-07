@@ -11,10 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 
-import cn.nit.beauty.BeautyApplication;
-import cn.nit.beauty.entity.User;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.socialization.Socialization;
 import com.actionbarsherlock.app.ActionBar;
 
 import org.lucasr.smoothie.AsyncGridView;
@@ -24,16 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.R;
 import cn.nit.beauty.adapter.StaggeredAdapter;
-import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.database.Category;
+import cn.nit.beauty.entity.User;
 import cn.nit.beauty.model.ImageInfo;
 import cn.nit.beauty.utils.Data;
 
 public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigationListener {
 
-    LaucherDataBase database;
     private AsyncGridView mAdapterView = null;
     private StaggeredAdapter mAdapter = null;
     private List<String> filters = new ArrayList<String>();
@@ -80,8 +76,6 @@ public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigati
         setContentView(R.layout.activity_category);
 
         currentUser = BeautyApplication.getInstance().getCurrentUser();
-
-        database = new LaucherDataBase(getApplicationContext());
 
         mAdapterView = (AsyncGridView) findViewById(R.id.list);
 
@@ -182,7 +176,7 @@ public class BeautyActivity extends BaseActivity implements ActionBar.OnNavigati
     private void updateFilters() {
 
         filters.add("全部");
-        List<Category> categories = database.getItems(category);
+        List<Category> categories = Data.getCategoryItems(category);
         for (Category category : categories) {
             filters.add(category.getTITLE());
         }
