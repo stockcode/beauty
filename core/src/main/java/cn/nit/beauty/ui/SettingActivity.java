@@ -10,12 +10,11 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
-import cn.nit.beauty.BeautyApplication;
-import cn.nit.beauty.R;
-import cn.nit.beauty.Utils;
-import cn.nit.beauty.utils.ActivityUtil;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.octo.android.robospice.GsonSpringAndroidSpiceService;
+import com.octo.android.robospice.SpiceManager;
 import com.testin.agent.TestinAgent;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.update.UmengUpdateAgent;
@@ -26,13 +25,18 @@ import com.umeng.update.UpdateStatus;
 import java.io.File;
 import java.text.DecimalFormat;
 
+import cn.nit.beauty.R;
+import cn.nit.beauty.Utils;
+import cn.nit.beauty.utils.ActivityUtil;
+
 public class SettingActivity extends PreferenceActivity {
     public static final String TAG = "alipay-sdk";
-
-	private static final String[] PREFERENCE_KEYS = {"txtPasswd"};
+    private static final String[] PREFERENCE_KEYS = {"txtPasswd"};
     DecimalFormat df = new DecimalFormat("##0.00");
+    private SpiceManager spiceManager = new SpiceManager(
+            GsonSpringAndroidSpiceService.class);
     private Preference prefCache, prefVersion, prefPay, feedback, about, userguide;
-    private float cacheSize= 0;
+    private float cacheSize = 0;
     private SharedPreferences.OnSharedPreferenceChangeListener listener =
             new SharedPreferences.OnSharedPreferenceChangeListener() {
 
@@ -87,7 +91,7 @@ public class SettingActivity extends PreferenceActivity {
         });
 
         final File cacheDir = StorageUtils.getCacheDirectory(this);
-        float div = 1024*1024;
+        float div = 1024 * 1024;
         cacheSize = Utils.getFolderSize(cacheDir) / div;
         prefCache.setSummary("当前共有缓存" + df.format(cacheSize) + "MB");
         prefCache.setOnPreferenceClickListener(new PrefClickListener());
@@ -132,44 +136,46 @@ public class SettingActivity extends PreferenceActivity {
 
     @Override
     protected void onStop() {
+        spiceManager.shouldStop();
         super.onStop();
         TestinAgent.onStop(getApplicationContext());
     }
 
     @Override
     protected void onStart() {
+        spiceManager.start(this);
         super.onStart();
         TestinAgent.onStart(getApplicationContext());
     }
 
     @Override
-    protected void onResume() {  
-        super.onResume();  
+    protected void onResume() {
+        super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
-    }  
-       
-	@Override
-    protected void onPause() {  
-        super.onPause();  
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(listener);  
-    }  
-      
-	private void setPreferenceSummary(String key) {
-		setPreferenceSummary(PreferenceManager.getDefaultSharedPreferences(this), key);
-	}
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    private void setPreferenceSummary(String key) {
+        setPreferenceSummary(PreferenceManager.getDefaultSharedPreferences(this), key);
+    }
 
     private void setPreferenceSummary(SharedPreferences sharedPreferences, String key) {
-		@SuppressWarnings("deprecation")
+        @SuppressWarnings("deprecation")
         Preference pref = findPreference(key);
-		if (pref == null) {
-			return;
-		}
-    	if (key.equals("checkbox_key")) {
+        if (pref == null) {
+            return;
+        }
+        if (key.equals("checkbox_key")) {
             pref.setSummary(sharedPreferences.getBoolean(key, false) ? "チェック" : "未チェック");
-    	} else {
+        } else {
             pref.setSummary(sharedPreferences.getString(key, ""));
-    	}
-	}
+        }
+    }
 
     private class PrefClickListener implements OnPreferenceClickListener {
         public boolean onPreferenceClick(Preference preference) {
@@ -179,7 +185,7 @@ public class SettingActivity extends PreferenceActivity {
                     .setMessage("确定要清除所有缓存?")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            //BeautyApplication.getInstance().getSpiceManager().removeAllDataFromCache();
+                            spiceManager.removeAllDataFromCache();
                             ImageLoader.getInstance().clearDiscCache();
                             prefCache.setSummary("当前共有缓存0.00MB");
                             Toast.makeText(SettingActivity.this, "已清理缓存,共释放" + df.format(cacheSize) + "空间!", Toast.LENGTH_SHORT).show();

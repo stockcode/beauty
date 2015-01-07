@@ -8,6 +8,20 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.widget.Toast;
+
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+import com.testin.agent.TestinAgent;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UmengMessageHandler;
+import com.umeng.message.UmengRegistrar;
+import com.umeng.message.entity.UMessage;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobPointer;
@@ -25,14 +39,6 @@ import cn.nit.beauty.utils.L;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.socialization.Socialization;
 import cn.smssdk.SMSSDK;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-import com.testin.agent.TestinAgent;
-import com.umeng.analytics.MobclickAgent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SplashActivity extends BaseActivity {
 
@@ -73,6 +79,7 @@ public class SplashActivity extends BaseActivity {
 
         setContentView(R.layout.activity_splashing);
 
+        enablePush();
 
         MobclickAgent.updateOnlineConfig(this);
 
@@ -90,10 +97,10 @@ public class SplashActivity extends BaseActivity {
             settings.edit().putBoolean("shortcut", true).apply();
         }
 
-        Toast.makeText( SplashActivity.this, "检测到网络:" + Helper.getNetworkName(this), Toast.LENGTH_SHORT ).show();
+        Toast.makeText(SplashActivity.this, "检测到网络:" + Helper.getNetworkName(this), Toast.LENGTH_SHORT).show();
 
         IndexRequest indexRequest = new IndexRequest(Data.OSS_URL + Data.INDEX_KEY);
-        getSpiceManager().execute(indexRequest, "beauty.index", DurationInMillis.ONE_WEEK, new IndexRequestListener());
+        getSpiceManager().execute(indexRequest, "beauty.index", DurationInMillis.ALWAYS_EXPIRED, new IndexRequestListener());
 
         ShareSDK.initSDK(this);
 
@@ -106,6 +113,25 @@ public class SplashActivity extends BaseActivity {
         Socialization service = ShareSDK.getService(Socialization.class);
         BeautyPlatform beautyPlatform = new BeautyPlatform(SplashActivity.this);
         service.setCustomPlatform(beautyPlatform);
+    }
+
+    private void enablePush() {
+        PushAgent mPushAgent = PushAgent.getInstance(this);
+        //mPushAgent.setDebugMode(true);
+        mPushAgent.enable();
+
+        L.i("Device Token:" + UmengRegistrar.getRegistrationId(this));
+
+        UmengMessageHandler messageHandler = new UmengMessageHandler() {
+            @Override
+            public void dealWithCustomMessage(final Context context, final UMessage msg) {
+                if (msg.custom.toLowerCase().equals("update")) {
+                    getSpiceManager().removeDataFromCache(Index.class, "beauty.index");
+                    L.i("beauty.index has been removed");
+                }
+            }
+        };
+        mPushAgent.setMessageHandler(messageHandler);
     }
 
     @Override

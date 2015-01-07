@@ -4,8 +4,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.14.+'
-        classpath 'com.github.jcandksolutions.gradle:android-unit-test:2.0.2'
+        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.github.jcandksolutions.gradle:android-unit-test:+'
     }
 }
 
@@ -46,8 +46,8 @@ android {
 
     defaultConfig {
         applicationId "cn.nit.beauty"
-        versionCode 26
-        versionName '1.1.26'
+        versionCode 27
+        versionName '1.1.27'
     }
 
     compileSdkVersion 17
@@ -103,7 +103,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
     //compile  'com.github.chrisbanes.photoview:library:1.2.1'
 
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 
     compile 'de.hdodenhof:circleimageview:1.2.1'
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'

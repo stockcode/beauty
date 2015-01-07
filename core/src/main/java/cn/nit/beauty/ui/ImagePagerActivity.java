@@ -5,73 +5,65 @@ import android.app.WallpaperManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import cn.nit.beauty.BeautyApplication;
-import cn.nit.beauty.Helper;
-import cn.nit.beauty.Utils;
-import cn.nit.beauty.entity.User;
-import cn.nit.beauty.proxy.UserProxy;
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.onekeyshare.OnekeyShare;
-import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
-import cn.sharesdk.sina.weibo.SinaWeibo;
-import cn.sharesdk.tencent.weibo.TencentWeibo;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-import com.nostra13.universalimageloader.utils.StorageUtils;
-import com.octo.android.robospice.GsonSpringAndroidSpiceService;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.utils.DiskCacheUtils;
+import com.testin.agent.TestinAgent;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import cn.nit.beauty.BeautyApplication;
+import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
-import cn.nit.beauty.adapter.GalleryAdapter;
-import cn.nit.beauty.gallery.HackyViewPager;
+import cn.nit.beauty.Utils;
+import cn.nit.beauty.entity.User;
 import cn.nit.beauty.model.ImageInfo;
-import cn.nit.beauty.model.ImageInfos;
-import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.Data;
-import com.testin.agent.TestinAgent;
-import com.umeng.analytics.MobclickAgent;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.weibo.TencentWeibo;
 import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class ImageGalleryActivity extends SherlockFragmentActivity {
+public class ImagePagerActivity extends SherlockFragmentActivity {
+
+    private static final String STATE_POSITION = "STATE_POSITION";
 
     List<ImageInfo> imageInfoList;
-    private GalleryAdapter mAdapter;
     private ViewPager mViewPager;
+    private ImageAdapter mAdapter;
+
     private String objectKey, folder;
     private Message message;
     private Boolean autoPlay = false, isOriginal = false;
@@ -86,11 +78,16 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        settings = PreferenceManager.getDefaultSharedPreferences(ImageGalleryActivity.this);
+        setContentView(R.layout.activity_image_pager);
+
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+
+        settings = PreferenceManager.getDefaultSharedPreferences(ImagePagerActivity.this);
 
         Intent intent = getIntent();
 
-        objectKey = intent.getStringExtra("objectKey");
+        int pagerPosition = savedInstanceState == null ? intent.getIntExtra("position", 0) : savedInstanceState.getInt(STATE_POSITION);
+
         folder = intent.getStringExtra("folder");
         imageInfoList = (List<ImageInfo>) intent.getSerializableExtra("imageList");
         setBigPicture();
@@ -98,10 +95,6 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         setTitle(intent.getStringExtra("title"));
 
         currentUser = BeautyApplication.getInstance().getCurrentUser();
-
-        mViewPager = new ViewPager(this);
-        setContentView(mViewPager);
-
 
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -116,14 +109,14 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
                     if (currentUser == null) {
                         autoPlay = false;
-                        Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
+                        Intent intent = new Intent(ImagePagerActivity.this, LoginActivity.class);
                         startActivityForResult(intent, Utils.LOGIN);
-                        Toast.makeText(ImageGalleryActivity.this, "查看更多图片请先登录", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ImagePagerActivity.this, "查看更多图片请先登录", Toast.LENGTH_SHORT).show();
                     } else if (currentUser.hasExpired()) {
                         autoPlay = false;
-                        Intent intent = new Intent(ImageGalleryActivity.this, VipProductActivity.class);
+                        Intent intent = new Intent(ImagePagerActivity.this, VipProductActivity.class);
                         startActivityForResult(intent, Utils.VIP);
-                        Toast.makeText(ImageGalleryActivity.this, "有效期为" + currentUser.getExpiredDate() + "，请续费", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ImagePagerActivity.this, "有效期为" + currentUser.getExpiredDate() + "，请续费", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -135,15 +128,15 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
             public void onPageScrollStateChanged(int i) {
             }
         });
-        mAdapter = new GalleryAdapter(getSupportFragmentManager());
+
+        mAdapter = new ImageAdapter();
+        mAdapter.addItems(imageInfoList);
+
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setId(R.id.view_pager);
 
-        ShareSDK.initSDK(this);
 
-        mAdapter.addItemLast(imageInfoList);
-        mAdapter.notifyDataSetChanged();
-        mViewPager.setCurrentItem(getCurrentItem(), false);
+        mViewPager.setCurrentItem(pagerPosition);
+
     }
 
     private void setBigPicture() {
@@ -152,6 +145,10 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_POSITION, mViewPager.getCurrentItem());
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -201,9 +198,9 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
                 return true;
             case R.id.mnuOriginal:
                 if (currentUser == null) {
-                    Intent intent = new Intent(ImageGalleryActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(ImagePagerActivity.this, LoginActivity.class);
                     startActivityForResult(intent, Utils.LOGIN);
-                    Toast.makeText(ImageGalleryActivity.this, "查看原图请先登录", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ImagePagerActivity.this, "查看原图请先登录", Toast.LENGTH_SHORT).show();
                     return true;
                 }
 
@@ -212,7 +209,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
                         changeOriginal();
                     }
                     else {
-                        new AlertDialog.Builder(ImageGalleryActivity.this)
+                        new AlertDialog.Builder(ImagePagerActivity.this)
                                 .setTitle("温馨提示")
                                 .setMessage("当前非WIFI网络，继续浏览会消耗您的流量(每张图片约1MB)")
                                 .setNegativeButton("继续", new DialogInterface.OnClickListener() {
@@ -252,7 +249,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         ImageInfo imageInfo = mAdapter.getImageInfo(mViewPager.getCurrentItem());
         String imageSrc = imageInfo.getOriginalUrl();
 
-        File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + imageSrc, ImageLoader.getInstance().getDiscCache());
+        File cacheFile = DiskCacheUtils.findInCache(Data.OSS_URL + imageSrc, ImageLoader.getInstance().getDiskCache());
 
         String dir = Utils.getRootDirectory().getPath();
 
@@ -260,7 +257,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
         Utils.copyFile(cacheFile.getAbsolutePath(), dstFile);
 
-        Toast.makeText(ImageGalleryActivity.this, "图片已保存至" + dir + "文件夹", Toast.LENGTH_LONG).show();
+        Toast.makeText(ImagePagerActivity.this, "图片已保存至" + dir + "文件夹", Toast.LENGTH_LONG).show();
 
         Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         scanIntent.setData(Uri.fromFile(new File(dstFile)));
@@ -306,7 +303,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
                         message = "未知错误";
                         break;
                 }
-                Toast.makeText(ImageGalleryActivity.this, message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImagePagerActivity.this, message, Toast.LENGTH_SHORT).show();
 
                 spinner.setVisibility(View.GONE);
             }
@@ -314,10 +311,8 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 spinner.setVisibility(View.GONE);
-                Toast.makeText(ImageGalleryActivity.this, "原图已加载", Toast.LENGTH_SHORT).show();
-                //Toast.makeText(ImageGalleryActivity.this, "文件大小：" + loadedImage.getByteCount() / (1024*1024) + "MB", Toast.LENGTH_SHORT).show();
-                PhotoViewAttacher mAttacher = new PhotoViewAttacher(photoView);
-                mAttacher.update();
+                Toast.makeText(ImagePagerActivity.this, "原图已加载", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ImagePagerActivity.this, "文件大小：" + loadedImage.getByteCount() / (1024*1024) + "MB", Toast.LENGTH_SHORT).show();
                 isOriginal = true;
                 invalidateOptionsMenu();
                 imageInfo.setOriginal(true);
@@ -328,11 +323,11 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
     private void changeWallpaper() {
         WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
         try {
-            File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + imageInfoList.get(mViewPager.getCurrentItem()).getUrl(), ImageLoader.getInstance().getDiscCache());
+            File cacheFile = DiskCacheUtils.findInCache(Data.OSS_URL + imageInfoList.get(mViewPager.getCurrentItem()).getUrl(), ImageLoader.getInstance().getDiskCache());
             InputStream is = new FileInputStream(cacheFile);
             wallpaperManager.setStream(is);
             is.close();
-            Toast.makeText(ImageGalleryActivity.this, "壁纸已换好", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ImagePagerActivity.this, "壁纸已换好", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -390,31 +385,9 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         MobclickAgent.onResume(this);
     }
 
-    public int getCurrentItem() {
-        for (int i = 0; i < imageInfoList.size(); i++) {
-            if (imageInfoList.get(i).getKey().equals(objectKey)) return i;
-        }
-        return 0;
-    }
-
-
-    class AutoPlayHandler extends Handler {
-
-        @Override
-        public void handleMessage(Message msg) {
-            if (autoPlay) {
-                int nextItem = (mViewPager.getCurrentItem() + 1) % imageInfoList.size();
-                if (nextItem == 0) {
-                    Toast.makeText(ImageGalleryActivity.this, "已经播放完了，从头开始", Toast.LENGTH_SHORT).show();
-                }
-                mViewPager.setCurrentItem(nextItem);// 换页，同时实现了循环播放
-                message = obtainMessage(0);// 重新给message赋值，因为前一个message“还在使用中”
-                sendMessageDelayed(message, 2000);
-            }
-        }
-    }
-
     private void showShare() {
+        ShareSDK.initSDK(this);
+
         ImageInfo imageInfo = imageInfoList.get(mViewPager.getCurrentItem());
 
         final String url = MobclickAgent.getConfigParams(this, "share_url") + "?p=" + URLEncoder.encode(imageInfo.getKey());
@@ -435,7 +408,7 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
         // text是分享文本，所有平台都需要这个字段
         oks.setText(share_text);
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        File cacheFile = DiscCacheUtil.findInCache(Data.OSS_URL + imageInfo.getUrl(), ImageLoader.getInstance().getDiscCache());
+        File cacheFile = DiskCacheUtils.findInCache(Data.OSS_URL + imageInfo.getUrl(), ImageLoader.getInstance().getDiskCache());
         if (cacheFile != null) oks.setImagePath(cacheFile.getAbsolutePath());//确保SDcard下面存在此张图片
 
         // url仅在微信（包括好友和朋友圈）中使用
@@ -465,14 +438,123 @@ public class ImageGalleryActivity extends SherlockFragmentActivity {
 
         if (requestCode == Utils.LOGIN) {
             if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(ImageGalleryActivity.this, "取消登录，已返回", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImagePagerActivity.this, "取消登录，已返回", Toast.LENGTH_SHORT).show();
                 finish();
             }
         } else if (requestCode == Utils.VIP) {
             if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(ImageGalleryActivity.this, "取消续费，已返回", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImagePagerActivity.this, "取消续费，已返回", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
     }
+
+    class AutoPlayHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (autoPlay) {
+                int nextItem = (mViewPager.getCurrentItem() + 1) % imageInfoList.size();
+                if (nextItem == 0) {
+                    Toast.makeText(ImagePagerActivity.this, "已经播放完了，从头开始", Toast.LENGTH_SHORT).show();
+                }
+                mViewPager.setCurrentItem(nextItem);// 换页，同时实现了循环播放
+                message = obtainMessage(0);// 重新给message赋值，因为前一个message“还在使用中”
+                sendMessageDelayed(message, 2000);
+            }
+        }
+    }
+
+    private class ImageAdapter extends PagerAdapter {
+
+        private LayoutInflater inflater;
+
+        private LinkedList<ImageInfo> mInfos = new LinkedList<ImageInfo>();
+
+        ImageAdapter() {
+            inflater = LayoutInflater.from(ImagePagerActivity.this);
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+
+        @Override
+        public int getCount() {
+            return mInfos.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup view, int position) {
+            View imageLayout = inflater.inflate(R.layout.item_pager_image, view, false);
+            assert imageLayout != null;
+            ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image);
+            final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
+
+            ImageLoader.getInstance().displayImage(Data.OSS_URL + mInfos.get(position).getUrl(), imageView, new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
+                    spinner.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                    String message = null;
+                    switch (failReason.getType()) {
+                        case IO_ERROR:
+                            message = "Input/Output error";
+                            break;
+                        case DECODING_ERROR:
+                            message = "Image can't be decoded";
+                            break;
+                        case NETWORK_DENIED:
+                            message = "Downloads are denied";
+                            break;
+                        case OUT_OF_MEMORY:
+                            message = "Out Of Memory error";
+                            break;
+                        case UNKNOWN:
+                            message = "Unknown error";
+                            break;
+                    }
+                    Toast.makeText(ImagePagerActivity.this, message, Toast.LENGTH_SHORT).show();
+
+                    spinner.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    spinner.setVisibility(View.GONE);
+                }
+            });
+
+            view.addView(imageLayout, 0);
+            imageLayout.setTag(position);
+            return imageLayout;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view.equals(object);
+        }
+
+        public void addItems(List<ImageInfo> datas) {
+            mInfos.addAll(datas);
+        }
+
+        @Override
+        public void restoreState(Parcelable state, ClassLoader loader) {
+        }
+
+        @Override
+        public Parcelable saveState() {
+            return null;
+        }
+
+        public ImageInfo getImageInfo(int currentItem) {
+            return mInfos.get(currentItem);
+        }
+    }
+
 }

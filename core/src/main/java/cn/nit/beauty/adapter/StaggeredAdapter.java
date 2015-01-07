@@ -1,28 +1,20 @@
 package cn.nit.beauty.adapter;
 
-import android.graphics.Color;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import cn.nit.beauty.R;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import cn.nit.beauty.R;
 import cn.nit.beauty.model.ImageInfo;
-import cn.nit.beauty.ui.ImageGalleryActivity;
-import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.widget.ScaleImageView;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Administrator on 13-7-24.
@@ -59,29 +51,19 @@ public class StaggeredAdapter extends BaseAdapter {
 
         String title = imageInfo.getTitle();
         String[] strs = title.split("/");
-        title = strs[strs.length-1];
+        title = strs[strs.length - 1];
 
         if (title.equals("")) holder.contentView.setVisibility(View.GONE);
 
         holder.contentView.setText(title);
         holder.imageInfo = imageInfo;
+        holder.position = position;
         //ImageLoader.getInstance().displayImage(Data.OSS_URL + duitangInfo.getUrl(), holder.imageView);
         return convertView;
     }
 
     public void clear() {
         mInfos.clear();
-    }
-
-    public class ViewHolder {
-        @InjectView(R.id.news_pic) public ScaleImageView imageView;
-        @InjectView(R.id.news_title) TextView contentView;
-
-        public ImageInfo imageInfo;
-
-        public ViewHolder(View view) {
-            ButterKnife.inject(this, view);
-        }
     }
 
     @Override
@@ -105,5 +87,18 @@ public class StaggeredAdapter extends BaseAdapter {
 
     public void addItemTop(ImageInfo imageInfo) {
         mInfos.add(imageInfo);
+    }
+
+    public class ViewHolder {
+        @InjectView(R.id.news_pic)
+        public ScaleImageView imageView;
+        public ImageInfo imageInfo;
+        public int position;
+        @InjectView(R.id.news_title)
+        TextView contentView;
+
+        public ViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
     }
 }

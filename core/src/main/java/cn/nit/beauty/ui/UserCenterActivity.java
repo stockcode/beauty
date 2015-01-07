@@ -1,24 +1,24 @@
 package cn.nit.beauty.ui;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.nit.beauty.BeautyApplication;
-import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
 import cn.nit.beauty.Utils;
 import cn.nit.beauty.entity.User;
-import cn.nit.beauty.proxy.UserProxy;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 
 public class UserCenterActivity extends BaseActivity {
@@ -106,7 +106,7 @@ public class UserCenterActivity extends BaseActivity {
             ivLogout.setOnClickListener(logoutClickListener);
 
             BmobFile avatarFile = currentUser.getAvatar();
-            if(null != avatarFile){
+            if (null != avatarFile) {
                 ImageLoader.getInstance()
                         .displayImage(avatarFile.getFileUrl(), ivLogout,
                                 BeautyApplication.getInstance().getOptions(R.drawable.icon));

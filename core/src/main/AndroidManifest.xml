@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:installLocation="preferExternal"
-    package="cn.nit.beauty">
+    package="cn.nit.beauty"
+    android:installLocation="preferExternal">
 
-    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17" />
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -24,38 +25,50 @@
 
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
+        android:name="BeautyApplication"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/BeautyTheme"
-        android:name="BeautyApplication">
+        android:theme="@style/BeautyTheme">
 
 
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value="cn.nit.beauty.ui.BeautyActivity" />
 
-        <meta-data android:name="android.app.default_searchable" android:value="cn.nit.beauty.ui.BeautyActivity" />
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="548fe31dfd98c542620004d2" />
 
-        <meta-data android:name="UMENG_APPKEY" android:value="548fe31dfd98c542620004d2"/>
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="8f25263b3710dbf4345aa0045c8daa51" />
 
-        <meta-data android:name="UMENG_MESSAGE_SECRET" android:value="8f25263b3710dbf4345aa0045c8daa51" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="360" />
 
-        <meta-data android:name="UMENG_CHANNEL" android:value="360" />
+        <meta-data
+            android:name="TESTIN_APPKEY"
+            android:value="494059efa57220eb8321f4737d48ba3f" />
 
-        <meta-data android:name="TESTIN_APPKEY" android:value="494059efa57220eb8321f4737d48ba3f"/>
-
-        <meta-data android:name="TESTIN_CHANNEL" android:value="360"/>
+        <meta-data
+            android:name="TESTIN_CHANNEL"
+            android:value="360" />
 
         <activity
             android:name=".ui.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BeautyTheme.NoTitleBar" >
+            android:theme="@style/BeautyTheme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -64,7 +77,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/BeautyTheme.NoTitleBar" >
+            android:theme="@style/BeautyTheme.NoTitleBar">
 
         </activity>
 
@@ -72,175 +85,172 @@
         <activity
             android:name=".ui.BeautyActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".ui.MainActivity" >
+            android:parentActivityName=".ui.MainActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
-            <meta-data android:name="android.app.searchable"
-                       android:resource="@xml/searchable"/>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
         <activity
             android:name=".ui.ImageListActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".ui.BeautyActivity" >
+            android:parentActivityName=".ui.BeautyActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.BeautyActivity" />
         </activity>
         <activity
-            android:name=".ui.ImageGalleryActivity"
+            android:name=".ui.ImagePagerActivity"
             android:launchMode="singleTask"
             android:parentActivityName=".ui.ImageListActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.ImageListActivity" />
         </activity>
         <activity
-                android:name=".ui.SettingActivity"
-                android:launchMode="singleTask"
-                android:parentActivityName=".ui.MainActivity" >
+            android:name=".ui.SettingActivity"
+            android:launchMode="singleTask"
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.MainActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.MainActivity" />
         </activity>
         <activity
-                android:name=".ui.UserCenterActivity"
-                android:launchMode="singleTask"
-                android:parentActivityName=".ui.MainActivity" >
+            android:name=".ui.UserCenterActivity"
+            android:launchMode="singleTask"
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.MainActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.MainActivity" />
         </activity>
         <activity
-                android:name=".ui.VipProductActivity"
-                android:parentActivityName=".ui.UserCenterActivity" >
+            android:name=".ui.VipProductActivity"
+            android:parentActivityName=".ui.UserCenterActivity">
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.UserCenterActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.UserCenterActivity" />
         </activity>
 
         <activity
             android:name=".ui.LoginActivity"
-            android:screenOrientation="portrait"
-            android:label="用户登录">
-        </activity>
+            android:label="用户登录"
+            android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".ui.InputActivity"></activity>
 
         <activity
-                android:name=".ui.InputActivity">
-        </activity>
-
-        <activity
-                android:name=".wxapi.WXEntryActivity"
-                android:theme="@android:style/Theme.Dialog"
-                android:exported="true" />
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Dialog" />
 
         <activity
             android:name=".ui.RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BeautyTheme.NoTitleBar"
-            android:windowSoftInputMode="stateVisible">
-        </activity>
+            android:windowSoftInputMode="stateVisible"></activity>
 
         <activity
-                android:name=".ui.UserSettingsActivity"
-                android:label="用户设置"
-                android:parentActivityName=".ui.UserCenterActivity" >
+            android:name=".ui.UserSettingsActivity"
+            android:label="用户设置"
+            android:parentActivityName=".ui.UserCenterActivity">
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.UserCenterActivity" />>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.UserCenterActivity" />>
         </activity>
 
         <activity
-                android:name=".ui.HelpActivity"
-                android:label="使用指南"
-                android:parentActivityName=".ui.SettingActivity" >
+            android:name=".ui.HelpActivity"
+            android:label="使用指南"
+            android:parentActivityName=".ui.SettingActivity">
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.SettingActivity" />>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.SettingActivity" />>
         </activity>
 
         <activity
-                android:name=".ui.AboutActivity"
-                android:label="关于"
-                android:parentActivityName=".ui.SettingActivity" >
+            android:name=".ui.AboutActivity"
+            android:label="关于"
+            android:parentActivityName=".ui.SettingActivity">
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.SettingActivity" />>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.SettingActivity" />>
         </activity>
 
         <activity
-        android:name="com.alipay.sdk.app.H5PayActivity"
-        android:configChanges="orientation|keyboardHidden|navigation"
-        android:exported="false"
-        android:screenOrientation="behind" >
-    </activity>
-    <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"></activity>
+        <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind" >
-    </activity>
+            android:screenOrientation="behind"></activity>
 
         <activity
-                android:name="com.tencent.tauth.AuthActivity"
-                android:noHistory="true"
-                android:launchMode="singleTask" >
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="1102386164" />
             </intent-filter>
         </activity>
 
-    <activity android:name="com.tencent.connect.common.AssistActivity"
-                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
-                  android:configChanges="orientation|keyboardHidden|screenSize"
-                />
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
 
         <activity
-                android:name="cn.smssdk.SMSSDKUIShell"
-                android:configChanges="keyboardHidden|orientation|screenSize"
-                android:theme="@android:style/Theme.Translucent.NoTitleBar"
-                android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:name="cn.smssdk.SMSSDKUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-                android:name="cn.sharesdk.framework.ShareSDKUIShell"
-                android:theme="@android:style/Theme.Translucent.NoTitleBar"
-                android:configChanges="keyboardHidden|orientation|screenSize"
-                android:screenOrientation="portrait"
-                android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:name="cn.sharesdk.framework.ShareSDKUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <data android:scheme="tencent100371282" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <service
-                android:name="com.umeng.update.net.DownloadingService"
-                android:process=":DownloadingService" >
-        </service>
-        <activity
-                android:name="com.umeng.update.UpdateDialogActivity"
-                android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-        </activity>
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService"></service>
 
         <activity
-                android:name="com.umeng.fb.ConversationActivity"
-                android:label="@string/umeng_fb_title"
-                android:launchMode="singleTop"/>
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+
+        <activity
+            android:name="com.umeng.fb.ConversationActivity"
+            android:label="@string/umeng_fb_title"
+            android:launchMode="singleTop" />
 
 
         <receiver
-                android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
-                android:exported="false" >
-        </receiver>
-        <receiver android:name="com.umeng.message.RegistrationReceiver" >
+            android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
+            android:exported="false"></receiver>
+        <receiver android:name="com.umeng.message.RegistrationReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -256,7 +266,7 @@
             </intent-filter>
 
         </receiver>
-        <receiver android:name="com.umeng.message.UmengBroadcastReceiver" >
+        <receiver android:name="com.umeng.message.UmengBroadcastReceiver">
             <intent-filter>
                 <action android:name="org.agoo.android.intent.action.RECEIVE" />
             </intent-filter>
@@ -267,10 +277,11 @@
                 <action android:name="org.agoo.android.intent.action.RE_ELECTION_V2" />
             </intent-filter>
         </receiver>
+
         <service
-                android:name="com.umeng.message.UmengService"
-                android:exported="true"
-                android:process=":umengService_v1" >
+            android:name="com.umeng.message.UmengService"
+            android:exported="true"
+            android:process=":umengService_v1">
             <intent-filter>
                 <action android:name="cn.nit.beauty.intent.action.START" />
             </intent-filter>
@@ -282,9 +293,9 @@
             </intent-filter>
         </service>
         <service
-                android:name="org.android.agoo.service.ElectionService"
-                android:exported="true"
-                android:process=":umengService_v1" >
+            android:name="org.android.agoo.service.ElectionService"
+            android:exported="true"
+            android:process=":umengService_v1">
             <intent-filter>
                 <action android:name="org.agoo.android.intent.action.ELECTION_V2" />
             </intent-filter>
@@ -295,8 +306,8 @@
 
 
         <service
-                android:name="com.octo.android.robospice.GsonSpringAndroidSpiceService"
-                android:exported="false" />
+            android:name="com.octo.android.robospice.GsonSpringAndroidSpiceService"
+            android:exported="false" />
 
     </application>
 

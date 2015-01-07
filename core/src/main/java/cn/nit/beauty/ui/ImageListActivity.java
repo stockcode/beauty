@@ -9,6 +9,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+
+import org.lucasr.smoothie.AsyncGridView;
+import org.lucasr.smoothie.ItemManager;
+
+import java.util.ArrayList;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.bmob.v3.BmobQuery;
@@ -29,16 +41,6 @@ import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.utils.L;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.socialization.QuickCommentBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-import com.umeng.analytics.MobclickAgent;
-import org.lucasr.smoothie.AsyncGridView;
-import org.lucasr.smoothie.ItemManager;
-
-import java.util.ArrayList;
 
 public class ImageListActivity extends BaseActivity {
 
@@ -133,11 +135,11 @@ public class ImageListActivity extends BaseActivity {
                     }
                 }
 
-                final Intent intent = new Intent(ImageListActivity.this, ImageGalleryActivity.class);
-                intent.putExtra("objectKey", holder.imageInfo.getKey());
+                final Intent intent = new Intent(ImageListActivity.this, ImagePagerActivity.class);
                 intent.putExtra("folder", objectKey);
                 intent.putExtra("title", title);
                 intent.putExtra("imageList", imageInfoList);
+                intent.putExtra("position", holder.position);
                 startActivity(intent);
             }
         });
@@ -154,7 +156,7 @@ public class ImageListActivity extends BaseActivity {
         mAdapterView.setItemManager(itemManager);
 
         ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey + Data.INDEX_KEY);
-        getSpiceManager().execute(imageListRequest, objectKey, DurationInMillis.ONE_WEEK, new ImageListRequestListener());
+        getSpiceManager().execute(imageListRequest, title, DurationInMillis.ONE_WEEK, new ImageListRequestListener());
 
         BmobQuery<PhotoGallery> query = new BmobQuery<PhotoGallery>();
 
