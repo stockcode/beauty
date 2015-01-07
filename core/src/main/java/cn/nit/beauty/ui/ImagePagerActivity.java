@@ -390,7 +390,7 @@ public class ImagePagerActivity extends SherlockFragmentActivity {
 
         ImageInfo imageInfo = imageInfoList.get(mViewPager.getCurrentItem());
 
-        final String url = MobclickAgent.getConfigParams(this, "share_url") + "?p=" + URLEncoder.encode(imageInfo.getKey());
+        final String url = MobclickAgent.getConfigParams(this, "share_url") + "?p=" + URLEncoder.encode(imageInfo.getUrl());
 
         final String share_text = MobclickAgent.getConfigParams(this, "share_text");
 

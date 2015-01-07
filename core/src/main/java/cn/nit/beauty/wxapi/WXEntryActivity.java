@@ -2,13 +2,7 @@ package cn.nit.beauty.wxapi;
 
 import android.content.Intent;
 import android.os.Bundle;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UploadFileListener;
-import cn.nit.beauty.entity.User;
-import cn.nit.beauty.proxy.UserProxy;
-import cn.nit.beauty.ui.BaseActivity;
-import cn.nit.beauty.utils.*;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -19,12 +13,24 @@ import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
+import cn.nit.beauty.entity.User;
+import cn.nit.beauty.proxy.UserProxy;
+import cn.nit.beauty.ui.BaseActivity;
+import cn.nit.beauty.utils.ActivityUtil;
+import cn.nit.beauty.utils.Data;
+import cn.nit.beauty.utils.DialogFactory;
+import cn.nit.beauty.utils.L;
 
 /**
  * Created by vicky on 2014/10/9.
@@ -34,10 +40,8 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler,
     UserProxy userProxy;
 
     User user;
-
-    private IWXAPI api;
-
     AsyncHttpClient client = new AsyncHttpClient();
+    private IWXAPI api;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,11 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler,
     @Override
     public void onResp(BaseResp baseResp) {
 
+        if (!(baseResp instanceof SendAuth.Resp)) {
+            finish();
+            return;
+        }
+
         SendAuth.Resp resp = (SendAuth.Resp) baseResp;
 
         L.e("weixin:" + resp.errCode + ":resp");
@@ -79,7 +88,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler,
             params.put("code", resp.code);
             params.put("grant_type", "authorization_code");
 
-            client.get("https://api.weixin.qq.com/sns/oauth2/access_token", params, new JsonHttpResponseHandler(){
+            client.get("https://api.weixin.qq.com/sns/oauth2/access_token", params, new JsonHttpResponseHandler() {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
                         final RequestParams params = new RequestParams();
@@ -149,8 +158,6 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler,
                         });
 
 
-
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -181,7 +188,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler,
 
     @Override
     public void onLoginFailure(String msg) {
-        ActivityUtil.show(this, "登录失败。"+msg);
+        ActivityUtil.show(this, "登录失败。" + msg);
         setResult(RESULT_CANCELED);
         finish();
     }

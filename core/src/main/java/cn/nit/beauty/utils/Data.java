@@ -1,9 +1,12 @@
 package cn.nit.beauty.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import cn.nit.beauty.database.Category;
 
 
 public class Data {
@@ -29,6 +32,8 @@ public class Data {
     public static int DISPLAY_COUNT = 12;
 
     public static Map<String, List<String>> categoryMap = new HashMap<String, List<String>>();
+    public static List<Category> categories;
+
     private static Map<String,String> titleMap = new HashMap<String, String>(){{
         put("asia", "岛国风情");
         put("occident", "欧美情调");
@@ -71,5 +76,16 @@ public class Data {
 
     public static String getTitle(String category) {
         return titleMap.get(category);
+    }
+
+    public static List<Category> getCategoryItems(String categoryName) {
+        List<Category> categoryList = new ArrayList<Category>();
+        for (Category category : categories) {
+            if (category.getCATEGORY().equals(categoryName)) {
+                categoryList.add(category);
+            }
+        }
+
+        return categoryList;
     }
 }

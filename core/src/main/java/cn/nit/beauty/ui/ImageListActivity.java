@@ -39,7 +39,6 @@ import cn.nit.beauty.request.ImageListRequest;
 import cn.nit.beauty.utils.ActivityUtil;
 import cn.nit.beauty.utils.Data;
 import cn.nit.beauty.utils.L;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.socialization.QuickCommentBar;
 
 public class ImageListActivity extends BaseActivity {
@@ -165,8 +164,8 @@ public class ImageListActivity extends BaseActivity {
             public void onSuccess(PhotoGallery gallery) {
                 photoGallery = gallery;
                 qcBar.setTopic(photoGallery.getObjectId(), photoGallery.getTitle(), photoGallery.getCreatedAt(), photoGallery.getTitle());
+                qcBar.setAuthedAccountChangeable(false);
                 qcBar.getBackButton().setVisibility(View.INVISIBLE);
-                qcBar.setOnekeyShare(new OnekeyShare());
             }
 
             @Override

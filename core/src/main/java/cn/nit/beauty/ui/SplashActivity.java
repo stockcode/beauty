@@ -29,7 +29,6 @@ import cn.bmob.v3.listener.FindListener;
 import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.Helper;
 import cn.nit.beauty.R;
-import cn.nit.beauty.database.LaucherDataBase;
 import cn.nit.beauty.entity.BeautyPlatform;
 import cn.nit.beauty.entity.PhotoGallery;
 import cn.nit.beauty.model.Index;
@@ -42,7 +41,6 @@ import cn.smssdk.SMSSDK;
 
 public class SplashActivity extends BaseActivity {
 
-    LaucherDataBase database;
     boolean isDaily;
     boolean isFinish = false;
 
@@ -86,9 +84,6 @@ public class SplashActivity extends BaseActivity {
         Intent intent = getIntent();
 
         isDaily = intent.hasExtra("isDaily");
-
-        database = new LaucherDataBase(getApplicationContext());
-
 
         settings = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -198,7 +193,7 @@ public class SplashActivity extends BaseActivity {
         @Override
         public void onRequestSuccess(Index index) {
             if (index != null) {
-                database.insertItems(index.getCategories());
+                Data.categories = index.getCategories();
                 Data.categoryMap = index.getRoots();
                 Data.categoryMap.put("favorite", new ArrayList<String>());
                 if (BeautyApplication.getInstance().getCurrentUser() == null)
