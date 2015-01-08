@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="#ffffff"
     >
 <LinearLayout
@@ -14,26 +14,26 @@
     <RelativeLayout 
         android:id="@+id/user_icon"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/selector_settings_item_down"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
         >
         <TextView 
             android:id="@+id/user_icon_tips"
+            style="@style/tipstheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/tipstheme"
-            android:text="头像"
             android:layout_centerVertical="true"
+            android:text="头像"
             />
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/user_icon_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/user_icon_default_main"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:src="@drawable/user_icon_default_main"
             />
     </RelativeLayout>
 	<View 
@@ -45,30 +45,30 @@
 	    android:id="@+id/user_nick"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:paddingTop="8dp"
+        android:background="@drawable/selector_settings_item_down"
 	    android:paddingBottom="8dp"
-	    android:background="@drawable/selector_settings_item_down"
+        android:paddingTop="8dp"
 	    >
 	    <TextView 
             android:id="@+id/user_nick_tips"
+            style="@style/tipstheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/tipstheme"
-            android:text="昵称"
             android:layout_centerVertical="true"
-            android:paddingTop="8dip"
             android:paddingBottom="8dip"
+            android:paddingTop="8dip"
+            android:text="昵称"
             />
 	    <TextView 
             android:id="@+id/user_nick_text"
+            style="@style/tipstheme_second"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/tipstheme_second"
-            android:text="点击登录"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:paddingTop="8dip"
+            android:layout_centerVertical="true"
             android:paddingBottom="8dip"
+            android:paddingTop="8dip"
+            android:text="点击登录"
             />
 	</RelativeLayout>
 	<View 
@@ -81,28 +81,28 @@
         android:id="@+id/sex_choice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:paddingTop="8dp"
         android:paddingBottom="8dp"
+        android:paddingTop="8dp"
         >
         <TextView 
             android:id="@+id/sex_choice_tips"
+            style="@style/tipstheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/tipstheme"
-            android:text="性别"
             android:layout_centerVertical="true"
-            android:paddingTop="8dip"
             android:paddingBottom="8dip"
+            android:paddingTop="8dip"
+            android:text="性别"
             />
         <CheckBox 
             android:id="@+id/sex_choice_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="centerInside"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:button="@drawable/selector_sex_choice"
             android:checked="true"
+            android:scaleType="centerInside"
             />
     </RelativeLayout>
 	<View 
@@ -116,48 +116,60 @@
 	    android:id="@+id/user_sign"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:paddingTop="8dp"
+        android:background="@drawable/selector_settings_item_down"
 	    android:paddingBottom="8dp"
-	    android:background="@drawable/selector_settings_item_down"
+        android:paddingTop="8dp"
 	    >
 	    <TextView 
             android:id="@+id/user_sign_tips"
+            style="@style/tipstheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/tipstheme"
-            android:text="个性签名"
             android:layout_centerVertical="true"
-            android:paddingTop="8dip"
             android:paddingBottom="8dip"
+            android:paddingTop="8dip"
+            android:text="个性签名"
             />
 	    <TextView 
             android:id="@+id/user_sign_text"
+            style="@style/tipstheme_second"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/tipstheme_second"
-            android:text="点击填写"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:paddingTop="8dip"
-            android:paddingBottom="8dip"
-            android:layout_marginLeft="100dp"
             android:layout_alignTop="@id/user_sign_tips"
-            android:maxLines="2"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="100dp"
             android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingBottom="8dip"
+            android:paddingTop="8dip"
+            android:text="点击填写"
             />
 	</RelativeLayout>
 	<View 
 	    android:layout_width="match_parent"
-	    android:layout_height="2dp"
+        android:layout_height="1dp"
 	    android:layout_marginTop="20dp"
 	    android:background="#eeeeee"
 	    />
 
-    <View
-	    android:layout_width="match_parent"
-	    android:layout_height="1px"
-	    android:background="#eeeeee"
-	    />
+    <RelativeLayout
+        android:id="@+id/resetPasswd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_settings_item_down"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+
+        <TextView
+            style="@style/tipstheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:text="修改密码" />
+    </RelativeLayout>
 
     <View
 	    android:layout_width="match_parent"
@@ -167,33 +179,39 @@
 	<RelativeLayout 
         android:id="@+id/settings_update"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/selector_settings_item_down"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
         >
         <TextView 
             android:id="@+id/tvPay"
+            style="@style/tipstheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/tipstheme"
-            android:text="购买服务"
             android:layout_centerVertical="true"
+            android:paddingBottom="8dp"
             android:paddingTop="8dp"
-        	android:paddingBottom="8dp"
+            android:text="购买服务"
             />
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#eeeeee" />
+
     <TextView 
         android:id="@+id/user_logout"
+        style="@style/tipstheme_buttontext"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        style="@style/tipstheme_buttontext"
-        android:text="退出登录"
+        android:layout_marginTop="48dp"
         android:background="@drawable/selector_logout"
         android:gravity="center"
-        android:paddingTop="12dip"
         android:paddingBottom="12dip"
-        android:layout_marginTop="48dp"
+        android:paddingTop="12dip"
+        android:text="退出登录"
         />
 </LinearLayout>
 </ScrollView>

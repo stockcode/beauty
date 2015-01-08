@@ -155,6 +155,12 @@
             android:windowSoftInputMode="stateVisible"></activity>
 
         <activity
+            android:name=".ui.ResetPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BeautyTheme.NoTitleBar"
+            android:windowSoftInputMode="stateVisible"></activity>
+
+        <activity
             android:name=".ui.UserSettingsActivity"
             android:label="用户设置"
             android:parentActivityName=".ui.UserCenterActivity">

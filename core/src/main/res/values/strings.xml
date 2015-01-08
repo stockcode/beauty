@@ -6,29 +6,31 @@
     <string name="ptr_release_to_refresh">Release to refresh</string>
     <string name="ptr_refreshing">Refreshing</string>
     <string name="ptr_last_updated">Updated: %1$s</string>
-        <string name="xlistview_header_hint_normal">下拉刷新</string>
+    <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
     <string name="xlistview_header_hint_loading">正在加载...</string>
     <string name="xlistview_header_last_time">上次更新时间：</string>
     <string name="xlistview_footer_hint_normal"></string>
     <string name="xlistview_footer_hint_ready"></string>
-    
+
     <string name="custom_text_hint">用户自定义打开的Activity</string>
-    
+
     <string name="action_bar_share_with">分享给…</string>
-    
+
     <string name="ani_time">250</string>
-	<string name="ani_time2">500</string>
-	<string name="ani_timestartof">150</string>
+    <string name="ani_time2">500</string>
+    <string name="ani_timestartof">150</string>
 
     <string name="register_tip">提示 \n带*项为必填项\n填写邮箱方便您找回密码以及了解更多信息</string>
     <string name="qr_register">用户注册</string>
     <string name="login">登 录</string>
     <string name="account">输入手机号</string>
     <string name="password">输入密码</string>
+    <string name="confirm_password">再次输入确认</string>
     <string name="register2">注册新帐号</string>
     <string name="auto_save_password">记住密码</string>
     <string name="sending_request">正在发送请求</string>
+    <string name="reset_password">重置密码</string>
 
     <string name="txt_nickname">丽图会员</string>
     <string name="btn_myyouku_vipopen">开通会员</string>

@@ -72,8 +72,6 @@ public class ImagePagerActivity extends SherlockFragmentActivity {
 
     private SharedPreferences settings;
 
-    private User currentUser;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,8 +92,6 @@ public class ImagePagerActivity extends SherlockFragmentActivity {
 
         setTitle(intent.getStringExtra("title"));
 
-        currentUser = BeautyApplication.getInstance().getCurrentUser();
-
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -106,6 +102,8 @@ public class ImagePagerActivity extends SherlockFragmentActivity {
             public void onPageSelected(int i) {
                 if ((folder.startsWith("origin") && i >= 3)
                         || i >= Data.DISPLAY_COUNT) {
+
+                    User currentUser = BeautyApplication.getInstance().getCurrentUser();
 
                     if (currentUser == null) {
                         autoPlay = false;
@@ -140,7 +138,7 @@ public class ImagePagerActivity extends SherlockFragmentActivity {
     }
 
     private void setBigPicture() {
-        for(ImageInfo imageInfo:imageInfoList) {
+        for (ImageInfo imageInfo : imageInfoList) {
             imageInfo.setBig(true);
         }
     }
@@ -197,7 +195,7 @@ public class ImagePagerActivity extends SherlockFragmentActivity {
                 changeWallpaper();
                 return true;
             case R.id.mnuOriginal:
-                if (currentUser == null) {
+                if (BeautyApplication.getInstance().getCurrentUser() == null) {
                     Intent intent = new Intent(ImagePagerActivity.this, LoginActivity.class);
                     startActivityForResult(intent, Utils.LOGIN);
                     Toast.makeText(ImagePagerActivity.this, "查看原图请先登录", Toast.LENGTH_SHORT).show();
@@ -207,8 +205,7 @@ public class ImagePagerActivity extends SherlockFragmentActivity {
                 if (mi.getTitle().equals("原图")) {
                     if (Helper.isWifi(getApplicationContext()) || settings.getBoolean("notifyWIFI", false)) {
                         changeOriginal();
-                    }
-                    else {
+                    } else {
                         new AlertDialog.Builder(ImagePagerActivity.this)
                                 .setTitle("温馨提示")
                                 .setMessage("当前非WIFI网络，继续浏览会消耗您的流量(每张图片约1MB)")

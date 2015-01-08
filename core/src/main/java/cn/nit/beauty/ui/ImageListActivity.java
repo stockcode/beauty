@@ -1,11 +1,6 @@
 package cn.nit.beauty.ui;
 
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -57,20 +52,13 @@ public class ImageListActivity extends BaseActivity {
 
     private User currentUser;
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //这里可以取得下载的id，这样就可以知道哪个文件下载完成了。适用与多个下载任务的监听
-            Toast.makeText(getApplicationContext(), "ID:" + intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0), Toast.LENGTH_SHORT).show();
-        }
-    };
+    private Boolean load = true;
 
-    /**
-     * 添加内容
-     *
-     *            1为下拉刷新 2为加载更多
-     */
     private void AddItemToContainer() {
+        if (!load) return;
+
+        load = false;
+
         mAdapter.clear();
 
         for(int i = 0 ; i < imageInfoList.size(); i++) {
@@ -154,9 +142,6 @@ public class ImageListActivity extends BaseActivity {
 
         mAdapterView.setItemManager(itemManager);
 
-        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey + Data.INDEX_KEY);
-        getSpiceManager().execute(imageListRequest, title, DurationInMillis.ONE_WEEK, new ImageListRequestListener());
-
         BmobQuery<PhotoGallery> query = new BmobQuery<PhotoGallery>();
 
         query.getObject(this, objectId, new GetListener<PhotoGallery>() {
@@ -194,16 +179,6 @@ public class ImageListActivity extends BaseActivity {
             case R.id.mnuFavoriate:
                 doFav();
                 return true;
-            case R.id.mnuDownload:
-                String url = Data.OSS_URL + objectKey.replaceAll("/smallthumb/", "/original.zip");
-                DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-                downloadManager.enqueue(request);
-
-                registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-
-                        Toast.makeText(getApplicationContext(), "套图开始下载，请稍等", Toast.LENGTH_SHORT).show();
-                return true;
             default:
                 return super.onOptionsItemSelected(mi);
         }
@@ -212,7 +187,9 @@ public class ImageListActivity extends BaseActivity {
     }
 
     private void doFav() {
-        if (currentUser == null) {
+        User user = BeautyApplication.getInstance().getCurrentUser();
+
+        if (user == null) {
             Intent intent = new Intent(ImageListActivity.this, LoginActivity.class);
             startActivityForResult(intent, Utils.FAVORITE);
             Toast.makeText(ImageListActivity.this, "收藏图片请先登录", Toast.LENGTH_SHORT).show();
@@ -232,8 +209,8 @@ public class ImageListActivity extends BaseActivity {
             Data.addFav(photoGallery.getUrl());
             ActivityUtil.show(this, "收藏成功。");
         }
-        currentUser.setFavorite(favRelaton);
-        currentUser.update(this, new UpdateListener() {
+        user.setFavorite(favRelaton);
+        user.update(this, new UpdateListener() {
             @Override
             public void onSuccess() {
                 L.i("收藏成功。");
@@ -254,7 +231,16 @@ public class ImageListActivity extends BaseActivity {
 
         setProgressBarIndeterminateVisibility(true);
 
-        currentUser = BeautyApplication.getInstance().getCurrentUser();
+        User user = BeautyApplication.getInstance().getCurrentUser();
+
+        if (user != currentUser) {
+            load = true;
+        }
+
+        currentUser = user;
+
+        ImageListRequest imageListRequest = new ImageListRequest(Data.OSS_URL + objectKey + Data.INDEX_KEY);
+        getSpiceManager().execute(imageListRequest, title, DurationInMillis.ONE_WEEK, new ImageListRequestListener());
 
     }
 
@@ -265,14 +251,10 @@ public class ImageListActivity extends BaseActivity {
         if (requestCode == Utils.LOGIN) {
             if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(ImageListActivity.this, "取消登录，已返回", Toast.LENGTH_SHORT).show();
-            } else {
-                AddItemToContainer();
             }
         } else if (requestCode == Utils.VIP) {
             if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(ImageListActivity.this, "取消续费，已返回", Toast.LENGTH_SHORT).show();
-            } else {
-                AddItemToContainer();
             }
         } else if (requestCode == Utils.FAVORITE && resultCode == RESULT_OK) {
             doFav();
@@ -287,7 +269,7 @@ public class ImageListActivity extends BaseActivity {
 
         @Override
         public void onRequestSuccess(ImageInfos imageInfos) {
-            imageInfoList = imageInfos.getResults();
+            if (imageInfoList.size() == 0) imageInfoList = imageInfos.getResults();
             AddItemToContainer();
             setProgressBarIndeterminateVisibility(false);
         }

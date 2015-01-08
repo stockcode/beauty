@@ -1,6 +1,7 @@
 package cn.nit.beauty.entity;
 
 import android.content.Context;
+
 import cn.nit.beauty.BeautyApplication;
 import cn.nit.beauty.R;
 import cn.sharesdk.socialization.SocializationCustomPlatform;
@@ -9,9 +10,11 @@ import cn.sharesdk.socialization.SocializationCustomPlatform;
  * Created by gengke on 2014/12/20.
  */
 public class BeautyPlatform extends SocializationCustomPlatform {
+    private Context mContext;
 
     public BeautyPlatform(Context context) {
         super(context);
+        mContext = context;
     }
 
     @Override
@@ -37,7 +40,8 @@ public class BeautyPlatform extends SocializationCustomPlatform {
         UserBrief user = new UserBrief();
         user.userId = currentUser.getObjectId();
         user.userNickname = currentUser.getNickname();
-        if (currentUser.getAvatar() != null) user.userAvatar = currentUser.getAvatar().getFileUrl();
+        if (currentUser.getAvatar() != null)
+            user.userAvatar = currentUser.getAvatar().getFileUrl(mContext);
         user.userGender = UserGender.Male;
         user.userVerifyType = UserVerifyType.Verified;
         return user;

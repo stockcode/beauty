@@ -46,8 +46,8 @@ android {
 
     defaultConfig {
         applicationId "cn.nit.beauty"
-        versionCode 29
-        versionName '1.1.29'
+        versionCode 30
+        versionName '1.1.30'
     }
 
     compileSdkVersion 17
@@ -97,7 +97,6 @@ apply plugin: 'android-unit-test'
 dependencies {
     compile 'com.jakewharton:butterknife:6.0.0'
     compile 'com.android.support:support-v4:21.0.+'
-    compile 'de.greenrobot:greendao:1.3.1'
 
     compile 'com.octo.android.robospice:robospice:1.4.14'
     compile 'com.octo.android.robospice:robospice-spring-android:1.4.14'

@@ -92,7 +92,7 @@ public class BeautyApplication extends Application {
                 .showImageOnFail(drawableId)
                 .resetViewBeforeLoading(true)
                 .cacheInMemory(true)
-                .cacheOnDisc(true)
+                .cacheOnDisk(true)
                 .imageScaleType(ImageScaleType.EXACTLY)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
@@ -104,6 +104,8 @@ public class BeautyApplication extends Application {
     }
 
     public void authorize() {
+        currentUser = BmobUser.getCurrentUser(this, User.class);
+
         Platform platform = ShareSDK.getPlatform("Beauty");
         platform.authorize();
     }

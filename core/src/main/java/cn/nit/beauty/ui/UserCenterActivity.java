@@ -108,7 +108,7 @@ public class UserCenterActivity extends BaseActivity {
             BmobFile avatarFile = currentUser.getAvatar();
             if (null != avatarFile) {
                 ImageLoader.getInstance()
-                        .displayImage(avatarFile.getFileUrl(), ivLogout,
+                        .displayImage(avatarFile.getFileUrl(this), ivLogout,
                                 BeautyApplication.getInstance().getOptions(R.drawable.icon));
             }
         } else {
